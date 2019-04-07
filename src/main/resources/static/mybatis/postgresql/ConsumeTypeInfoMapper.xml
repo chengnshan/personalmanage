@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cxp.personalmanage.mapper.postgresql.ConsumeTypeInfoMapper">
+	<resultMap type="com.cxp.personalmanage.pojo.consumer.ConsumeTypeInfo" id="baseResultMap">
+		<id property="id" column="id"/>
+		<result property="consumeId" column="consume_id"/>
+		<result property="consumeName" column="consume_name"/>
+		<result property="remark" column="remark"/>
+		<result property="importNo" column="import_no" javaType="Integer" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<sql id="baseColumn">
+		id,consume_id,consume_name,import_no
+	</sql>
+	
+	<select id="findConsumeTypeInfo" parameterType="com.cxp.personalmanage.pojo.consumer.ConsumeTypeInfo" resultMap="baseResultMap">
+		select <include refid="baseColumn"/> 
+		from consume_type_info 
+		<where>
+			<if test="id !=null ">
+				id=#{id}
+			</if>
+			<if test="consumeId !=null and consumeId !='' ">
+				consume_id=#{consumeId}
+			</if>
+			<if test="consumeName !=null and consumeName !='' ">
+			 <!-- bind:可以将OGNL表达式的值绑定到一个变量中，方便后来引用这个变量的值 -->
+			   <bind name="consume_name" value=" '%'+ consumeName +'%'"/>
+				consume_name like #{consume_name}
+			</if>
+			<if test="remark !=null and remark !='' ">
+				remark = #{remark}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getConsumerTypeById" resultMap="baseResultMap" parameterType="String">
+		select <include refid="baseColumn"/> 
+		from consume_type_info 
+		where consume_id = #{consumeId}
+	</select>
+</mapper>

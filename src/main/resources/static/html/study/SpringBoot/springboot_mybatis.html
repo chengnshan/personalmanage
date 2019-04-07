@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>使用mybatis-基于注解开发</title>
+<link rel="stylesheet" type="text/css" href="../../../js/bootstrap/css/bootstrap.min.css" />
+     <style type="text/css">
+    	.py{
+    		color:red;
+    	}
+    	.s{
+    		color:blue;
+    	}
+    	.methodContent{
+    		color:blue;
+    	}
+    	.classContent{
+    		color:#000000;
+    		font-weight:bold;
+    		font-size:15px;
+    	}
+    </style>
+   
+    <script type="text/javascript" src="../../../js/common/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../../js/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="wrapper">
+		<nav class="navbar navbar-inverse" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button class="navbar-toggle" type="button" data-toggle="collapse"
+						data-target=".navbar-responsive-collapse">
+						<span class="sr-only">Toggle Navigation</span> 
+						<span class="icon-bar"></span> <span class="icon-bar"></span> 
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/html/indexAdmin.html">首页</a>
+				</div>
+				<div class="collapse navbar-collapse navbar-responsive-collapse"  style="border:0px white solid;text-align:center;">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="springboot_index.html">SpringBoot</a></li>
+						<li><a href="../SpringMVC/springMVC_index.html">SpringMVC</a></li>
+						<li><a href="">Linux</a></li>
+						<li><a href="#">消息中间件</a></li>
+						<li><a href="#">SpringCloud</a></li>
+						<li><a href="#">SpringMVC</a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle"
+							data-toggle="dropdown"> Java <b class="caret"></b>
+							</a>
+								<ul class="dropdown-menu">
+									<li><a href="#">jmeter</a></li>
+									<li><a href="#">EJB</a></li>
+									<li><a href="#">Jasper Report</a></li>
+									<li class="divider"></li>
+									<li><a href="#">分离的链接</a></li>
+									<li class="divider"></li>
+									<li><a href="#">另一个分离的链接</a></li>
+								</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+		<div id="page-wrapper" style="border:0px red solid;" class="container"> 
+		        <div class="col-md-9 markdown-body">
+					<h3 id="redis介绍">Mybatis介绍</h3>
+		<p><img src="../../../image/study/mybatis/mybatis_logo.jpg"/></p>
+		<p><span style="font-size:16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyBatis是一个支持普通SQL查询，存储过程和高级映射的优秀持久层框架。
+		MyBatis消除了几乎所有的JDBC代码和参数的手工设置以及对结果集的检索封装。
+		MyBatis可以使用简单的XML或注解用于配置和原始映射，将接口和Java的POJO（Plain Old Java Objects，普通的Java对象）映射成数据库中的记录。</span></p>
+		
+		<h3>mybatis快速入门</h3>
+		<p style="color:blue;font-size:16px;">1、引入mybatis-spring-boot-starter</p> 
+		
+		<div class="language-xml highlighter-rouge">
+<pre class="highlight"><span class="nt">&lt;dependency&gt;</span>  
+  <span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>  
+  <span class="nt">&lt;artifactId&gt;</span>mybatis-spring-boot-starter<span class="nt">&lt;/artifactId&gt;</span>  
+  <span class="nt">&lt;version&gt;</span>1.3.0<span class="nt">&lt;/version&gt;</span>  
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>  
+  <span class="nt">&lt;groupId&gt;</span>com.alibaba<span class="nt">&lt;/groupId&gt;</span>  
+  <span class="nt">&lt;artifactId&gt;</span>druid<span class="nt">&lt;/artifactId&gt;</span>  
+  <span class="nt">&lt;version&gt;</span>1.0.30<span class="nt">&lt;/version&gt;</span>  
+<span class="nt">&lt;/dependency&gt;</span>  
+<span class="nt">&lt;dependency&gt;</span>  
+  <span class="nt">&lt;groupId&gt;</span>mysql<span class="nt">&lt;/groupId&gt;</span>  
+  <span class="nt">&lt;artifactId&gt;</span>mysql-connector-java<span class="nt">&lt;/artifactId&gt;</span>  
+  <span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span> 
+<span class="nt">&lt;/dependency&gt;</span>  
+		</pre>
+		</div>
+		
+		<p style="color:blue;font-size:16px;">2、配置文件application.properties添加配置项</p>
+		
+		<div class="language-properties highlighter-rouge">
+		<pre><span class="c"># 数据库驱动</span>
+<span class="py">spring.datasource.driver-class-name</span><span class="p">=</span><span class="s">com.mysql.jdbc.Driver</span>
+<span class="c"># 数据库URL地址</span>
+<span class="py">spring.datasource.url</span><span class="p">=</span><span class="s">jdbc:mysql://localhost:3306/test?useUnicode=true
+&characterEncoding=utf8&useSSL=false</span> 
+<span class="c"># 数据库用户名</span>
+<span class="py">spring.datasource.username</span><span class="p">=</span><span class="s">root</span>
+<span class="c">#数据库连接密码</span>
+<span class="py">spring.datasource.password</span><span class="p">=</span><span class="s">123456</span> 
+
+<span class="c"># Mybatis配置</span>
+<span class="py">mybatis.mapper-locations</span><span class="p">=</span><span class="s">classpath:static/mybatis/*Mapper.xml  </span>
+<span class="c">#扫描实体包中实体，得到别名</span>
+<span class="py">mybatis.type-aliases-package</span><span class="p">=</span><span class="s">com.cxp.personalmanage.pojo  </span>
+
+<!-- <span class="c"># Druid连接池配置</span> 
+<span class="c"># 连接池中的最大空闲连接</span>
+<span class="py">spring.pool.max-idle</span><span class="p">=</span><span class="s">8  </span>
+<span class="c"># 连接池中的最小空闲连接</span>
+<span class="py">spring.pool.min-idle</span><span class="p">=</span><span class="s">0  </span>
+<span class="c"># 连接超时时间（毫秒）</span>
+<span class="py">spring.redis.timeout</span><span class="p">=</span><span class="s">0  </span> -->
+</pre></div>
+	
+	<p style="color:blue;font-size:16px;">3、实体类</p>
+	<div class="language-java highlighter-rouge"><div class="highlight">
+		<pre class="highlight">
+			
+		</pre>
+	</div>
+	
+	<p style="color:blue;font-size:16px;">4、开发Mapper</p>
+		
+		<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight" style="font-size:14px;">
+<span style="color:red;font-weight:bold;font-size:15px;">@Mapper</span>
+<span class="classContent"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">CustomerDaoMybatis</span> <span class="o">{</span></span>
+
+ @Insert(value = 
+		"insert into customer (cust_name,cust_gender,cust_phone,cust_address) 
+		values (#{cust_name},#{cust_gender},#{cust_phone},#{cust_address})")	
+ <span class="methodContent">  int saveCustomer(CustomerMybatis customerMybatis);</span>
+
+
+ @Update(value = 
+		"update customer set cust_name=#{cust_name}
+			,cust_gender=#{cust_gender},cust_phone=#{cust_phone}
+			,cust_address=#{cust_address} 
+		where id=#{id}")
+ <span class="methodContent">  int updateCustomer(CustomerMybatis customerMybatis);</span>
+
+
+ @Delete(value = "delete from customer where id=#{id}")
+ <span class="methodContent">  int deleteCustomer(int id);</span>	
+
+
+ @Select(value = "select id,cust_name,cust_gender,cust_phone,cust_address from customer")
+ <span class="methodContent"> List &lt;CustomerMybatis&gt; findCustomerList();</span>
+
+
+ @Select(value = "select id,cust_name,cust_gender,cust_phone,cust_address from customer where id=#{id}")
+ @Results(id="CustomerMabatisMap",value = {
+        @Result(property = "id",column = "id",id = true),
+        @Result(property = "cust_name",column = "cust_name"),
+        @Result(property = "cust_gender",column = "cust_gender"),
+        @Result(property = "cust_phone",column = "cust_phone"),
+        @Result(property = "cust_address",column = "cust_address")
+})
+ <span class="methodContent">  CustomerMybatis getCustomerById(int id);</span>
+
+ 
+ //映射到Map集合中
+ @Select(value = "select id,cust_name,cust_gender,cust_phone,cust_address from customer")
+ @ResultType(value = Map.class)
+ <span class="methodContent">  List &lt;Map&lt;String,Object&gt;&gt; findCustomerMybatisMap();</span>
+
+
+ //用户map集合传递参数
+ @Select(value = "select id,cust_name,cust_gender,cust_phone,cust_address 
+				from customer where id=#{id} and cust_name=#{cust_name}")
+ @ResultType(value = Map.class)
+ <span class="methodContent">  Map &lt;String,Object&gt; findCustomerMybatisMapByCondition(Map&lt;String,Object&gt; map);</span>
+
+<span class="classContent">}</span>
+</pre></div></div>
+		
+		<p style="color:blue;font-size:16px;">5、Service层</p>
+		
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight">
+<span class="nd">@Service</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomerMybatisServiceImpl implements CustomerMybatisService </span> <span class="o">{</span>
+
+	<span class="nd">@Autowired</span>
+	<span class="kd">private</span> <span class="n">CustomerDaoMybatis</span> <span class="n">customerDaoMybatis</span><span class="o">;</span>
+	
+	<span class="nd">@Override</span>
+	<span class="kd">private</span> <span class="n">int</span> <span class="n">saveCustomer (CustomerMybatis customerMybatis)</span><span class="o">{</span>
+	  return customerDaoMybatis.saveCustomer(customerMybatis);
+	}
+	
+	<span class="nd">@Override</span>
+	<span class="kd">public</span> <span class="kt">int </span> <span class="nf">deleteCustomer</span><span class="o">(int id)</span> <span class="o">{</span>
+	  return customerDaoMybatis.deleteCustomer(id);
+	<span class="o">}</span>
+			    
+	<span class="nd">@Override</span>
+	<span class="kd">public</span> <span class="kt">int </span> <span class="nf">updateCustomer</span><span class="o">(CustomerMybatis customerMybatis)</span> <span class="o">{</span>
+	  return customerDaoMybatis.updateCustomer(customerMybatis);
+	<span class="o">}</span>
+	
+	@Override
+	public CustomerMybatis getCustomerById(int id) {
+	  return customerDaoMybatis.getCustomerById(id);
+	}
+	
+	@Override
+	public List&lt;CustomerMybatis&gt; findCustomerList() {
+	  return customerDaoMybatis.findCustomerList();
+	}
+	
+	@Override
+	public List&lt;Map&lt;String, Object&gt;&gt; findCustomerMybatisMap() {
+	    return customerDaoMybatis.findCustomerMybatisMap();
+	}
+
+<span class="o">}</span>
+</pre></div></div>
+		
+		<p style="color:blue;font-size:16px;">6、Controller层</p>
+		
+<div class="language-java highlighter-rouge"><div class="highlight">
+<pre class="highlight">
+<span class="py">@RestController</span>
+<span class="py">@RequestMapping(value = "/customerMybatisController")</span>
+public class CustomerMybatisController {
+    @Autowired
+    private CustomerMybatisService customerMybatisService;
+
+    @Autowired
+    private CustomerDaoMybatis customerDaoMybatis;
+
+    @GetMapping(value = "/saveCustomer")
+    public CustomerMybatis saveCustomer(CustomerMybatis customerMybatis) {
+        System.out.println(customerMybatisService.findCustomerList());
+        customerMybatisService.saveCustomer(customerMybatis);
+        return customerMybatis;
+    }
+
+    @GetMapping(value = "/getcustomermybatismap")
+    public List&lt;Map&lt;String,Object&gt;&gt; getCustomerMybatisMap(){
+        List&lt;Map&lt;String, Object&gt;&gt; customerMybatisMap = customerMybatisService.findCustomerMybatisMap();
+        return customerMybatisMap;
+    }
+
+    @GetMapping(value = "/")
+    public Map&lt;String,Object&gt; getCustomerMybatisMapByCondition(){
+        Map&lt;String,Object&gt; param=new HashMap&lt;&gt;();
+        param.put("id",1);
+       param.put("cust_name","张三丰");
+        Map&lt;String, Object&gt; customerMybatisMap = customerDaoMybatis.findCustomerMybatisMapByCondition(param);
+        return customerMybatisMap;
+    }
+}
+</pre></div></div>
+
+<h3>springboot中mybatis注解开发的使用</h3>
+<p style="font-size:15px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyBatis的注解，主要是用于替换映射文件。映射文件中无非存放在增删改查的sql映射标签。所以，MyBatis注解，
+就是要替换映射文件中的SQL标签。<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;
+MyBatis官方文档中指出，若要真正想发挥MyBatis功能，还是要用映射文件。所以官方并不建议使用MyBatis注解式开发。
+</p>	
+		
+<p style="color:blue;font-size:16px;">1、使用@Param</p>
+<p>在之前的整合示例中,我们已经使用了这种最简单的传参方式,如下:</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight">
+ @Insert(<span style="color:#A6E230;">" insert into user(name,age) values (#{name},#{age}) "</span>)
+ int insert(@Param("name") String name,@Param("age") Integer age);
+ 
+</pre></div></div>
+<p> 这种方式很好理解,@Param中定义的name对应了SQL中的#{name}，age对应了SQL中的#{age}</p>
+
+<p style="color:blue;font-size:16px;">2、使用Map</p>
+<p>如下代码，通过Map对象来作为传递参数的容器:</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight">
+ @Insert(<span style="color:#A6E230;">" insert into user(name,age) values (#{name,jdbcType=VARCHAR},#{age,jdbcType=INTEGER}) "</span>)
+ int insertByMap(@Param("name") String name,@Param("age") Integer age);
+</pre></div></div>
+
+<p> 对于Insert语句中需要的参数，我们只需要在map中填入同名的内容即可,具体如下面代码所示:</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight">
+1  Map&lt;String, Object&gt; map = new HashMap&lt;&gt;()
+2  map.put("name","AAA");
+3  map.put("age",20);
+4  useMapper.insertByMap(map);
+</pre></div></div>
+		
+<p style="color:blue;font-size:16px;">3、使用@InsertProvider</p>
+<p>我们可以创建动态的Insert查询,使用@InsertProvider</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight">
+public class TutorDynaSqlProvider {
+    public String insertTutor(final Tutor tutor) {
+      return new SQL(){{
+			INSERT_INTO ("TUTORS");
+			if(tutor.getName() != null){
+			  values("name","#{name}");
+			}
+		}}.toString();
+}
+
+
+public interface TutorMapper{
+  @InsertProvider(type=TutorDynaSqlProvider.class,method="insertTutor")
+  @Options(useGeneratedKeys=true,keyProperty="tutorId")
+   int insertTutor(Tutor tutor);
+}
+</pre></div></div>
+
+
+<p style="color:blue;font-size:16px;">4、使用@UpdateProvider</p>
+<p>我们可以创建动态的Update查询,使用@UpdateProvider</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight">
+public class TutorDynaSqlProvider {
+    public String updateTutor(final Tutor tutor) {
+      return new SQL(){{
+		UPDATE ("TUTORS");
+		if(tutor.getName() != null){
+		  set("name = #{name}")
+		}
+		if(tutor.getEmail() != null){
+		  set("EMAIL = #{email}")
+		}
+		where("tutor_id=#{tutorId}");
+		}}.toString();
+}
+
+
+public interface TutorMapper{
+  @UpdateProvider(type=TutorDynaSqlProvider.class,method="updateTutor")
+   int updateTutor(Tutor tutor);
+}
+</pre></div></div>
+
+<p style="color:blue;font-size:16px;">5、使用@DeleteProvider</p>
+<p>我们可以创建动态的delete查询,使用@DeleteProvider</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight">
+public class TutorDynaSqlProvider {
+    public String deleteTutor(final Tutor tutor) {
+      return new SQL(){{
+		DELETE_FROM ("TUTORS");
+		where("TUTOR_ID=#{tutorId}");
+		}}.toString();
+}
+
+
+public interface TutorMapper{
+  @UpdateProvider(type=TutorDynaSqlProvider.class,method="deleteTutor")
+   int deleteTutor(int tutorId);
+}
+</pre></div></div>
+	
+		
+		<p><strong><a href="https://github.com/ityouknow/spring-boot-examples" target="_blank">示例代码-github</a></strong></p>
+		
+		<p><strong><a href="https://gitee.com/ityouknow/spring-boot-examples" target="_blank">示例代码-码云</a></strong></p>
+		
+		<h2 id="参考">参考</h2>
+		
+		<p><a href="http://emacoo.cn/blog/spring-redis" target="_blank">Redis的两个典型应用场景</a><br />
+		<a href="https://segmentfault.com/a/1190000004358410" target="_blank">SpringBoot应用之分布式会话</a></p>
+		
+		<hr />
+		
+		<strong>出处：<a href="http://www.ityouknow.com">www.ityouknow.com</a></strong>    <br />
+		<strong>版权所有，欢迎保留原文链接进行转载：)</strong></p>
+		            <!-- copyright -->
+		            <div>
+		</div>
+		            <!-- Comments -->
+		    </div>
+		</div>
+		</div>
+	</div>
+</body>
+</html>

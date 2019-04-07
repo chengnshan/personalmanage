@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>使用mybatis-基于XML配置</title>
+<link rel="stylesheet" type="text/css" href="../../../js/bootstrap/css/bootstrap.min.css" />
+     <style type="text/css">
+    	.py{
+    		color:red;
+    	}
+    	.s{
+    		color:blue;
+    	}
+    	.methodContent{
+    		color:blue;
+    	}
+    	.classContent{
+    		color:#000000;
+    		font-weight:bold;
+    		font-size:15px;
+    	}
+    </style>
+    <script type="text/javascript" src="../../../js/common/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../../js/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="wrapper">
+		<nav class="navbar navbar-inverse" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button class="navbar-toggle" type="button" data-toggle="collapse"
+						data-target=".navbar-responsive-collapse">
+						<span class="sr-only">Toggle Navigation</span> 
+						<span class="icon-bar"></span> <span class="icon-bar"></span> 
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/html/indexAdmin.html">首页</a>
+				</div>
+				<div class="collapse navbar-collapse navbar-responsive-collapse"  style="border:0px white solid;text-align:center;">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="springboot_index.html">SpringBoot</a></li>
+						<li><a href="../SpringMVC/springMVC_index.html">SpringMVC</a></li>
+						<li><a href="">Linux</a></li>
+						<li><a href="#">消息中间件</a></li>
+						<li><a href="#">SpringCloud</a></li>
+						<li><a href="#">SpringMVC</a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle"
+							data-toggle="dropdown"> Java <b class="caret"></b>
+							</a>
+								<ul class="dropdown-menu">
+									<li><a href="#">jmeter</a></li>
+									<li><a href="#">EJB</a></li>
+									<li><a href="#">Jasper Report</a></li>
+									<li class="divider"></li>
+									<li><a href="#">分离的链接</a></li>
+									<li class="divider"></li>
+									<li><a href="#">另一个分离的链接</a></li>
+								</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+<div id="page-wrapper" style="border:0px red solid;" class="container"> 
+		        <div class="col-md-9 markdown-body">
+					<h3 id="redis介绍">Mybatis介绍</h3>
+		<p><img src="../../../image/study/mybatis/mybatis_logo.jpg"/></p>
+		<p><span style="font-size:16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyBatis是一个支持普通SQL查询，存储过程和高级映射的优秀持久层框架。
+		MyBatis消除了几乎所有的JDBC代码和参数的手工设置以及对结果集的检索封装。
+		MyBatis可以使用简单的XML或注解用于配置和原始映射，将接口和Java的POJO（Plain Old Java Objects，普通的Java对象）映射成数据库中的记录。</span></p>
+		
+<h3>mybatis自定义SqlSession和XML配置</h3>
+<p style="color:blue;font-size:16px;">1、引入mybatis相关依赖</p> 
+	
+<div class="language-xml highlighter-rouge">
+<pre class="highlight">
+&lt;parent&gt;
+   &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+   &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+   &lt;version&gt;1.5.7.RELEASE&lt;/version&gt;
+   &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+&lt;/parent&gt;
+
+&lt;properties&gt;
+   &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+   &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;
+   &lt;java.version&gt;1.8&lt;/java.version&gt;
+&lt;/properties&gt;
+
+&lt;dependencies&gt;
+   &lt;dependency&gt;
+      &lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt;
+      &lt;version&gt;1.3.1&lt;/version&gt;
+   &lt;/dependency&gt;
+   &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+   &lt;/dependency&gt;
+   &lt;dependency&gt;
+      &lt;groupId&gt;mysql&lt;/groupId&gt;
+      &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+      &lt;scope&gt;runtime&lt;/scope&gt;
+   &lt;/dependency&gt;
+   &lt;dependency&gt;
+      &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+      &lt;artifactId&gt;druid&lt;/artifactId&gt;
+      &lt;version&gt;1.0.29&lt;/version&gt;
+   &lt;/dependency&gt;
+   &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+   &lt;/dependency&gt;
+   &lt;!--pagehelper --&gt;
+   &lt;dependency&gt;
+      &lt;groupId&gt;com.github.pagehelper&lt;/groupId&gt;
+      &lt;artifactId&gt;pagehelper-spring-boot-starter&lt;/artifactId&gt;
+      &lt;version&gt;1.1.1&lt;/version&gt;
+   &lt;/dependency&gt;
+&lt;/dependencies&gt;
+
+&lt;build&gt;
+   &lt;plugins&gt;
+      &lt;plugin&gt;
+         &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+         &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+      &lt;/plugin&gt;
+   &lt;/plugins&gt;
+&lt;/build&gt; 
+</pre>
+</div>
+		
+<p style="color:blue;font-size:16px;">2、配置文件application.properties添加配置项</p>
+		
+<div class="language-properties highlighter-rouge">
+<pre><span class="c"># 数据库驱动</span>
+<span class="py">spring.datasource.driver-class-name</span><span class="p">=</span><span class="s">com.mysql.jdbc.Driver</span>
+<span class="c"># 数据库URL地址</span>
+<span class="py">spring.datasource.url</span><span class="p">=</span><span class="s">jdbc:mysql://localhost:3306/test?useUnicode=true
+&characterEncoding=utf8&useSSL=false</span> 
+<span class="c"># 数据库用户名</span>
+<span class="py">spring.datasource.username</span><span class="p">=</span><span class="s">root</span>
+<span class="c">#数据库连接密码</span>
+<span class="py">spring.datasource.password</span><span class="p">=</span><span class="s">123456</span> 
+
+<span class="c"># Mybatis配置</span>
+<span class="py">mybatis.mapper-locations</span><span class="p">=</span><span class="s">classpath:static/mybatis/*Mapper.xml  </span>
+<span class="c">#扫描实体包中实体，得到别名</span>
+<span class="py">mybatis.type-aliases-package</span><span class="p">=</span><span class="s">com.cxp.personalmanage.pojo  </span>
+
+<!-- <span class="c"># Druid连接池配置</span> 
+<span class="c"># 连接池中的最大空闲连接</span>
+<span class="py">spring.pool.max-idle</span><span class="p">=</span><span class="s">8  </span>
+<span class="c"># 连接池中的最小空闲连接</span>
+<span class="py">spring.pool.min-idle</span><span class="p">=</span><span class="s">0  </span>
+<span class="c"># 连接超时时间（毫秒）</span>
+<span class="py">spring.redis.timeout</span><span class="p">=</span><span class="s">0  </span> -->
+</pre></div>
+	
+	<p style="color:blue;font-size:16px;">3、自定义数据源配置</p>
+	<div class="language-java highlighter-rouge"><div class="highlight">
+		<pre class="highlight">
+@Configuration
+public class DataSourceConfig {
+    @Autowired
+    private Environment ev;
+
+    @Bean
+    public DataSource dataSource() {
+        DruidDataSource druidDataSource = new DruidDataSource();
+        druidDataSource.setDriverClassName(ev.getProperty("datasource.driverClassName"));
+        druidDataSource.setUrl(ev.getProperty("datasource.url"));
+        druidDataSource.setUsername(ev.getProperty("datasource.username"));
+        druidDataSource.setPassword(ev.getProperty("datasource.password"));
+        druidDataSource.setMaxActive(Integer.parseInt(ev.getProperty("datasource.maxactive")));
+        druidDataSource.setMinIdle(Integer.parseInt(ev.getProperty("datasource.minIdle")));
+        druidDataSource.setInitialSize(Integer.parseInt(ev.getProperty("datasource.initialSize")));
+        return druidDataSource;
+    }
+}
+</pre>
+	</div>
+	
+<p style="color:blue;font-size:16px;">4、Mybatis配置类</p>
+<div class="language-java highlighter-rouge"><div class="highlight">
+<pre class="highlight">
+/**
+ * 实现TransactionManagementConfigurer接口，配置spring事务的管理
+ */
+@Configuration
+public class MyBatisConfig implements TransactionManagementConfigurer{
+    @Autowired
+    private DataSource dataSource;
+
+    @Bean(name = "sqlSessionFactory")
+    public SqlSessionFactory sqlSessionFactory(){
+        SqlSessionFactoryBean bean=new SqlSessionFactoryBean();
+        bean.setDataSource(dataSource);
+        bean.setTypeAliasesPackage("com.cxp.pojo");
+
+        ResourcePatternResolver resolver=new PathMatchingResourcePatternResolver();
+        try {
+             //设置xml文件扫描路径          
+ 	   bean.setMapperLocations(resolver.getResources("classpath:/mybatis/*Mapper.xml"));
+            return bean.getObject();
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Bean
+    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory){
+        return new SqlSessionTemplate(sqlSessionFactory);
+    }
+
+    //事务支持
+    @Bean
+    @Override
+    public PlatformTransactionManager annotationDrivenTransactionManager() {
+        return new DataSourceTransactionManager(dataSource);
+    }
+}
+</pre>
+</div>
+
+
+<p style="color:blue;font-size:16px;">5、mybatis扫描(mapper接口)路径配置</p>
+<div class="language-java highlighter-rouge"><div class="highlight">
+<pre class="highlight">
+<span style="color: green;">@Configuration</span>
+<span style="color: green;">@AutoConfigureAfter(MyBatisConfig.class)</span>
+public class MybatisMapperScannerConfig {
+
+    <span style="color: green;">@Bean</span>
+    public MapperScannerConfigurer mapperScannerConfigurer(){
+        MapperScannerConfigurer mapperScannerConfigurer=new MapperScannerConfigurer();
+        mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactory");
+        mapperScannerConfigurer.setBasePackage("com.cxp.dao.mapper");
+        return mapperScannerConfigurer;
+    }
+
+<span style="color: green;">    /*
+    * 注册MyBatis分页插件PageHelper
+    */
+    @Bean</span>
+    public PageHelper pageHelper() {
+        PageHelper pageHelper = new PageHelper();
+        Properties p = new Properties();
+        p.setProperty("offsetAsPageNum", "true");
+        p.setProperty("rowBoundsWithCount", "true");
+        p.setProperty("reasonable", "true");
+        pageHelper.setProperties(p);
+        return pageHelper;
+    }
+}			
+</pre>
+</div>
+
+<p style="color:blue;font-size:16px;">6、在src/main/resources下创建文件夹mybatis，把mapper的xml文件放到mybatis文件夹下面</p>
+<div class="language-java highlighter-rouge"><div class="highlight">
+<pre class="highlight">
+
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" &gt;
+&lt;mapper namespace="com.cxp.dao.mapper.ProductMapper"&gt;
+   
+   &lt;resultMap type="com.cxp.pojo.Product" id="productBaseMap"&gt;
+        &lt;id column="id" property="id" jdbcType="INTEGER"/&gt;
+        &lt;result column="pname" property="pname" jdbcType="VARCHAR"/&gt;
+        &lt;result column="price" property="price" jdbcType="VARCHAR"/&gt;
+        &lt;result column="remark" property="remark" jdbcType="VARCHAR"/&gt;
+        &lt;result column="productDate" property="productDate" jdbcType="TIMESTAMP"/&gt;
+   &lt;/resultMap&gt;
+   
+   &lt;sql id="base_column"&gt;
+       id,pname,price,remark,productDate 
+   &lt;/sql&gt;
+   
+    &lt;sql id="page_conditionn_limit"&gt;
+        &lt;if test="(pageSize != null and pageSize &gt;0) and (pageRow != null and pageRow &gt;=0)"&gt;
+            limit #{pageSize} offset #{pageRow}
+        &lt;/if&gt;
+    &lt;/sql&gt;
+    
+    <span style="color: green;">&lt;!-- 查询所有列表并分页 --&gt;</span>
+    &lt;select id="findProductList" resultType="java.util.LinkedHashMap" parameterType="java.util.Map"&gt;
+       select &lt;include refid="base_column"&gt;&lt;/include&gt; from product 
+       &lt;include refid="page_conditionn_limit"&gt;&lt;/include&gt;
+    &lt;/select&gt;
+    
+    &lt;insert id="saveProduct" parameterType="com.cxp.pojo.Product"&gt;
+        insert into product (pname,price,remark,productDate) values (#{pname},#{price},#{remark},#{productDate})
+    &lt;/insert&gt;
+    
+    &lt;select id="getProductById" parameterType="Integer" resultType="com.cxp.pojo.Product"&gt;
+        select &lt;include refid="base_column"/&gt; from product where id=#{id}
+    &lt;/select&gt;
+
+    <span style="color: green;">&lt;!--查询商品列表，并通过PageHelper分布--&gt;</span>
+    &lt;select id="findProductListAll" resultType="java.util.Map"&gt;
+        select &lt;include refid="base_column"&gt;&lt;/include&gt; from product
+    &lt;/select&gt;
+
+&lt;/mapper&gt;
+		</pre>
+	</div>
+	
+<p style="color:blue;font-size:16px;">7、Mapper接口</p>	
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight" style="font-size:14px;">
+ public interface ProductMapper {
+    <span style="color: green;">// 查询所有商品列表并分页</span>
+    public List&lt;Map&lt;String, Object&gt;&gt; findProductList(Map&lt;String,Object&gt; map);
+
+    <span style="color: green;">// 添加商品</span>
+    public Integer saveProduct(Product product);
+
+    <span style="color: green;">// 根据id查询商品</span>
+    public Product getProductById(int id);
+
+    <span style="color: green;">//查询商品列表，并通过pageHepler分页</span>
+    public List&lt;Map&lt;String,Object&gt;&gt; findProductListAll();
+}
+</pre></div></div>
+		
+		<p style="color:blue;font-size:16px;">5、Service层</p>
+		
+<div class="language-java highlighter-rouge">
+<div class="highlight"><pre class="highlight">
+
+</pre></div></div>
+		
+<p style="color:blue;font-size:16px;">6、Controller层</p>	
+<div class="language-java highlighter-rouge"><div class="highlight">
+<pre class="highlight">
+<span style="color: green;">@RestController</span>
+public class ProductController {
+<span style="color: green;">    @Autowired</span>
+    private ProductMapper productMapper;
+
+    @GetMapping(value = "/findproductlistmap")
+    public List&lt;Map&lt;String,Object&gt;&gt; findProductListMap(){
+        PageHelper.startPage(1,20);
+        List&lt;Map&lt;String, Object&gt;&gt; productListAll = productMapper.findProductListAll();
+        return productListAll;
+    }
+}
+</pre></div></div>
+
+<p style="color:blue;font-size:16px;">6、main方法入口</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在main方法所在类上加注解@MapperScan(value = "com.cxp.dao.mapper")</p>	
+<div class="language-java highlighter-rouge"><div class="highlight">
+<pre class="highlight">
+@SpringBootApplication
+@MapperScan(value = "com.cxp.dao.mapper")
+public class Springboot3ClassApplication {
+   public static void main(String[] args) {
+      SpringApplication.run(Springboot3ClassApplication.class, args);
+   }
+}
+</pre></div></div>
+<br/>
+<br/>
+
+    <p style="color:blue;font-size:16px;">7、MyBatis中Like语句使用方式及解决索引失效</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mybatis使用#和$区别，mybatis使用concat，使用bind。使用like如何优化，使索引不失效。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. like  %keyword    索引失效，使用全表扫描。但可以通过翻转函数+like前模糊查询+建立翻转函数索引=走翻转函数索引，不走全表扫描。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. like  keyword%    索引有效。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. like  %keyword% 索引失效，也无法使用反向索引。</p>
+    <div class="language-java highlighter-rouge">
+        <img src="../../../image/study/mybatis/mybatis_bind.png"/>
+    </div>
+    <br/>
+    <br/>
+
+		<p><strong><a href="https://github.com/ityouknow/spring-boot-examples" target="_blank">示例代码-github</a></strong></p>
+		
+		<p><strong><a href="https://gitee.com/ityouknow/spring-boot-examples" target="_blank">示例代码-码云</a></strong></p>
+		
+		<h2 id="参考">参考</h2>
+		
+		<p><a href="http://emacoo.cn/blog/spring-redis" target="_blank">Redis的两个典型应用场景</a><br />
+		<a href="https://segmentfault.com/a/1190000004358410" target="_blank">SpringBoot应用之分布式会话</a></p>
+		
+		<hr />
+		
+		<strong>出处：<a href="http://www.ityouknow.com">www.ityouknow.com</a></strong>    <br />
+		<strong>版权所有，欢迎保留原文链接进行转载：)</strong>
+		            <!-- copyright -->
+		            <div>
+		</div>
+		            <!-- Comments -->
+		    </div>
+		</div>
+		</div>
+		</div>
+		</div>
+	</div>
+	</div>
+</body>
+</html>

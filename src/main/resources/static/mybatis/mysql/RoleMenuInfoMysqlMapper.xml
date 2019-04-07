@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cxp.personalmanage.mapper.mysql.RoleMenuInfoMysqlMapper">
+	
+	<resultMap type="com.cxp.personalmanage.pojo.RoleMenuInfo" id="baseResultMap">
+		<id column="id" property="id" jdbcType="BIGINT"/>
+		<result column="roleId" property="roleId" jdbcType="VARCHAR"/>
+		<result column="menuId" property="menuId" jdbcType="VARCHAR"/>
+		<result column="enable" property="enable" jdbcType="BIGINT"/>
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP"/>
+		<result column="create_user" property="create_user" jdbcType="VARCHAR"/>
+		<result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="baseColumn">
+		id,roleid,menuid,enable,create_time,create_user,update_time,update_user
+	</sql>
+	
+	<!-- 查询角色菜单信息 -->
+	<select id="findRoleMenuInfo" parameterType="com.cxp.personalmanage.pojo.RoleMenuInfo" resultMap="baseResultMap">
+		select <include refid="baseColumn"/>  from role_menu_info 
+		<where>
+			<if test="roleId != null and roleId != '' ">
+				and roleid = #{roleId}
+			</if>
+			<if test="menuId != null and menuId != '' ">
+				and menuid = #{menuId}
+			</if>
+			<if test="id != null ">
+				and id = #{id}
+			</if>
+			<if test="enable != null ">
+				and enable = #{enable}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 添加角色菜单权限 -->
+	<insert id="saveRoleMenuInfo" parameterType="com.cxp.personalmanage.pojo.RoleMenuInfo">
+		insert into role_menu_info (roleid,menuid,enable,create_time,create_user,update_time,update_user) values 
+		(#{roleId},#{menuId},#{enable},#{create_time},#{create_user},#{update_time},#{update_user})
+	</insert>
+	
+	<!-- 批量添加 -->
+	<insert id="batchRoleMenuInfo" parameterType="java.util.List">
+		insert into role_menu_info (roleid,menuid,enable,create_time,create_user,update_time,update_user) values 
+		<foreach collection="list" separator="," item="item">
+			(#{item.roleId},#{item.menuId},#{item.enable},#{item.create_time},#{item.create_user},#{item.update_time},#{item.update_user}) 
+		</foreach>
+	</insert>
+	
+	<!-- 更新角色菜单信息 -->
+	<update id="updateRoleMenuInfo" parameterType="com.cxp.personalmanage.pojo.RoleMenuInfo">
+		update role_menu_info 
+		<set>
+			<if test="roleId != null and roleId != '' ">
+				roleid = #{roleId},
+			</if>
+			<if test="menuId != null and menuId != '' ">
+				menuid = #{menuId},
+			</if>
+			<if test="enable != null ">
+				enable = #{enable},
+			</if>
+		</set>
+		where  id = #{id}
+	</update>
+	
+	<!-- 删除角色菜单 -->
+	<delete id="deleteMenuInfo" parameterType="String">
+		delete from role_menu_info where roleid = #{_roleId}
+	</delete>
+	
+	<!-- 根据角色Id或菜单id批量删除 -->
+	<delete id="batchDelete" parameterType="java.util.Map">
+		delete from role_menu_info 
+		where 
+		<if test=" roleId != null and roleId !='' ">
+			roleid =#{roleId} 
+		</if>
+		
+		<if test=" deletelist != null and deletelist.size() >0">
+			and menuid in 
+			<foreach collection="deletelist" item="item" separator="," index="index" open="(" close=")">
+				#{item}
+			</foreach>
+		</if>
+	</delete>
+</mapper>

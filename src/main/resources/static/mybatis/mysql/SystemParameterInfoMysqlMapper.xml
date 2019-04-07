@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cxp.personalmanage.mapper.mysql.SystemParameterInfoMysqlMapper">
+	<resultMap type="com.cxp.personalmanage.pojo.SystemParameterInfo" id="baseResultMap">
+		<id column="id" property="id"/>
+		<result column="param_code" property="param_code"/>
+		<result column="param_value" property="param_value"/>
+		<result column="param_name" property="param_name"/>
+		<result column="enable" property="enable"/>
+		<result column="create_time" property="create_time" />
+		<result column="create_user" property="create_user" />
+		<result column="update_time" property="update_time" />
+		<result column="update_user" property="update_user" />
+	</resultMap>
+	
+	<sql id="baseColumn">
+		id,param_code,param_value,param_name,enable,create_time,create_user,update_time,update_user 
+	</sql>
+	
+	<select id="getParameterInfoByCode" parameterType="java.util.Map" resultMap="baseResultMap">
+		select <include refid="baseColumn"/> 
+		from system_parameter_info 
+		<where>
+			<if test=" param_code != null and param_code != ''">
+				param_code = #{param_code}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getByCode" parameterType="String" resultMap="baseResultMap">
+		select <include refid="baseColumn"/> 
+		from system_parameter_info where param_code = #{param_code}
+	</select>
+</mapper>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cxp.personalmanage.mapper.mysql.ConsumeDetailInfoMysqlMapper">
+	
+	<resultMap type="com.cxp.personalmanage.pojo.consumer.ConsumeDetailInfo" id="baseResultMap">
+		<id property="id" column="id" javaType="java.lang.Integer" />
+		<result property="userName" column="user_name" javaType="String" jdbcType="VARCHAR"/>
+		<result property="consume_time" column="consume_time" javaType="java.util.Date" jdbcType="DATE"/>
+		<result property="consume_money" column="consume_money" javaType="java.math.BigDecimal"/>
+		<result property="consumeId" column="consume_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="remark" column="remark"  javaType="String" jdbcType="VARCHAR"/>
+		<result column="create_time" property="create_time"  javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+		<result column="create_user" property="create_user"  javaType="String" jdbcType="VARCHAR"/>
+		<result column="update_time" property="update_time"  javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+		<result column="update_user" property="update_user"  javaType="String" jdbcType="VARCHAR"/>
+		<association property="consumeTypeInfo" select="com.cxp.personalmanage.mapper.ConsumeTypeInfoMapper.getConsumerTypeById" 
+			javaType="com.cxp.personalmanage.pojo.consumer.ConsumeTypeInfo"
+			column="consumeId"></association>
+	</resultMap>
+	
+	<sql id="baseColumn">
+		id,user_name,consume_time,consume_money,consume_id,remark,create_time,create_user,update_time,update_user
+	</sql>
+	
+	<sql id="page_conditionn_limit">
+        <if test="(pageSize != null and pageSize >0) and (pageRow != null and pageRow >=0)">
+            limit #{pageSize} offset #{pageRow}
+        </if>
+    </sql>
+	
+	<!-- 根据对象查询 -->
+	<select id="findConsumeDetailInfoListByObj" parameterType="com.cxp.personalmanage.pojo.consumer.ConsumeDetailInfo" resultMap="baseResultMap">
+		select <include refid="baseColumn"/>
+		from consume_detail_info 
+		<where>
+			<if test="id !=null ">
+				id=#{id}
+			</if>
+			<if test=" userName !=null and userName != '' ">
+				and user_name = #{userName}
+			</if>
+			<if test=" consumeId !=null and consumeId != '' ">
+				and consume_id = #{consumeId}
+			</if>
+			<if test=" consume_money !=null  ">
+				and consume_money = #{consume_money}
+			</if>
+			<if test=" consume_time !=null  ">
+				and consume_time = #{consume_time, jdbcType=DATE}
+			</if>
+		</where> 
+	</select>
+
+	<!-- 根据Map来查询 -->
+	<select id="findConsumeDetailInfoListByMap" parameterType="java.util.Map" resultMap="baseResultMap">
+		select <include refid="baseColumn"/>
+		from consume_detail_info 
+		<where>
+			<if test="id !=null ">
+				id=#{id}
+			</if>
+			<if test=" userName !=null and userName != '' ">
+				and user_name = #{userName}
+			</if>
+			<if test=" endTime !=null ">
+				and <![CDATA[consume_time <= #{endTime}]]>	
+			</if>
+			<if test=" startTime !=null ">
+				and <![CDATA[consume_time >= #{startTime}]]>	
+			</if>
+			<if test=" consumeId !=null and consumeId != '' ">
+				and consume_id = #{consumeId}
+			</if>
+			<if test=" consume_money !=null ">
+				and consume_money = #{consume_money}
+			</if>
+			<if test=" remark !=null and remark != '' ">
+				<bind name="likeRemark" value=" '%'+remark+'%' "/>
+				and remark like #{likeRemark}
+			</if>
+		</where> 
+		order by id  
+		<include refid="page_conditionn_limit"></include>
+	</select>
+	
+	<!-- 查询总数 -->
+	<select id="findConsumeDetailInfoCountByMap" parameterType="java.util.Map" resultType="Integer">
+		select count(1) 
+		from consume_detail_info 
+		<where>
+			<if test="id !=null ">
+				id=#{id}
+			</if>
+			<if test=" userName !=null and userName != '' ">
+				and user_name = #{userName}
+			</if>
+			<if test=" endTime !=null ">
+				and <![CDATA[consume_time <= #{endTime}]]>	
+			</if>
+			<if test=" startTime !=null ">
+				and <![CDATA[consume_time >= #{startTime}]]>	
+			</if>
+			<if test=" consumeId !=null and consumeId != '' ">
+				and consume_id = #{consumeId}
+			</if>
+			<if test=" consume_money !=null ">
+				and consume_money = #{consume_money}
+			</if>
+			<if test=" remark !=null and remark != '' ">
+				<bind name="likeRemark" value=" '%'+remark+'%' "/>
+				and remark like #{likeRemark}
+			</if>
+		</where> 
+	</select>
+	
+	<!-- 插入数据 -->
+	<insert id="saveConsumeDetail" parameterType="com.cxp.personalmanage.pojo.consumer.ConsumeDetailInfo">
+		insert into consume_detail_info  
+		(user_name,consume_time,consume_money,consume_id,remark,create_time,create_user,update_time,update_user)  
+		values (#{userName},#{consume_time},#{consume_money},#{consumeId},#{remark},#{create_time},#{create_user},#{update_time},#{update_user})
+	</insert>
+	
+	<!-- 更新数据 -->
+	<update id="updateConsumeDetailInfoById" parameterType="com.cxp.personalmanage.pojo.consumer.ConsumeDetailInfo">
+		update consume_detail_info 
+		<set>
+			<if test=" userName !=null and userName != '' ">
+				 user_name = #{userName},
+			</if>
+			<if test=" consume_time !=null ">
+				 consume_time = #{consume_time} ,
+			</if>
+			<if test=" consumeId !=null and consumeId != '' ">
+				 consume_id = #{consumeId},
+			</if>
+			<if test=" consume_money !=null ">
+				 consume_money = #{consume_money},
+			</if>
+			<if test=" remark !=null and remark != '' ">
+				 remark = #{remark},
+			</if>
+			<if test=" update_time !=null ">
+				 update_time = #{update_time} ,
+			</if>
+			<if test=" update_user !=null and update_user != '' ">
+				 update_user = #{update_user} ,
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- 根据主键id查询 -->
+	<select id="getConsumeDetailInfoById" parameterType="Integer" resultMap="baseResultMap">
+		select <include refid="baseColumn"/>
+			from consume_detail_info where id = #{id}
+	</select>
+	
+	<!-- 批量插入 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		insert into consume_detail_info  
+		(user_name,consume_time,consume_money,consume_id,remark,create_time,create_user,update_time,update_user)  
+		values 
+		<foreach collection="list" item="obj" separator=",">
+			(#{obj.userName},#{obj.consume_time},#{obj.consume_money},#{obj.consumeId},#{obj.remark},
+			 #{obj.create_time},#{obj.create_user},#{obj.update_time},#{obj.update_user})
+		</foreach>
+	</insert>
+	
+	
+</mapper>

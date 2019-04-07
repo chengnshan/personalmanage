@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cxp.personalmanage.mapper.postgresql.ConsumeChannelInfoMapper">
+
+    <resultMap id="baseResultMap" type="com.cxp.personalmanage.pojo.consumer.ConsumeChannelInfo">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="channel_code" column="channel_code" jdbcType="VARCHAR"/>
+        <result property="channel_name" column="channel_name" jdbcType="VARCHAR"/>
+        <result property="channel_remark" column="channel_remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="baseColumn">
+        id,channel_code,channel_name,channel_remark
+    </sql>
+
+    <!--根据对象属性查询列表-->
+    <select id="findConsumeChannelList" resultMap="baseResultMap" parameterType="com.cxp.personalmanage.pojo.consumer.ConsumeChannelInfo">
+      select <include refid="baseColumn"/>
+        from consume_channel_info
+        <where>
+            <if test="channel_code !=null and channel_code != '' ">
+                channel_code = #{channel_code}
+            </if>
+            <if test="channel_name !=null and channel_name != '' ">
+                channel_name = #{channel_name}
+            </if>
+            <if test="channel_remark !=null and channel_remark != '' ">
+                <bind name="likeRemark" value="'%'+channel_remark+'%'"/>
+                and channel_remark like #{likeRemark}
+            </if>
+        </where>
+    </select>
+
+    <!--根据id查询-->
+    <select id="findConsumeChannelById" resultMap="baseResultMap" parameterType="java.lang.Integer">
+        select <include refid="baseColumn"/>
+        from consume_channel_info
+        where id = #{id}
+    </select>
+
+    <!--根据code查询-->
+    <select id="findConsumeChannelByCode" resultMap="baseResultMap" parameterType="java.lang.String">
+        select <include refid="baseColumn"/>
+        from consume_channel_info
+        where channel_code = #{channel_code}
+    </select>
+</mapper>

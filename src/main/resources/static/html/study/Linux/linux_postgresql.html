@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>linux_postgresql</title>
+<link rel="stylesheet" type="text/css" href="../../../js/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../js/bootstrap/font-awesome/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../js/bootstrap/css/local.css" />
+
+<link id="themecss" rel="stylesheet" type="text/css" href="../../../js/bootstrap/css/all.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../js/bootstrap/css/theme.css" />
+<link rel="stylesheet" type="text/css" href="../../../js/bootstrap/css/dashboard.css" />
+    
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+<!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+<!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+     <style type="text/css">
+    	p,li{
+			font-size:16px;
+		}
+		.post-directory {
+		    font-size: 14px;
+		    background: #fff;
+		    box-shadow: 0 2px 10px 2px rgba(0, 0, 0, 0.2);
+		    width: 262px;
+		}
+		
+		.post-directory dt, dd{
+		    border-left: 5px solid #666;
+		    cursor: pointer;
+		    padding: 2px 5px 2px 15px;
+		}
+		
+		.post-directory a{
+		    text-decoration: none;
+		    display: inline-block;
+		    width: 100%;
+		}
+		
+		.post-directory dt:hover, dd:hover {
+		    background: #666;
+		    border-left: 5px solid #111;
+		}
+		
+		.post-directory dt:hover a, dd:hover a {
+		    font-weight: bold;
+		    color: #fff;
+		}
+		
+		.col-md-3 {
+		    position: static; /* fix strange behavior */
+		}
+		
+		* {
+			    margin: 0;
+			    padding: 0;
+			    font-family: Microsoft YaHei,"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+			}
+			
+			/** Header **/
+			.site-header{
+			    padding-top:20px;
+			    padding-bottom:20px;
+			    width: 100%;
+			    position: fixed;
+			    margin: 40px 0 30px 0;
+			    top: 0;
+			    left: 0 !important;
+			    right: 0;
+			    z-index: 103;
+			
+			    color: #000;
+			    background: #fff;
+			
+			    -webkit-transition: all 0.5s ease;
+			    -moz-transition: all 0.5s ease;
+			    -ms-transition: all 0.5s ease;
+			    -o-transition: all 0.5s ease;
+			    transition: all 0.5s ease;
+			}
+			
+			.site-header #site-header-brand {
+			    color: #2e2e2e;
+			    float: left;
+			}
+			.icon-play{fill: #000;}
+			.site-header a {
+			    text-decoration: none;
+			}
+			
+			.site-header a:hover {
+			    color: #4183c4;
+			}
+			
+			#site-header-brand, #site-header-brand .octicon {
+			    margin-top: 0;
+			    margin-bottom: 0;
+			    font-size: 38px;
+			    font-weight: 400;
+			    line-height: 38px;
+			}
+			
+			.site-header-nav{
+			    float:right;
+			    margin-bottom: -20px;
+			}
+			
+			.site-header-nav-item {
+			    color: #000;
+			    display:inline-block;
+			    padding:10px;
+			    margin-left:1.25rem;
+			    font-size: 20px;
+			}
+			
+			/******* Scroll Start *******/
+			.site-header {
+			    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+			}
+			
+			.icon-logo.site-header-nav-scrolled {fill: #000;}
+			
+			.site-header.site-header-nav-scrolled {
+			    margin: 0;
+			    background-color: white;
+			    -webkit-box-shadow: 0 0.125em 0.125em 0 rgba(0, 0, 0, 0.125);
+			    -moz-box-shadow: 0 0.125em 0.125em 0 rgba(0, 0, 0, 0.125);
+			    -ms-box-shadow: 0 0.125em 0.125em 0 rgba(0, 0, 0, 0.125);
+			    -o-box-shadow: 0 0.125em 0.125em 0 rgba(0, 0, 0, 0.125);
+			    box-shadow: 0 0.125em 0.125em 0 rgba(0, 0, 0, 0.125);
+			
+			}
+			
+			
+			/******* Scroll End *******/
+			
+			/******* Scroll Start on the phone *******/
+			.site-header {
+			    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+			}
+			
+			.icon-logo.site-header-nav-scrolled-ph {fill: #000;}
+			
+			.site-header.site-header-nav-scrolled-ph {
+			    margin-top: -160px;
+			
+			    -webkit-box-shadow: 0 0.125em 0.125em 0 rgba(0, 0, 0, 0.125);
+			    -moz-box-shadow: 0 0.125em 0.125em 0 rgba(0, 0, 0, 0.125);
+			    -ms-box-shadow: 0 0.125em 0.125em 0 rgba(0, 0, 0, 0.125);
+			    -o-box-shadow: 0 0.125em 0.125em 0 rgba(0, 0, 0, 0.125);
+			    box-shadow: 0 0.125em 0.125em 0 rgba(0, 0, 0, 0.125);
+			}
+			/******* Scroll End *******/
+			
+			/** Jumbotron **/
+			.jumbotron {
+			    padding-top: 200px;
+			    padding-bottom: 100px;
+			    color: #fff;
+			}
+			
+			.jumbotron a {
+			    color: #fff;
+			    text-decoration: none;
+			}
+			.jumbotron #jumbotron-meta-info {
+			    margin-top: 20px;
+			}
+			
+			.jumbotron .meta-info {
+			    font-size: 20px;
+			    margin-right: 15px;
+			    display: inline-block;
+			    vertical-align: middle;
+			    color: #2e2e2e;
+			}
+			
+			.jumbotron .meta-info-index {
+			    font-size: 12px;
+			    margin-right: 3px;
+			    display: inline-block;
+			    vertical-align: middle;
+			    color: #2e2e2e;
+			}
+			
+			.jumbotron.meta-info, .jumbotron .meta-info .octicon {
+			    font-size: 18px;
+			}
+			
+			/** Footer **/
+			.site-footer{
+			    position:relative;
+			    margin-top:40px;
+			    padding:40px 0;
+			    font-size:12px;
+			    line-height:1.5;
+			    color:#777;
+			    border-top:2px solid #eee
+			}
+			
+			.site-footer .octicon-mark-github {
+			    position: absolute;
+			    left: 50%;
+			    color: #ccc;
+			}
+			
+			.site-footer .octicon-mark-github:hover {
+			    color:#bbb;
+			}
+			
+			/** Post List **/
+			.post-list-item {
+			    position: relative;
+			    padding-top: 30px;
+			    padding-bottom: 30px;
+			    list-style: none;
+			    border-bottom: 1px solid #eee;
+			}
+			
+			.post-list-title a {
+			    text-decoration: none;
+			}
+			
+			.post-list-description {
+			    margin-top: 8px;
+			    margin-bottom: 0;
+			    font-size: 18px;
+			    color: #666;
+			}
+			
+			.post-list-meta {
+			    margin-top: 8px;
+			    margin-bottom: 0;
+			    color: #888;
+			}
+			
+			.post-list-meta, .post-list-meta.octicon {
+			    font-size: 18px;
+			}
+			
+			.geopattern {
+			    background-size: contain; /* To fix strange behavior when zoom in/out */
+			}
+			
+			.sidebar-title {
+			    text-align: center;
+			}
+			
+			.center {
+			  text-align: center;
+			  margin: 0 auto;
+			}
+			
+			.center img {
+			  max-width: 600px; 
+			  height: auto;
+			}
+			.site-footer-icons{
+			    line-height: 32px;
+			    text-align: center;
+			}
+			.site-footer-icons a{
+			    display: inline-block;
+			    margin: 0 2px;
+			    vertical-align: middle;
+			}
+			.site-footer-links {
+			    line-height: 32px;
+			    text-align: center;
+			}
+			.site-footer-links a{
+			    display: inline-block;
+			    margin: 0 2px;
+			    vertical-align: middle;
+			}
+			.site-footer .scrolltop{
+			    position: absolute;
+			    right: 0;
+			    top: 50%;
+			    margin-top: -16px;
+			    line-height: 32px;
+			}
+			.site-footer .rss{
+			    position: absolute;
+			    left: 0;
+			    top: 50%;
+			    margin-top: -16px;
+			    line-height: 32px;
+			}
+			
+			.markdown-body img {
+			    max-width: 600px; 
+			    height: auto;
+			    display: block;
+			    margin: 0 auto;
+			}
+			@media (max-width: 640px){
+			    .markdown-body img{
+			        max-width: 100%;
+			    }
+			}
+			.archives-list{ list-style: inside; }
+			.archives-list:after{ width: 100%; height: 0; font: 0/0 a; content: '.'; clear: both; overflow: hidden; }
+			.archives-list li{ width: 50%; line-height: 1.5; float: left; margin: 10px 0; }
+			.archives-list li span{ color: #666; }
+			.archives-list h3{ clear: both; margin: 0; padding: 20px 0 10px; }
+			.navbar-default,.navbar-inverse	{background-color: #464C5B;}
+    </style>
+    
+    <style>
+    /*全屏显示大图*/
+    .opacityBottom{
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        background:rgba(0,0,0,0.8);
+        z-index:1000;
+        top: 0;
+        left: 0
+    }
+    .none-scroll{
+        overflow: hidden;
+        height: 80%;
+    }
+    .bigImg{
+        width:60%;
+        height: 60%;
+        left:20%;
+        top:20%;
+        position:fixed;
+        z-index: 10001;
+    }
+</style>
+    
+    <script type="text/javascript" src="../../../js/common/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../../js/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    	
+    	$(function(){
+    		$(".image_click").click(function () {
+    		    var imgsrc = $(this).attr("src");
+    		    var opacityBottom = '<div id="opacityBottom" style="display: none"><img class="bigImg" src="'+ imgsrc +'" ></div>';
+    		    $(document.body).append(opacityBottom);
+    		    toBigImg();//变大函数
+    		});
+    	});
+    
+    function toBigImg(){
+
+        $("#opacityBottom").addClass("opacityBottom");
+        $("#opacityBottom").show();
+        $("html,body").addClass("none-scroll");//下层不可滑动
+        $(".bigImg").addClass("bigImg");
+        /*隐藏*/
+        $("#opacityBottom").bind("click",clickToSmallImg);
+        $(".bigImg").bind("click",clickToSmallImg);
+        var imgHeight = $(".bigImg").prop("height");
+        if(imgHeight < h){
+            $(".bigImg").css({"top":(h-imgHeight)/2 + 'px'});
+
+        }else{
+            $(".bigImg").css({"top":'0px'});
+        }
+        function clickToSmallImg() {
+            $("html,body").removeClass("none-scroll");
+            $("#opacityBottom").remove();
+        }
+    };
+    </script>
+</head>
+<body>
+	<div class="wrapper">
+			<nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+			    <div class="container"  style="background-color: #464C5B;">
+			        <div class="navbar-header">
+			            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+			                <span class="sr-only"></span>
+			                <span class="icon-bar"></span>
+			                <span class="icon-bar"></span>
+			                <span class="icon-bar"></span>
+			            </button>
+			            <a class="navbar-brand" href="#">导航栏</a>
+			        </div>
+			
+			        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="background-color: #464C5B;">
+			            <ul class="nav navbar-nav nav-pills">
+			                <li class=""><a href="#"></a></li>
+			                <li><a href="#">主页</a></li>
+			                <li class="dropdown">
+			                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Linux系统<span class="caret"></span></a>
+			                    <ul class="dropdown-menu">
+			                        <li><a href="##">Linux命令</a></li>
+			                        <li><a href="linux_postgresql.html">Linux安装Postgresql</a></li>
+			                        <li><a href="##">Linux安装Mysql</a></li>
+			                        <li><a href="##">Linux安装Nginx</a></li>
+			                    </ul>
+			                </li>
+			              <!--   <li><a href="#">教育</a></li> -->
+			            </ul>
+			        </div>
+			    </div>
+		</nav>
+		
+		<div class="container" >
+				<script>
+				    $(document).ready(function(){
+				
+				        $('.geopattern').each(function(){
+				            $(this).geopattern($(this).data('pattern-id'));
+				        });
+				
+				    });
+				</script>
+				<br/>
+		<article class="post container" itemscope itemtype="http://schema.org/BlogPosting">
+		    <div class="row">
+		        <div class="col-md-10 markdown-body">
+		            <p></p>
+					<h2 id="redis介绍">PostgreSql介绍</h2>
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PostgreSQL是一个功能强大的开源数据库系统。经过长达15年以上的积极开发和不断改进，PostgreSQL已在可靠性、稳定性、数据一致性等
+			获得了业内极高的声誉。目前PostgreSQL可以运行在所有主流操作系统上，包括Linux、Unix（AIX、BSD、HP-UX、SGI IRIX、Mac OS X、Solaris
+			和Tru64）和Windows。PostgreSQL是完全的事务安全性数据库，完整地支持外键、联合、视图、触发器和存储过程（并支持多种语言开发存储过程）。
+			它支持了大多数的SQL:2008标准的数据类型，包括整型、数值值、布尔型、字节型、字符型、日期型、时间间隔型和时间型，它也支持存储二进制的大对像，
+			包括图片、声音和视频。PostgreSQL对很多高级开发语言有原生的编程接口，如C/C++、Java、.Net、Perl、Python、Ruby、Tcl 和ODBC
+			以及其他语言等，也包含各种文档。
+			<br/>
+			<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;作为一种企业级数据库，PostgreSQL以它所具有的各种高级功能而自豪，像多版本并发控制(MVCC)、按时间点恢复(PITR)、表空间、异步复制、
+			嵌套事务、在线热备、复杂查询的规划和优化以及为容错而进行的预写日志等。它支持国际字符集、多字节编码并支持使用当地语言进行排序、
+			大小写处理和格式化等操作。它也在所能管理的大数据量和所允许的大用户量并发访问时间具有完全的高伸缩性。
+			目前已有很多PostgreSQL的系统在实际生产环境下管理着超过4TB的数据。一些PostgreSQL系统的极限值如下表所列：
+		</p>
+		
+		<h2 id="如何使用">Linux安装Postgresql(tar包安装)</h2>
+		
+		<h3 style="color:blue;"><span>1、tar包下载</span></h3>
+		
+		<div class="language-xml highlighter-rouge">
+			 <div class="row">
+			 	<div class="col-xs-8">
+					<img src="../../../image/study/linux/linux_postgresql1.png" class="image_click"/>
+				</div>
+				<div class="col-xs-4"></div>
+			 </div>
+			<div class="row">
+				<div class="col-xs-8">
+					<img src="../../../image/study/linux/linux_postgresql2.png"  class="image_click"/>
+				</div>
+				<div class="col-xs-4"></div>
+			</div>
+			<div class="row">
+				<p>如上图，可以看到提供了两种压缩格式，此处我们选择postgresql-9.5.5.tar.gz，下载完成后上传至CentOS服务器的指定目录即可。</p>
+			</div>	
+		</div>
+		<br/>
+		<h3 style="color:blue;">2、配置编译安装</h3>
+		<p>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;首先进入pg压缩包目录通过tar -zxvf ./postgresql-9.5.5.tar.gz进行解压，
+		然后就可以开始编译安装了，进入解压目录，
+		通过./configure --help可以看到编译相关的帮助信息，如下图：</p>
+		<div class="row">
+			<div class="col-xs-8" style="border:0px red solid;text-align:left;">
+				<img src="../../../image/study/linux/linux_postgresql3.png"  class="image_click">
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+		<div  class="row">
+			<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如上图，--prefix=dir可以指定安装目录，
+			还有比如--with-python则可以使用python语法的PL/Python过程语言自定义函数，
+			根据需求我们暂且用不到，所以编译时仅指定一个安装目录即可：</p>
+			<p><span style="font-size:15px;font-weight:bold;color:red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			 ./configure --prefix=/usr/local/postgresql</span></p>
+			 
+			 <p>运行编译后发现会提示没有c编译器，是因为新系统的原因，所以安装一个gcc编译器即可：</p>
+			 <p><span style="font-size:15px;font-weight:bold;color:red;">
+			 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	yum  -y  install gcc   <br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	yum  -y  install readline-devel	<br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	yum  -y  install zlib-devel	<br/></span></p>
+			<p>安装完成后再次编译postgresql，并没有再报error，可以看到提示创建了config.status配置文件：</p>
+		</div>
+		<div class="row">
+			<div class="col-xs-8" style="border:0px red solid;text-align:left;">
+				<img src="../../../image/study/linux/linux_postgresql4.png"  class="image_click">
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+		<div class="row">
+			<p>配置完成了，接下来就可以编译安装了，依次执行：</p>
+			<p><span style="font-size:15px;font-weight:bold;color:red;">
+			 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	make   <br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	make install	<br/></span></p>
+			<p>看到如下提示即可说明编译安装成功：</p>
+			<p><img src="../../../image/study/linux/linux_postgresql5.png" class="image_click"></p>
+			<p><img src="../../../image/study/linux/linux_postgresql6.png" class="image_click"></p>
+		</div>
+		
+		<h3 style="color:blue;">3、用户权限与环境变量</h3>
+		
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;编译安装成功后，接下来要做的就是创建一个普通用户，因为默认超级用户（root）不能启动postgresql，
+		所以需要创建一个普通用户来启动数据库，执行以下命令创建用户：</p>
+		
+		<p><span style="font-size:15px;font-weight:bold;color:red;">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	useradd  postgres	<br/></span></p>
+		
+		<p>接下来需要设置权限，将postgres的数据目录全部赋权给postgres用户（此处我将postgres的数据目录指定在在/usr/local/postgresql/data目录下）：</p>
+		<p><span style="font-size:15px;font-weight:bold;color:red;">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	chown -R postgres:postgres /usr/local/postgresql/	<br/></span></p>
+		
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;最后为了方便起见设置一下相关的环境变量，此处仅仅设置postgres用户的环境变量，
+		所以首先通过su - postgres切换到postgres用户，打开.bash_profile文件并追加以下内容： </p>
+		
+		<p><span style="font-size:15px;font-weight:bold;color:red;">
+			 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	su - postgres   <br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	vim /home/postgres/.bash_profile	<br/></span></p>
+		
+		<pre style="background-color: #000000;font-size:14px;">
+			<span style="color:blue;"># User specific environment and startup programs</span>
+			<span style="color:#00A6A5;">PGHOME</span><span style="color:white;">=/usr/<span style="color:#837C00;">local</span>/postgresql</span>
+			<span style="color:#837C00;">export</span><span style="color:#00A6A5;"> PGHOME</span>
+			<span style="color:#00A6A5;">PGDATA</span><span style="color:white;">=/usr/<span style="color:#837C00;">local</span>/postgresql/data</span>
+			<span style="color:#837C00;">export</span> <span style="color:#00A6A5;">PGDATA</span>
+			
+			<span style="color:#00A6A5;">PATH</span>=<span style="color:white;"><span style="color:#4A0081;">$PATH:$HOME</span>/.local/bin:<span style="color:#4A0081;">$HOME</span>/bin:<span style="color:#4A0081;">$PGHOME</span>/bin</span>
+			
+			<span style="color:#837C00;">export</span> <span style="color:#00A6A5;">PATH</span>
+		</pre>
+		<div class="row">
+			<div class="col-xs-8" style="border:0px red solid;text-align:left;">
+				<img src="../../../image/study/linux/linux_postgresql7.png" class="image_click">
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+		<div class="row">
+			<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;修改完成后可以通过source  /home/postgres/.bash_profile使其立即生效，
+			接下来检验一下环境变量是否设置正确，切换任意目录输入which psql以及psql -V即可分别查看psql客户端的路径以及postgresql的数据库版本，
+			如下图：</p>
+			
+		</div>
+		<div class="row">
+			<div class="col-xs-8" style="border:0px red solid;text-align:left;">
+				<img src="../../../image/study/linux/linux_postgresql8.png" class="image_click">
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+		<p>一切准备就绪之后接下来就可以初始化数据库了。</p>
+		<br/>
+		
+		<h3 style="color:blue;">4、初始化数据库</h3>
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由于配置了环境变量，所以此处我们直接执行initdb即可完成db初始化，但在这之前我们可以通过initdb --help看一下初始化相关的帮助信息：</p>
+		<div class="row">
+			<div class="col-xs-8" style="border:0px red solid;text-align:left;">
+				<img src="../../../image/study/linux/linux_postgresql9.png" class="image_click">
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+		<br/>
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如上图，可以看到在使用initdb进行初始化的同时我们可以指定参数来同时进行一些初始化工作，例如指定pgdata（postgresql数据目录）、
+		指定encoding（编码）、指定数据库超级用户的用户名和密码等等，在最后面我标记出的这段话指出了如果data目录没有指定，
+		则会默认使用环境变量中的PGDATA，由于之前我们刚刚设置了PGDATA环境变量，所以此处我们也就无需再额外指定，最后执行初始化命令即可：</p>
+		<p style="color:red;font-weight:bold;font-size:18px;">initdb</p>
+		<p>看到如下信息就说明初始化成功了：</p>
+		<div class="row">
+			<div class="col-xs-8" style="border:0px red solid;text-align:left;">
+				<img src="../../../image/study/linux/linux_postgresql10.png" class="image_click">
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+		<br/>
+		<p>同时在postgresql的目录可以看到生成的数据目录data以及该目录的相关数据和配置文件：</p>
+		<div class="row">
+			<div class="col-xs-8" style="border:0px red solid;text-align:left;">
+				<img src="../../../image/study/linux/linux_postgresql11.png" class="image_click">
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+		<div class="row">
+			<div class="col-xs-8" style="border:0px red solid;text-align:left;">
+				<img src="../../../image/study/linux/linux_postgresql12.png" class="image_click">
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+		<br/>
+		
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如上图，base目录是表空间目录，global目录是相关全局变量的目录，
+		pg_hba.conf和postgresql.conf在之前的博客也都提及了，<span style="color:blue;">一个是访问控制配置（127.0.0.1改为信任的客户端ip网段使其可以远程访问），
+		一个是postgresql主配置文件（listen_address=localhost改为星号使其监听整个网络）</span>，方便起见我这里将pg_hba.conf的ip地址修改为0.0.0.0/0，
+		而加密方式改为md5，就表示需要密码访问，算是提供一个最低级的安全防护： </p>
+		<div class="row">
+			<div class="col-xs-8" style="border:0px red solid;text-align:left;">
+				<img src="../../../image/study/linux/linux_postgresql13.png" class="image_click">
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+		<div class="row">
+			<div class="col-xs-8" style="border:0px red solid;text-align:left;">
+				<img src="../../../image/study/linux/linux_postgresql14.png" class="image_click">
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+		
+		<br/>
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;最后别忘记开放pg的5432端口，否则即使做了上面两处修改客户端依然无法连接postgresql，
+		所以将5432端口加入到zone即可，依次运行以下命令（注意此处需要切回root用户，否则没有权限）：</p>
+		
+		<p><span style="font-size:15px;font-weight:bold;color:red;">
+			 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	firewall-cmd --zone=public --add-port=5432/tcp --permanent   <br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	firewall-cmd --reload	<br/></span></p>
+		
+		<p>至此配置相关的内容就全部完成了，最后就是启动并连接数据库了。</p>
+		
+		
+		<h3 style="color:blue;">5、启动和连接</h3>
+		<p>在初始化数据库结束时我们已经看到了启动命令，如下图：</p>
+		<div class="row">
+			<div class="col-xs-8" style="border:0px red solid;text-align:left;">
+				<img src="../../../image/study/linux/linux_postgresql15.png" class="image_click">
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+		
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由于我们设置了环境变量，所以已经指定了数据目录PGDATA，-l表示日志文件目录，
+		通常需要指定，所以我们在/usr/local/postgresql根目录下用postgresql用户再创建一个log目录用来存放日志文件（注意别忘记赋予可写的权限），</p>
+		
+		<pre style="font-size:15px;">启动数据库:
+<span style="color:red;">/usr/local/postgresql/bin/pg_ctl  start  -D  /usr/local/postgresql/data/  -l  /usr/local/postgresql/log/log_server.log</span>
+		</pre>
+		<div class="row">
+			<div class="col-xs-8" style="border:0px red solid;text-align:left;">
+				<img src="../../../image/study/linux/linux_postgresql16.png" class="image_click">
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+		<br/>
+		<br/>
+		<p>最后运行pg_ctl start -l /usr/local/postgresql/log/pg_server.log即可启动数据库，看到如下提示就说明启动成功了：</p>
+		<div class="row">
+			<div class="col-xs-8" style="border:0px red solid;text-align:left;">
+				<img src="../../../image/study/linux/linux_postgresql18.png" class="image_click">
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+		<br/>
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;启动成功后我们就可以通过postgresql自带的客户端工具psql来进行连接，直接输入psql看到版本信息则说明连接成功：</p>
+		<p>而在日志文件目录中可以看到数据库日志文件以及刚才的启动日志：</p>
+		<div class="row">
+			<div class="col-xs-8" style="border:0px red solid;text-align:left;">
+				<img src="../../../image/study/linux/linux_postgresql19.png" class="image_click">
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+		<br/>
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;接下来要做的第一件事就是设置postgres用户的密码（默认为空），用psql连接成功后直接输入\password即会提示输入两次密码，如下图：</p>
+		<div class="row">
+			<div class="col-xs-8" style="border:0px red solid;text-align:left;">
+				<img src="../../../image/study/linux/linux_postgresql20.png" class="image_click">
+			</div>
+			<div class="col-xs-4"></div>
+		</div>
+		<br/>
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;此处我们暂且将密码修改为111111，通过\l命令即可查看数据库列表，
+		关于psql工具的使用在此处就不再做过多赘述。最后也是最重要的一点就是验证非本地客户端工具的连接了，
+		毕竟我们是要做数据库服务器的，这里我选择的工具是Navicat Premium，
+		在主机（Windows7）打开Navicat与虚拟机中的postgresql服务器进行连接测试： 
+		</p>
+		<br/>
+		<p></p>
+		<p></p>
+		<p></p>
+		<p></p>
+		
+		
+		
+	<!-- copyright -->
+	<div>
+	</div>
+		            <!-- Comments -->
+		          <div class="comment">
+		  
+		    <div id="disqus_thread"></div>
+		    <script>
+		    var disqus_config = function () {
+		        this.page.url = '';
+		        this.page.identifier = '';
+		        this.page.title = 'Linux下安装Postgresql';
+		    };
+		    var disqus_loaded = false;
+		    $(function() {
+		       
+		    })
+		    </script>
+
+		        <div id="gitalk-container"></div>
+
+		        	</div>
+		        </div>	
+		        <div class="col-md-2">
+					<div id="post-directory-module">
+						<section class="post-directory">
+						    <dl></dl>
+						</section>
+					</div>
+		
+					<script type="text/javascript">
+					
+					    $(document).ready(function(){
+					        $( "article h2" ).each(function( index ) {
+					            $(".post-directory dl").append("<dt><a class=\"jumper\" hre=#" +
+					                    $(this).attr("id")
+					                    + ">"
+					                    + $(this).text()
+					                    + "</a></dt>");
+					
+					            var children = $(this).nextUntil("h2", "h3")
+					
+					            children.each(function( index ) {
+					                $(".post-directory dl").append("<dd><a class=\"jumper\" hre=#" +
+					                        $(this).attr("id")
+					                        + ">"
+					                        + "&nbsp;&nbsp;- " + $(this).text()
+					                        + "</a></dd>");
+					            });
+					        });
+					
+					        var fixmeTop = $('#post-directory-module').offset().top - 100;       // get initial position of the element
+					
+					        $(window).scroll(function() {                  // assign scroll event listener
+					
+					            var currentScroll = $(window).scrollTop(); // get current position
+					
+					            if (currentScroll >= fixmeTop) {           // apply position: fixed if you
+					                $('#post-directory-module').css({      // scroll to that element or below it
+					                    top: '100px',
+					                    position: 'fixed',
+					                    width: 'inherit'
+					                });
+					            } else {                                   // apply position: static
+					                $('#post-directory-module').css({      // if you scroll above it
+					                    position: 'inherit',
+					                    width: 'inherit'
+					                });
+					            }
+					
+					        });
+					
+					        $("a.jumper").on("click", function( e ) {
+					            e.preventDefault();
+					            $("body, html").animate({
+					                scrollTop: ($( $(this).attr('hre') ).offset().top - 100)
+					            }, 600);
+					
+					        });
+					    });
+					
+					</script>
+		        </div>
+		    </div>
+		
+		</article>
+		</div>
+		
+	</div>
+</body>
+</html>

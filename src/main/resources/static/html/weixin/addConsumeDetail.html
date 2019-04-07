@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<link rel="stylesheet" type="text/css" href="../../js/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="../../js/common/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css" />
+<link rel="stylesheet" type="text/css" href="../../js/common/bootstrap-select-1.12.4/css/bootstrap-select.min.css">
+
+<style type="text/css">
+	
+</style>
+<title>添加个人收支</title>
+</head>
+<body >
+	<div class="container">
+		<div class="row"><h3 style="text-align: center;">添加个人收支</h3></div>
+		<div class="col-xs-1"></div>
+		
+		<div class="col-xs-8">
+			<form class="form-horizontal" role="form">
+			<div class="row">
+				<div class="form-group has-success">
+					<label for="firstname" class="col-xs-3 control-label" style="text-align:right;vertical-align: middle;">用&nbsp;户&nbsp;名:</label>
+					<div class="col-xs-9">
+						<input type="text" class="form-control" id="username" placeholder="请输入用户名">
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="form-group has-success">
+					<label for="lastname" class="col-xs-3 control-label" style="text-align:right;vertical-align: middle;">消费时间:</label>
+					<div class="col-xs-9">
+						<input type="text" class="datetimepicker form-control" id="consume_time" name="consume_time" placeholder="请输入消费时间">
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="form-group row has-success">
+					<label for="lastname" class="col-xs-3 control-label" style="text-align:right;vertical-align: middle;">消费类型:</label>
+					<div class="col-xs-9" style="border:0px red solid;" >
+						<select class="selectpicker form-control" data-style="btn-default" id="consume_type" name="consume_type" data-live-search="true">
+							<option value="">请选择</option>
+							<option value="house">房租消费(住)</option>
+							<option value="life">生活消费(食)</option>
+							<option value="transport">交通消费(行)</option>
+							<option value="clothes">衣服消费(衣)</option>
+							<option value="other">其它消费</option>
+                       	</select>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="form-group row has-success">
+					<label for="lastname" class="col-xs-3 control-label" style="text-align:right;vertical-align: middle;">消费金额:</label>
+					<div class="col-xs-9" style="border:0px red solid;">
+						<input type="text" class="form-control" id="consume_money" name="consume_money" placeholder="请输入消费金额">
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="form-group row has-success">
+					<label for="lastname" class="col-xs-3 control-label" style="text-align:right;vertical-align: middle;">&nbsp;备&nbsp;&nbsp;注&nbsp;:</label>
+					<div class="col-xs-9">
+						<textarea class="form-control" id="remark" placeholder="请输入备注"></textarea>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="form-group has-success">
+					<div class="col-xs-offset-2 col-sm-10">
+						<button type="submit" class="btn btn-primary" id="save">提交</button> 
+						<label style="width:5px;"></label>
+						<button type="submit" class="btn btn-info" id ="reset">重置</button>
+					</div>
+				</div>
+			</div>
+			
+		</form>
+		</div>
+		
+		<div class="col-xs-1"></div>
+		
+	</div>
+</body>
+<!-- <script type="text/javascript" src="../../js/common/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="../../js/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../js/common/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="../../js/common/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript" src="../../js/common/bootstrap-select-1.12.4/js/bootstrap-select.min.js"></script> -->
+<script type="text/javascript" src="../../js/common/require.js" data-main="../../js/myjs/weixin/addConsumeDetail.js"></script>
+</html>

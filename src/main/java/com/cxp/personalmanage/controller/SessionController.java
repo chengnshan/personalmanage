@@ -150,4 +150,68 @@ public class SessionController extends BaseController{
 		}
 		return null;
 	}
+
+	@RequestMapping(value = "/findOnlineUserListByEasyui")
+	@ResponseBody
+	@RequiresRoles(value = {"admin"},logical = Logical.AND)
+	public String findOnlineUserListByEasyui(String userName,@RequestParam(defaultValue = "1",required = false) String currentPage) {
+		logger.info("findOnlineUserListByEasyui 入参 : " + userName);
+
+		Map<String,Object> map=new HashMap<>();
+		Collection<Session> activeSessions = redisSessionDAO.getActiveSessions();
+
+		//获取已经登录的用户
+		if(CollectionUtils.isNotEmpty(activeSessions)) {
+			map.put("total", activeSessions.size());
+		}
+
+		Map<String, Object> onlineMap = null;
+		List<Map<String, Object>> onlineList = new ArrayList<>();
+		String sessionStr = null;
+		for (Session session : activeSessions) {
+			onlineMap = new HashMap<>();
+			onlineMap.put("sessionId", session.getId());
+			onlineMap.put("host", session.getHost());
+			onlineMap.put("startTimestamp", session.getStartTimestamp());
+			onlineMap.put("lastAccessTime", session.getLastAccessTime());
+			String key = Constant.REDISDAO_LOGIN_PREFIX + session.getId();
+			IRedisManager redisManager = redisSessionDAO.getRedisManager();
+			try {
+				SimpleSession deserialize = (SimpleSession) redisSessionDAO.getValueSerializer()
+						.deserialize(redisManager.get(key.getBytes()));
+				SimplePrincipalCollection attribute = (SimplePrincipalCollection) deserialize
+						.getAttribute("org.apache.shiro.subject.support.DefaultSubjectContext_PRINCIPALS_SESSION_KEY");
+				if(attribute != null) {
+					UserInfo userInfo = new UserInfo();
+					try {
+						BeanUtils.copyProperties(userInfo, attribute.getPrimaryPrincipal());
+					} catch (IllegalAccessException | InvocationTargetException e) {
+						e.printStackTrace();
+					}
+					logger.info(userInfo.toString());
+					onlineMap.put("userInfo", userInfo);
+					onlineMap.put("userName",userInfo.getUserName());
+					onlineMap.put("realName",userInfo.getRealName());
+
+					onlineList.add(onlineMap);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		//根据onlineList分页数据
+		int size = onlineList.size();
+		List<Map<String, Object>> onlineListPage = new ArrayList<>();
+		if(size > 10){
+			for(int i = (Integer.parseInt(currentPage)-1)* Constant.ROWS; i< Integer.parseInt(currentPage)*10 ; i++){
+				onlineListPage.add(onlineList.get(i));
+			}
+		}else{
+			onlineListPage.addAll(onlineList);
+		}
+		map.put("rows", onlineListPage);
+//		sessionStr = JackJsonUtil.objectToString(map);
+
+		return JackJsonUtil.objectToString(map);
+	}
 }

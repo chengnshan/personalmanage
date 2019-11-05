@@ -41,7 +41,7 @@ grant all on userInfo to chengxp;
 
 --==========================================================================================
 --==========================================================================================
---mysql的sql脚本
+-- mysql的sql脚本
 
 create table if not exists userinfo (
 	 id int not null AUTO_INCREMENT,
@@ -59,12 +59,12 @@ create table if not exists userinfo (
 );
 SELECT * from userinfo;
 
---序列授权
+-- 序列授权
 grant all on userinfo to chengxp;
 
---表说明
+-- 表说明
 ALTER TABLE  userinfo COMMENT = '用户信息表';
---表字段说明
+-- 表字段说明
 ALTER table userinfo MODIFY column  username varchar(50) COMMENT '用户名';
 ALTER table userinfo MODIFY column `PASSWORD` VARCHAR(128) COMMENT '密码';
 ALTER table userinfo MODIFY column salt VARCHAR(50), COMMENT '盐';
@@ -75,7 +75,7 @@ ALTER table userinfo MODIFY column create_user VARCHAR(50) COMMENT '创建人';
 ALTER table userinfo MODIFY column create_time date COMMENT '创建时间';
 ALTER table userinfo MODIFY column update_user VARCHAR(50) COMMENT '修改人';
 ALTER table userinfo MODIFY column update_time date COMMENT '修改时间';
---添加索引
+-- 添加索引
 create index index_userinfo_username on userinfo(username);
---添加唯一约束
+-- 添加唯一约束
 alter table userinfo add CONSTRAINT unique_userinfo_username UNIQUE(username);

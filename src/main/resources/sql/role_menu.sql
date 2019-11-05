@@ -39,7 +39,7 @@ grant all on role_menu_info to chengxp;
 
 --==========================================================================================
 --==========================================================================================
---mysql创建表
+-- mysql创建表
 create table if not exists role_menu_info (
 	 id int not null AUTO_INCREMENT,
 	 roleId varchar(50) not null,
@@ -53,9 +53,9 @@ create table if not exists role_menu_info (
 );
 
 grant all on role_menu_info to chengxp;
---表说明
+-- 表说明
 ALTER table role_menu_info COMMENT = '角色菜单对应表';
---表字段说明
+-- 表字段说明
 ALTER table role_menu_info MODIFY column roleId varchar(50) COMMENT '角色id';
 ALTER table role_menu_info MODIFY column menuId VARCHAR(128) COMMENT '菜单id';
 ALTER table role_menu_info MODIFY column enable smallint COMMENT '是否有效(1有效,0无效)';

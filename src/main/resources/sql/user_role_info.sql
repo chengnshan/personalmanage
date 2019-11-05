@@ -25,7 +25,7 @@ grant all on user_role_info to chengxp;
 
 --==========================================================================================
 --==========================================================================================
---mysql
+-- mysql
 create table if not exists user_role_info (
 	  id int not null AUTO_INCREMENT,
 	 roleid varchar(50) not null,
@@ -38,12 +38,12 @@ create table if not exists user_role_info (
 	constraint user_role_info_primary_key_id primary key (id)
 );
 
---序列授权
+-- 序列授权
 grant all on user_role_info to chengxp;
 
---表说明
+-- 表说明
 ALTER TABLE user_role_info COMMENT = '用户角色对应关系表';
---表字段说明
+-- 表字段说明
 ALTER table user_role_info MODIFY column roleid varchar(50) COMMENT '角色id';
 ALTER table user_role_info MODIFY column username VARCHAR(50) COMMENT '角色名';
 ALTER table user_role_info MODIFY column enable smallint COMMENT '是否有效(1有效,0无效)';

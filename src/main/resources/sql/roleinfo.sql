@@ -35,7 +35,7 @@ grant all on roleinfo to chengxp;
 
 --==========================================================================================
 --==========================================================================================
---mysql创建表
+-- mysql创建表
 create table if not exists roleinfo (
 	 id int not null AUTO_INCREMENT,
 	 roleId varchar(50) not null,
@@ -50,9 +50,9 @@ create table if not exists roleinfo (
 );
 
 grant all on roleinfo to chengxp;
---表说明
+-- 表说明
 ALTER table roleinfo COMMENT = '角色信息表';
---表字段说明
+-- 表字段说明
 ALTER table roleinfo  MODIFY column roleId varchar(50) COMMENT '角色id';
 ALTER table roleinfo  MODIFY column roleName varchar(50) COMMENT '角色名';
 ALTER table roleinfo  MODIFY column description  VARCHAR(200) COMMENT '角色描述';

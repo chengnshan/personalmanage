@@ -28,7 +28,7 @@ insert into consume_type_info (consume_id,consume_name,remark) values ('otherCos
 
 --==========================================================================================
 --==========================================================================================
---mysql的sql脚本
+-- mysql的sql脚本
 CREATE table if NOT EXISTS consume_type_info(
 	id int not null AUTO_INCREMENT,
 	consume_id VARCHAR(30) not null,
@@ -38,16 +38,16 @@ CREATE table if NOT EXISTS consume_type_info(
 	constraint consume_type_primary_key_id primary key (id)
 );
 
---表授权
+-- 表授权
 grant all on consume_type_info to chengxp;
 
---表说明
+-- 表说明
 ALTER TABLE consume_type_info COMMENT = '消费类型表';
---表字段说明
+-- 表字段说明
 ALTER table consume_type_info MODIFY column consume_id varchar(30) COMMENT '消费类型id';
 ALTER table consume_type_info MODIFY column consume_name varchar(100) COMMENT  '消费类型名称';
 ALTER table consume_type_info MODIFY column remark varchar(255) COMMENT  '消费备注';
 ALTER table consume_type_info MODIFY column import_no int COMMENT  '导入类型对应的数字代号';
---添加索引
+-- 添加索引
 create index index_consume_type_info_consumeId on consume_type_info(consume_id);
 

@@ -51,7 +51,7 @@ insert into system_parameter_info (param_code,param_value,param_name,enable,crea
 
 --==========================================================================================
 --==========================================================================================
---mysql创建表
+-- mysql创建表
 create table if not exists system_parameter_info(
 	id int not null AUTO_INCREMENT,
 	param_code varchar(50) not null,
@@ -66,9 +66,9 @@ create table if not exists system_parameter_info(
 );
 
 SELECT * from system_parameter_info;
---表说明
+-- 表说明
 ALTER TABLE system_parameter_info COMMENT = '系统参数信息表';
---表字段说明
+-- 表字段说明
 ALTER TABLE system_parameter_info MODIFY column param_code varchar(50) COMMENT '参数代码';
 ALTER TABLE system_parameter_info MODIFY column param_value varchar(512) COMMENT '参数值';
 ALTER TABLE system_parameter_info MODIFY column param_name varchar(128) COMMENT '参数名称';
@@ -77,9 +77,9 @@ ALTER TABLE system_parameter_info MODIFY column create_user VARCHAR(50) COMMENT 
 ALTER TABLE system_parameter_info MODIFY column create_time date COMMENT '创建时间';
 ALTER TABLE system_parameter_info MODIFY column update_user VARCHAR(50) COMMENT '修改人';
 ALTER TABLE system_parameter_info MODIFY column update_time date COMMENT '修改时间';
---添加索引
+-- 添加索引
 create index index_system_parameter_info_param_code on system_parameter_info(param_code);
---表权限赋予
+-- 表权限赋予
 grant all on system_parameter_info to chengxp;
 
 insert into system_parameter_info (param_code,param_value,param_name,enable,create_time,create_user,update_time,update_user ) values 

@@ -53,9 +53,9 @@ create table if not exists menu_info (
 );
 
 grant all on menu_info to chengxp;
---表说明
+-- 表说明
 ALTER table menu_info COMMENT = '菜单信息表';
---表字段说明
+-- 表字段说明
 ALTER table menu_info MODIFY column menuid VARCHAR(60) COMMENT '菜单id';
 ALTER table menu_info MODIFY column menuName varchar(50) COMMENT '菜单名';
 ALTER table menu_info MODIFY column menuUrl varchar(255) COMMENT '菜单路径';
@@ -66,9 +66,9 @@ ALTER table menu_info MODIFY column parent_menuid varchar(100) COMMENT '父菜�
 ALTER table menu_info MODIFY column enable smallint COMMENT '是否有效(1有效,0无效)';
 ALTER table menu_info MODIFY column menu_level int COMMENT '菜单级别';
 
---添加索引
+-- 添加索引
 create index index_menu_info_menuId on menu_info(menuId);
---添加唯一约束
+-- 添加唯一约束
 alter table menu_info add CONSTRAINT unique_menu_info_menuId UNIQUE(menuId);
 
 

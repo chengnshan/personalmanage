@@ -32,7 +32,7 @@ alter table consume_detail_info add column channel_code varchar(30);
 
 --==========================================================================================
 --==========================================================================================
---mysql表创建
+-- mysql表创建
 CREATE table if NOT EXISTS consume_detail_info(
 	id int not null AUTO_INCREMENT,
 	user_name varchar(30) not null,
@@ -46,18 +46,18 @@ CREATE table if NOT EXISTS consume_detail_info(
 	update_user VARCHAR(30),
 	constraint consume_detail_info_primary_key_id primary key (id)
 );
---序列授权
+-- 序列授权
 grant all on consume_detail_info to chengxp;
 
---表说明
+-- 表说明
 ALTER table consume_detail_info COMMENT = '消费类型表';
---表字段说明
+-- 表字段说明
 ALTER table consume_detail_info MODIFY column user_name varchar(30) COMMENT '消费人';
 ALTER table consume_detail_info MODIFY column consume_time date COMMENT '消费时间';
 ALTER table consume_detail_info MODIFY column consume_money numeric(9,4) COMMENT '消费金额';
 ALTER table consume_detail_info MODIFY column consume_id VARCHAR(30) COMMENT '消费类型Id';
 ALTER table consume_detail_info MODIFY column remark varchar(255) COMMENT '消费备注';
---添加索引
+-- 添加索引
 CREATE INDEX index_consume_detail_info_user_name on consume_detail_info(user_name);
 
 

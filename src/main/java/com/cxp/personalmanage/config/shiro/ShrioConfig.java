@@ -64,6 +64,7 @@ public class ShrioConfig {
 		filterChainDefinitionMap.put("/html/login.html", "anon");
 		filterChainDefinitionMap.put("/login", "anon");
 		filterChainDefinitionMap.put("/defaultKaptcha", "anon");
+		filterChainDefinitionMap.put("/websocket2", "anon");
 		filterChainDefinitionMap.put("/html/kickout.html", "anon");
 		filterChainDefinitionMap.put("/**", "kickout,authc");
 //		filterChainDefinitionMap.put("/**", "authc");

@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -57,6 +58,9 @@ public class UserInfo_ServiceImpl implements UserInfo_Service {
     @Autowired
 	@Qualifier(value = "stringRedisTemplate")
 	private StringRedisTemplate stringRedisTemplate;
+
+    @Value("${file.uploadFolder}")
+	private String updatePath;
 
     /**
      * 删除用户
@@ -349,8 +353,9 @@ public class UserInfo_ServiceImpl implements UserInfo_Service {
 			try {
 				in = file.getInputStream();
 				
-				String filePath = this.getClass().getClassLoader().getResource(Constant.LinuxPath.UPLOAD_PATH).getPath() +saveFileName;
+			//	String filePath = this.getClass().getClassLoader().getResource(Constant.LinuxPath.UPLOAD_PATH).getPath() +saveFileName;
 			//	File uploadFile = new File(filePath);
+				String filePath = updatePath +saveFileName ;
 				bos = new BufferedOutputStream(new FileOutputStream(filePath));
 				bos.write(file.getBytes());
 				userInfo.setImage_url(filePath);

@@ -178,8 +178,8 @@ define(['signup'],function(signup){
                  contentType:'application/x-www-form-urlencoded',
                  success:function (data) {
                 	 var result = data.resultData;
+					 var html = "";
                 	 if(data.resultCode >=0 && result){
-                		 var html = "";
                 		 $.each(result,function(index,item){
                 			 html +='<option value="'+item.consumeId+'">'+item.consumeName+'</option>';
                 		 });
@@ -187,10 +187,10 @@ define(['signup'],function(signup){
                 	 
                 	 $('.consumeId').append("<option value=''>请选择</option>");
                      $('.consumeId').append(html);
-                     $('.selectpicker').selectpicker({
+                     $('#qConsumeId').selectpicker({
                          size : 10
                      });
-                     $('.selectpicker').selectpicker('refresh');
+                     $('#qConsumeId').selectpicker('refresh');
                  }
         	});
         },
@@ -214,10 +214,10 @@ define(['signup'],function(signup){
 					}
                     $('#qConsumeChannel,#addChannelCode').append("<option value=''>请选择</option>");
                     $('#qConsumeChannel,#addChannelCode').append(html);
-                    $('.selectpicker').selectpicker({
+                    $('.qConsumeChannel').selectpicker({
                         size : 10
                     });
-                    $('.selectpicker').selectpicker('refresh');
+                    $('.qConsumeChannel').selectpicker('refresh');
                 }
 			});
 		},

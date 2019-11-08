@@ -9,6 +9,7 @@
 		<result column="salt" property="salt" />
 		<result column="realname" property="realName" />
 		<result column="enable" property="enable"/>
+		<result column="tel_phone" property="telPhone"/>
 		<result column="image_url" property="image_url"/>
 		<result column="create_time" property="create_time" />
 		<result column="create_user" property="create_user" />
@@ -46,7 +47,7 @@
 	</resultMap>
 
 	<sql id="baseColumn">
-		id,username,password,salt,realname,enable,image_url,create_time,create_user,update_time,update_user
+		id,username,password,salt,realname,enable,image_url,create_time,create_user,update_time,update_user,tel_phone
 	</sql>
 
     <sql id="page_conditionn_limit">
@@ -73,7 +74,13 @@
 	<select id="getUserInfoByUserName" parameterType="com.cxp.personalmanage.pojo.UserInfo" resultMap="baseResultMap">
 		select <include refid="baseColumn"/> 
 		from userinfo 
-		where 1=1  and username = #{userName}
+		where 1=1  and username = #{userAccount}
+
+		union
+
+		select <include refid="baseColumn"/>
+		from userinfo
+		where 1=1  and tel_phone = #{userAccount}
 	</select>
 
 	<select id="findUserInfoList" parameterType="java.util.Map" resultMap="baseResultMap">
@@ -139,10 +146,6 @@
 			#{userInfoObj.update_user},#{userInfoObj.update_time})
 		</foreach>
 	</insert>
-
-	<delete id="deleteUserInfo" parameterType="String">
-		DELETE  from userinfo where username = #{userName} 
-	</delete>
 	
 	<update id="updateUserInfo" parameterType="com.cxp.personalmanage.pojo.UserInfo">
 		update userinfo

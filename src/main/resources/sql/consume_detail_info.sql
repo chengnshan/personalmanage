@@ -9,10 +9,12 @@ CREATE table if NOT EXISTS consume_detail_info(
 	create_user VARCHAR(30),
 	update_time TIMESTAMP ,
 	update_user VARCHAR(30),
+	channel_code varchar(20),
 	constraint consume_detail_info_primary_key_id primary key (id)
 );
---序列授权
-grant all on consume_detail_info_id_seq to chengxp;
+
+--表授权
+grant all on consume_detail_info to chengxp;
 
 --表说明
 comment on table consume_detail_info is '消费类型表';
@@ -44,6 +46,7 @@ CREATE table if NOT EXISTS consume_detail_info(
 	create_user VARCHAR(30),
 	update_time datetime ,
 	update_user VARCHAR(30),
+	channel_code varchar(20),
 	constraint consume_detail_info_primary_key_id primary key (id)
 );
 -- 序列授权

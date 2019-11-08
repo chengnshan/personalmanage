@@ -29,6 +29,9 @@ require.config({
         'CustCommonJs':{
         	deps:["jquery","bootstrap"]
         },
+		'common_share':{
+			deps:["jquery","bootstrap"]
+		},
         "defaults":{
             deps:["jquery","bootstrap"]
         }
@@ -44,15 +47,16 @@ require.config({
         'moment':'common/bootstrap-datetimepicker/moment-with-locales',
         'bootstrap_treeview':'bootstrap/bootstrap-treeview/bootstrap-treeview.min',
         'CustCommonJs':'common/CustCommonJs',
+		'common_share':'myjs/common/common_share',
         'menu_manage':'myjs/childrenJs/menu_manage'
     },
 	waitSeconds: 0
 });
 
 require(['jquery','bootstrap','menu_manage','ajaxfileupload','theme','selectpicker',"moment",'My97DatePicker'
-	,'datetimepicker','bootstrap_treeview','CustCommonJs'],
+	,'datetimepicker','bootstrap_treeview','CustCommonJs','common_share'],
     function ($, bootstrap, menu_manage,ajaxfileupload,theme,selectpicker,moment,My97DatePicker
-    		,datetimepicker,bootstrap_treeview,CustCommonJs) {
+    		,datetimepicker,bootstrap_treeview,CustCommonJs,common_share) {
 // 		$('#nav').load("../top.html");
 	
 		$.comleteAjax();
@@ -61,7 +65,7 @@ require(['jquery','bootstrap','menu_manage','ajaxfileupload','theme','selectpick
 		});
         menu_manage.messsage();
 
-        menu_manage.getLoginUser();
+		common_share.getLoginUser();
 
         menu_manage.getTreeData();
         

@@ -88,7 +88,7 @@ public class UserInfoController extends BaseController {
 			String userMenuStr = stringRedisTemplate.opsForValue().get(userMenuKey);
 			if (!StringUtils.isEmpty(userMenuStr)) {
 				logger.info("菜单查询的是redis.");
-				return userMenuStr;
+				return buildSuccessResultInfo(userMenuStr);
 			}
 
 			List<RoleInfo> userRoleInfoList = roleInfoService.findUserRoleInfoList(userInfo.getUserName());
@@ -106,7 +106,7 @@ public class UserInfoController extends BaseController {
 			logger.info("菜单查询的是数据库.");
 			String userMenu = JackJsonUtil.objTojson(paramMap);
 			stringRedisTemplate.opsForValue().set(userMenuKey, userMenu, 1800, TimeUnit.SECONDS);
-			return userMenu;
+			return buildSuccessResultInfo(userMenu);
 		}
 		return buildFailedResultInfo(-1, "获取登录用户信息失败,请退出重新登录!");
 	}

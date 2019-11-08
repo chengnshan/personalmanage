@@ -41,6 +41,9 @@ require.config({
         'fileinput_locale_zh':{
         	deps:['jquery','bootstrap','bootstrap_fileinput']
         },
+		'common_share':{
+			deps:["jquery","bootstrap"]
+		},
         "defaults":{
             deps:["jquery","bootstrap"]
         }
@@ -60,15 +63,16 @@ require.config({
         'CustCommonJs':'common/CustCommonJs',
         'bootstrap_fileinput':'bootstrap/bootstrap-fileinput/js/fileinput.min',
         'fileinput_locale_zh':'bootstrap/bootstrap-fileinput/js/fileinput_locale_zh',
+		'common_share':'myjs/common/common_share',
         'signup':'myjs/signup'
     },
 	waitSeconds: 0
 });
 
 require(['jquery','bootstrap','signup','ajaxfileupload','theme','selectpicker','i18n',"moment","page",'My97DatePicker','datetimepicker'
-	,'selectpicker_zh_CN','CustCommonJs','bootstrap_fileinput','fileinput_locale_zh'],
+	,'selectpicker_zh_CN','CustCommonJs','bootstrap_fileinput','fileinput_locale_zh','common_share'],
     function ($, bootstrap, signup,ajaxfileupload,theme,selectpicker,i18n,moment,page,My97DatePicker,datetimepicker
-    		,selectpicker_zh_CN,CustCommonJs,bootstrap_fileinput,fileinput_locale_zh) {
+    		,selectpicker_zh_CN,CustCommonJs,bootstrap_fileinput,fileinput_locale_zh,common_share) {
 	
 //		$('#nav').load("top.html");
 	
@@ -76,8 +80,9 @@ require(['jquery','bootstrap','signup','ajaxfileupload','theme','selectpicker','
 
         signup.messsage();
 
-        signup.getLoginUser();
-        
+        // signup.getLoginUser();
+		common_share.getLoginUser();
+
         signup.queryConsumeTypeInfo();
 
         signup.queryConsumeChannelInfo();
@@ -217,7 +222,7 @@ define(['signup'],function(signup){
                     $('.qConsumeChannel').selectpicker({
                         size : 10
                     });
-                    $('.qConsumeChannel').selectpicker('refresh');
+                    $('.qConsumeChannel,.addChannelCode').selectpicker('refresh');
                 }
 			});
 		},

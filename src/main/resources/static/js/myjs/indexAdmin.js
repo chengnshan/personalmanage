@@ -17,6 +17,9 @@ require.config({
         "moment":{
             deps:["jquery","bootstrap"]
         },
+        'common_share':{
+            deps:["jquery","bootstrap"]
+        },
         "defaults":{
             deps:["jquery","bootstrap"]
         }
@@ -28,13 +31,14 @@ require.config({
         'My97DatePicker':'common/My97DatePicker/WdatePicker',
         'datetimepicker':'common/bootstrap-datetimepicker/bootstrap-datetimepicker.min',
         'moment':'common/bootstrap-datetimepicker/moment-with-locales',
+        'common_share':'myjs/common/common_share',
         'indexAdmin':'myjs/indexAdmin'
     },
 	waitSeconds: 0
 });
 
-require(['jquery','bootstrap','indexAdmin','ajaxfileupload',"moment",'My97DatePicker','datetimepicker'],
-    function ($, bootstrap, indexAdmin,ajaxfileupload,moment,My97DatePicker,datetimepicker) {
+require(['jquery','bootstrap','indexAdmin','ajaxfileupload',"moment",'My97DatePicker','datetimepicker','common_share'],
+    function ($, bootstrap, indexAdmin,ajaxfileupload,moment,My97DatePicker,datetimepicker,common_share) {
 //	$('#nav').load("top.html");
 	
     indexAdmin.messsage();

@@ -23,6 +23,9 @@ require.config({
         "moment":{
             deps:["jquery","bootstrap"]
         },
+        'common_share':{
+            deps:["jquery","bootstrap"]
+        },
         "defaults":{
             deps:["jquery","bootstrap"]
         }
@@ -36,19 +39,20 @@ require.config({
         'datetimepicker':'common/bootstrap-datetimepicker/bootstrap-datetimepicker.min',
         'moment':'common/bootstrap-datetimepicker/moment-with-locales',
         'page' : 'common/pagegenerator',
+        'common_share':'myjs/common/common_share',
         'onlineUserList':'myjs/onlineUserList'
     },
 	waitSeconds: 0
 });
 
-require(['jquery','bootstrap','onlineUserList','ajaxfileupload','theme',"moment","page",'My97DatePicker','datetimepicker'],
-    function ($, bootstrap, onlineUserList,ajaxfileupload,theme,moment,page,My97DatePicker,datetimepicker) {
+require(['jquery','bootstrap','onlineUserList','ajaxfileupload','theme',"moment","page",'My97DatePicker','datetimepicker','common_share'],
+    function ($, bootstrap, onlineUserList,ajaxfileupload,theme,moment,page,My97DatePicker,datetimepicker,common_share) {
 
 //	$('#nav').load("top.html");
 	
         onlineUserList.messsage();
-        
-        onlineUserList.getLoginUser();
+
+        common_share.getLoginUser();
 
         onlineUserList.getOnlineUserList(page);
        

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.cxp.personalmanage.pojo.UserInfo;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserInfoMapper {
 	/**
@@ -13,7 +14,7 @@ public interface UserInfoMapper {
 	 */
 	public UserInfo getUserInfo(UserInfo userInfo);
 	
-	public UserInfo getUserInfoByUserName(String userName);
+	public UserInfo getUserInfoByUserName(@Param("userAccount") String userName);
 
 	/**
 	 * 查询用户信息和权限信息

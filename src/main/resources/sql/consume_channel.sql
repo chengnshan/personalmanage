@@ -35,6 +35,8 @@ create table if not exists consume_channel_info(
   constraint consume_channel_info_primary_key_id primary key (id)
 );
 
+grant all on consume_channel_info to chengxp;
+
 ALTER table consume_channel_info COMMENT  =  '消费渠道表';
 -- 表字段说明
 ALTER table consume_channel_info  MODIFY column id int COMMENT  '主键Id';

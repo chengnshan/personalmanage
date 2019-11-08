@@ -22,6 +22,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<skipTests>true</skipTests>
 	</properties>
 
 	<dependencies>
@@ -228,7 +229,9 @@
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>0.4.14</version>
 				<configuration>
-					<imageName>122.51.229.140:5000//${project.artifactId}:${project.version}</imageName>
+					<!-- 注意imageName一定要是符合正则[a-z0-9-_.]的，否则构建不会成功 -->
+					<!-- 详见：https://github.com/spotify/docker-maven-plugin    Invalid repository name ... only [a-z0-9-_.] are allowed-->
+					<imageName>49.235.97.72:5000//${project.artifactId}:${project.version}</imageName>
 					<baseImage>jdk1.8</baseImage>
 					<entryPoint>["java","-jar","/${project.build.finalName}.jar"]</entryPoint>
 					<resources>
@@ -238,7 +241,7 @@
 							<include>${project.build.finalName}</include>
 						</resource>
 					</resources>
-					<dockerHost>http://122.51.229.140::2375</dockerHost>
+					<dockerHost>http://49.235.97.72/::2375</dockerHost>
 				</configuration>
 			</plugin>
 

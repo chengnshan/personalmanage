@@ -15,6 +15,8 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
@@ -24,6 +26,8 @@ import com.cxp.personalmanage.service.RoleInfoService;
 import com.cxp.personalmanage.service.UserInfoService;
 
 public class UserRealm extends AuthorizingRealm {
+
+	private static final Logger logger = LoggerFactory.getLogger(UserRealm.class);
 
 	@Autowired
 	private UserInfoService userInfoService;
@@ -45,7 +49,7 @@ public class UserRealm extends AuthorizingRealm {
 		try {
 			BeanUtils.copyProperties(userInfo, principal);
 		} catch (IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("UserRealm doGetAuthorizationInfo Exception : "+e.getMessage(), e);
 		}
 		List<RoleInfo> roleList = roleInfoService.findUserRoleInfoList(userInfo.getUserName());
 
@@ -67,12 +71,11 @@ public class UserRealm extends AuthorizingRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 		// 获取表单的用户名
-		String userName = (String) token.getPrincipal();
-		UserInfo userInfo = new UserInfo();
-		userInfo.setUserName(userName);
+		String userAccount = (String) token.getPrincipal();
+		UserInfo userInfo = null;
 		try {
 			// 从数据库查询用户
-			userInfo = userInfoService.getUserInfo(userInfo);
+			userInfo = userInfoService.getUserInfoByUserName(userAccount);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

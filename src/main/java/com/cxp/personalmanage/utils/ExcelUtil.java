@@ -160,7 +160,7 @@ public class ExcelUtil<T> {
 	/**
 	 * 对list数据源将其里面的数据导入到excel表单
 	 * 
-	 * @param sheetName
+	 * @param sheetNames
 	 *            工作表的名称
 	 * @param output
 	 *            java输出流
@@ -255,7 +255,7 @@ public class ExcelUtil<T> {
 	/**
 	 * 将EXCEL中A,B,C,D,E列映射成0,1,2,3
 	 * 
-	 * @param column
+	 * @param col
 	 * @return
 	 */
 	private int getExcelCol(String col) {
@@ -272,8 +272,8 @@ public class ExcelUtil<T> {
 	/**
 	 * 得到实体类所有通过注解映射了数据表的字段
 	 * 
-	 * @param clazz2
-	 * @param object
+	 * @param clazz
+	 * @param fields
 	 * @return
 	 */
 	private List<Field> getMappedFiled(Class clazz, List<Field> fields) {
@@ -360,7 +360,7 @@ public class ExcelUtil<T> {
 	 * 
 	 * @param sheetName
 	 *            工作表的名称
-	 * @param sheetSize
+	 * @param list
 	 *            每个sheet中数据的行数,此数值必须小于65536
 	 * @param output
 	 *            java输出流

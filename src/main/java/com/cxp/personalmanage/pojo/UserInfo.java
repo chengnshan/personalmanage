@@ -12,6 +12,8 @@ public class UserInfo extends BaseEntityInfo implements Serializable {
 	private String salt;// 盐
 	private String realName;
 
+	private String telPhone;
+
 	private String image_url; // 图片路径
 
 	private List<RoleInfo> roleList = new ArrayList<RoleInfo>();
@@ -99,4 +101,11 @@ public class UserInfo extends BaseEntityInfo implements Serializable {
 		this.image_url = image_url;
 	}
 
+	public String getTelPhone() {
+		return telPhone;
+	}
+
+	public void setTelPhone(String telPhone) {
+		this.telPhone = telPhone;
+	}
 }

@@ -26,6 +26,9 @@ require.config({
         "moment":{
             deps:["jquery","bootstrap"]
         },
+        'common_share':{
+            deps:["jquery","bootstrap"]
+        },
         "defaults":{
             deps:["jquery","bootstrap"]
         }
@@ -40,18 +43,19 @@ require.config({
         'My97DatePicker':'common/My97DatePicker/WdatePicker',
         'datetimepicker':'common/bootstrap-datetimepicker/bootstrap-datetimepicker.min',
         'moment':'common/bootstrap-datetimepicker/moment-with-locales',
+        'common_share':'myjs/common/common_share',
         'bootstrap_grid':'myjs/bootstrap_grid'
     },
 	waitSeconds: 0
 });
 
-require(['jquery','bootstrap','bootstrap_grid','ajaxfileupload','theme','selectpicker',"selectpicker_zh_CN","moment",'My97DatePicker','datetimepicker'],
-    function ($, bootstrap, bootstrap_grid,ajaxfileupload,theme,selectpicker,selectpicker_zh_CN,moment,My97DatePicker,datetimepicker) {
+require(['jquery','bootstrap','bootstrap_grid','ajaxfileupload','theme','selectpicker',"selectpicker_zh_CN","moment",
+        'My97DatePicker','datetimepicker','common_share'],
+    function ($, bootstrap, bootstrap_grid,ajaxfileupload,theme,selectpicker,selectpicker_zh_CN,moment,My97DatePicker,
+              datetimepicker,common_share) {
 //		$('#nav').load("top.html");
-	
-        bootstrap_grid.messsage();
 
-        bootstrap_grid.getLoginUser();
+        common_share.getLoginUser();
 
         $(document).on("click","#queryRedisDetail",function(){
             bootstrap_grid.queryBtn();
@@ -61,9 +65,6 @@ require(['jquery','bootstrap','bootstrap_grid','ajaxfileupload','theme','selectp
 
 define(['bootstrap_grid'],function(bootstrap_grid){
     var bootstrap_grid = {
-        messsage:function () {
-            console.log("加载了!");
-        },
 
         getLoginUser:function(){
             $.ajax({
@@ -108,14 +109,29 @@ define(['bootstrap_grid'],function(bootstrap_grid){
          */
         queryBtn:function(){
             console.log("查询redis");
+            $('#redisKeyBody').html('');
+            let redisKey = $('#redisKey').val();
             $.ajax({
                 url:'/redis/queryRedisDetail',
                 dataType:'json',
                 type:'POST',
-                data:{timestamp:new Date()},
+                data:{timestamp:new Date(), "redisKey": redisKey},
                 contentType:'application/x-www-form-urlencoded',
                 success:function(data){
-                    
+                    if (data && data.resultCode >= 0){
+                        let resultData = data.resultData;
+                        var html = '';
+                        html += "<tr>" +
+                            '<td class="text-center" >'+ resultData.dataType + '</td>'+
+                            '<td class="text-center" >'+ resultData.key + '</td>'+
+                            '<td class="text-center" >'+ resultData.value + '</td>'+
+                            '<td class="text-center" >'+ resultData.expire + '</td>'+
+                            '</tr>'
+                    }else {
+                        html+="<tr name='trDataBody'><td colspan='4' align='center'><span style='color:#ff0000;' >"
+                            +"没有查询合适条件的数据</span></td></tr>";
+                    }
+                    $('#redisKeyBody').append(html);
                 },
                 error:function (e) {
                     

@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -81,7 +82,7 @@ public class LoginController {
 			currentUser.login(token);
 
 			String ipAddr = CommonUtil.getIpAddr(request);
-			userInfo = userInfoService.getUserInfo(userInfo);
+			userInfo = userInfoService.getUserInfoByUserName(userInfo.getUserName());
 			stringRedisTemplate.opsForValue().set(ipAddr, JackJsonUtil.objectToString(userInfo));
 			logger.info("对用户[" + username + "]进行登录验证..验证通过");
 		} catch (UnknownAccountException uae) {
@@ -182,4 +183,12 @@ public class LoginController {
 			}
 		}, 2 * 60 * 1000);
 	}
+
+	/*@RequestMapping(value = "/logout")
+	@ResponseBody
+	public String logout( HttpServletRequest request, @RequestHeader Map<String, Object> map) {
+
+		SecurityUtils.getSubject().logout();
+		return "/login";
+	}*/
 }

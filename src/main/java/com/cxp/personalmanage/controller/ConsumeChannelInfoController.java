@@ -4,6 +4,7 @@ import com.cxp.personalmanage.common.Constant;
 import com.cxp.personalmanage.controller.base.BaseController;
 import com.cxp.personalmanage.pojo.consumer.ConsumeChannelInfo;
 import com.cxp.personalmanage.service.ConsumeChannelInfoService;
+import com.cxp.personalmanage.utils.JackJsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +30,16 @@ public class ConsumeChannelInfoController extends BaseController {
     @RequestMapping(value = "/findConsumeChannelInfoList")
     public String findConsumeChannelInfoList(ConsumeChannelInfo consumeChannelInfo){
         log.info("findConsumeChannelInfoList method in param : "+consumeChannelInfo);
-        String channelInfo = stringRedisTemplate.opsForValue().get(Constant.RedisCustomKey.CONSUMECHANNELKEY);
-        if (StringUtils.isBlank(channelInfo)){
+        String channelInfos = stringRedisTemplate.opsForValue().get(Constant.RedisCustomKey.CONSUMECHANNELKEY);
+        if (StringUtils.isBlank(channelInfos)){
             List<ConsumeChannelInfo> consumeChannelList = consumeChannelInfoService.findConsumeChannelList(consumeChannelInfo);
-            channelInfo = buildSuccessResultInfo(consumeChannelList);
-            stringRedisTemplate.opsForValue().set(Constant.RedisCustomKey.CONSUMECHANNELKEY,channelInfo,
+            String toString = JackJsonUtil.objectToString(consumeChannelList);
+            stringRedisTemplate.opsForValue().set(Constant.RedisCustomKey.CONSUMECHANNELKEY,toString,
                     3600L, TimeUnit.SECONDS);
+
+            channelInfos = buildSuccessResultInfo(consumeChannelList);
         }
-        log.info("findConsumeChannelInfoList out param : "+channelInfo);
-        return channelInfo;
+        log.info("findConsumeChannelInfoList out param : " + channelInfos);
+        return channelInfos;
     }
 }

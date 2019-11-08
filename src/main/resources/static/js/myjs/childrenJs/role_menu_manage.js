@@ -38,6 +38,9 @@ require.config({
         'CustCommonJs':{
         	deps:["jquery","bootstrap"]
         },
+        'common_share':{
+            deps:["jquery","bootstrap"]
+        },
         "defaults":{
             deps:["jquery","bootstrap"]
         }
@@ -56,15 +59,16 @@ require.config({
         'page' : 'common/pagegenerator',
         'icheck':'bootstrap/bootstrap-checkbox/js/icheck.min',
         'CustCommonJs':'common/CustCommonJs',
+        'common_share':'myjs/common/common_share',
         'role_menu_manage':'myjs/childrenJs/role_menu_manage'
     },
 	waitSeconds: 0
 });
 
 require(['jquery','bootstrap','role_menu_manage','ajaxfileupload','theme','confirmTool',"moment","page",'selectpicker',
-	'i18n','My97DatePicker','datetimepicker','icheck','CustCommonJs'],
+	'i18n','My97DatePicker','datetimepicker','icheck','CustCommonJs','common_share'],
     function ($, bootstrap, role_menu_manage,ajaxfileupload,theme,confirmTool,moment,page,selectpicker,
-    		i18n,My97DatePicker,datetimepicker,icheck,CustCommonJs) {
+    		i18n,My97DatePicker,datetimepicker,icheck,CustCommonJs,common_share) {
 		
 	//	$('#nav').load("../top.html");
 	
@@ -72,7 +76,7 @@ require(['jquery','bootstrap','role_menu_manage','ajaxfileupload','theme','confi
 	
 		role_menu_manage.messsage();
 
-		role_menu_manage.getLoginUser();
+        common_share.getLoginUser();
 
 		role_menu_manage.getRoleList();
 

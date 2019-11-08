@@ -20,6 +20,9 @@ require.config({
         "moment":{
             deps:["jquery","bootstrap"]
         },
+        'common_share':{
+            deps:["jquery","bootstrap"]
+        },
         "defaults":{
             deps:["jquery","bootstrap"]
         }
@@ -33,17 +36,18 @@ require.config({
         'My97DatePicker':'common/My97DatePicker/WdatePicker',
         'datetimepicker':'common/bootstrap-datetimepicker/bootstrap-datetimepicker.min',
         'moment':'common/bootstrap-datetimepicker/moment-with-locales',
+        'common_share':'myjs/common/common_share',
         'forms':'myjs/forms'
     },
 	waitSeconds: 0
 });
 
-require(['jquery','bootstrap','forms','ajaxfileupload','theme',"moment",'My97DatePicker','datetimepicker'],
-    function ($, bootstrap, forms,ajaxfileupload,theme,moment,My97DatePicker,datetimepicker) {
+require(['jquery','bootstrap','forms','ajaxfileupload','theme',"moment",'My97DatePicker','datetimepicker','common_share'],
+    function ($, bootstrap, forms,ajaxfileupload,theme,moment,My97DatePicker,datetimepicker,common_share) {
 
 //		$('#nav').load("top.html");
-		
-        forms.getLoginUser();
+
+        common_share.getLoginUser();
 
 });
 

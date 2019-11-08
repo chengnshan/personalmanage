@@ -92,6 +92,7 @@ public class ShrioConfig_crazycake implements EnvironmentAware{
 		filterChainDefinitionMap.put("/webchat/**", "anon");
 		filterChainDefinitionMap.put("/html/weixin/**", "anon");  //微信公众号页面
 		filterChainDefinitionMap.put("/html/study/**","anon");
+		filterChainDefinitionMap.put("/html/forgetPwd.html","anon");
 		filterChainDefinitionMap.put("/html/indexAdmin.html","anon");
 //		filterChainDefinitionMap.put("/websocket2", "anon");
 		filterChainDefinitionMap.put("/**", "kickout,user");

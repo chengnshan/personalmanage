@@ -41,6 +41,9 @@ require.config({
         'CustCommonJs':{
         	deps:["jquery","bootstrap"]
         },
+        'common_share':{
+            deps:["jquery","bootstrap"]
+        },
         "defaults":{
             deps:["jquery","bootstrap"]
         }
@@ -60,22 +63,23 @@ require.config({
         'i18n':'common/bootstrap-select-1.12.4/js/i18n/defaults-zh_CN',
         'page' : 'common/pagegenerator',
         'CustCommonJs':'common/CustCommonJs',
+        'common_share':'myjs/common/common_share',
         'user_manage':'myjs/childrenJs/user_manage'
     },
 	waitSeconds: 0
 });
 
 require(['jquery','bootstrap','user_manage','ajaxfileupload','bootstrap_fileinput','fileinput_locale_zh','theme','confirmTool',"moment","page",
-	'selectpicker','i18n','My97DatePicker','datetimepicker','CustCommonJs'],
+	'selectpicker','i18n','My97DatePicker','datetimepicker','CustCommonJs','common_share'],
     function ($, bootstrap, user_manage,ajaxfileupload,bootstrap_fileinput,fileinput_locale_zh,theme,confirmTool,moment,page,selectpicker
-    		,i18n,My97DatePicker,datetimepicker,CustCommonJs) {
+    		,i18n,My97DatePicker,datetimepicker,CustCommonJs,common_share) {
 //		$('#nav').load("../top.html");
 	
 		$.comleteAjax();
 	
         user_manage.messsage();
 
-        user_manage.getLoginUser();
+        common_share.getLoginUser();
 
         user_manage.getRoleList();
 

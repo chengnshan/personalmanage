@@ -90,7 +90,6 @@ public class PasswordController extends BaseController {
     @RequestMapping(value = "/pwd/sendEmailCode")
     @CrossOrigin
     public String sendEmailCode(String toMail){
-        Random random = new Random();
         String randomChar = RandomCharUtil.getRandomChar(6);
         try {
             Map<String, Object>  existMap = InitMemoryConfig.emailCodeMap.get(toMail);
@@ -100,8 +99,8 @@ public class PasswordController extends BaseController {
                     return buildFailedResultInfo(-1, "5分钟后才能再次获取验证码");
                 }
             }
-
-            mailService.sendMail(toMail,"这是springboot", randomChar, null,null);
+            logger.info("开始发送邮箱验证码: " + randomChar);
+            mailService.sendMail(toMail,"我自己的项目啊", String.format("邮箱验证码: %s,很正常的发送啊",randomChar), null,null);
 
             Map<String,Object> map = new HashMap<>(2);
             map.put(Constant.EMAIL_VERITY_CODE,randomChar);

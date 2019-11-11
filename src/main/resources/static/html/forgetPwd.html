@@ -10,7 +10,7 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 	margin-TOP: 100PX;
-	width: 20em;
+	width: 30em;
 }
 
 </style>
@@ -19,15 +19,15 @@ body {
 <script type="text/javascript" src="../js/common/slideunlock/jquery.slideunlock.js"></script>
 <script type="text/javascript">
 	$(function(){
-		
+
 		 var slider = new SliderUnlock("#slider",{
-	            successLabelTip : "验证成功！"   
+	            successLabelTip : "验证成功！"
 	        },function(){
 	           $("#submit").attr("successLabe","true")
-	            
+
 	        });
 	    slider.init();
-		
+
 		$("#submit").click(function(){
 			var username =$("#userName").val();
 			var password =$("#password").val();
@@ -62,47 +62,120 @@ body {
 </script>
 
 </head>
-<body style="background-color: ;">
+<body style="background-color:white ;">
+<div id="app">
 	
 	<form action="" method="POST" id="formabc">
 		<!--下面是用户名输入框-->
 		<div class="input-group">
-			<span class="input-group-addon" id="basic-addon1">用户名</span> <input
+			<span class="input-group-addon" id="basic-addon-userName">用&nbsp;&nbsp;户&nbsp;&nbsp;名&nbsp;&nbsp;&nbsp;</span> <input
 				id="userName" name="userName" type="text" class="form-control"
-				placeholder="用户名" aria-describedby="basic-addon1" />
+				placeholder="用户名" aria-describedby="basic-addon1" v-model="userName"/>
+		</div>
+		<br />
+		<div class="input-group">
+			<span class="input-group-addon" id="basic-addon-email">邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			<input id="email" name="email" type="text" class="form-control" v-model="email"
+				placeholder="邮箱" aria-describedby="basic-addon1" style="width: 100%;"/>
+			<span class="input-group-addon" style="background-color: #5bc0de;"  @click="sendEmailCode()">
+				<a href="javascrip:void(0);" id="sendEmailCode" >发送验证码</a>
+			</span>
+
 		</div>
 		<br />
 		<!--下面是密码输入框-->
 		<div class="input-group">
-			<span class="input-group-addon" id="basic-addon2">密&nbsp;&nbsp;&nbsp;&nbsp;码</span>
-			<input id="password" name="password" type="text" class="form-control"
+			<span class="input-group-addon" id="basic-addon-password">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			<input id="password" name="password" type="password" class="form-control" v-model="password"
 				placeholder="密码" aria-describedby="basic-addon1" />
 		</div>
 		<br />
 		<div class="input-group">
-			<span class="input-group-addon" id="basic-addon3">验证码</span>
-			<input id="randomcode" name="randomcode" type="text" class="form-control" style="width:98%;"
-				placeholder="验证码" aria-describedby="basic-addon1" />
-			<!-- <img alt="这是图片" src="/img/001.png"/> -->
-			<span class="input-group-btn"  style="height:100%;" >
-				<img alt="验证码" onclick="this.src='/defaultKaptcha?d='+new Date()*1" src="/defaultKaptcha" />
-			</span>
+			<span class="input-group-addon" id="basic-addon-confirmPwd">确&nbsp;认&nbsp;密&nbsp;码&nbsp;</span>
+			<input id="confirmPwd" name="confirmPwd" type="password" class="form-control" v-model="confirmPwd"
+				   placeholder="密码" aria-describedby="basic-addon1" />
+		</div>
+		<br />
+		<div class="input-group">
+			<span class="input-group-addon" id="basic-addon-emailcode">邮箱验证码</span>
+			<input id="emailcode" name="emailcode" type="text" class="form-control" style="width:100%;"
+				placeholder="验证码" aria-describedby="basic-addon1" v-model="emailcode"/>
+<!--			&lt;!&ndash; <img alt="这是图片" src="/img/001.png"/> &ndash;&gt;-->
+<!--			<span class="input-group-btn"  style="height:100%;" >-->
+<!--				<img alt="验证码" onclick="this.src='/defaultKaptcha?d='+new Date()*1" src="/defaultKaptcha" />-->
+<!--			</span>-->
 		</div>
 		<div class="input-group">
-			<div id="slider" class="" style="width: 280px;">
+			<div id="slider" class="" style="width: 420px;">
 			    <div id="slider_bg"></div>
-			    <span id="label">>></span> <span id="labelTip">拖动滑块验证</span> 
+			    <span id="label"></span> <span id="labelTip">拖动滑块验证</span>
 			 </div>
 		</div>
-		
-		<!--下面是记住我输入框-->
-		<div class="checkbox">
-			<label> <input id="remembeMe" name="rememberMe" type="checkbox" />记住我
-			</label>
+
+		<div class="input-group">
+			<span style="margin-left: 60px;"></span>
+			<!--下面是登陆按钮,包括颜色控制-->
+			<button type="button" id ="submit" style="width: 120px;" class="btn btn-info">清空</button>
+			<span style="margin-left: 60px;"></span>
+			<!--下面是登陆按钮,包括颜色控制-->
+			<button type="button" id ="reset" style="width: 120px;" class="btn btn-success" @click="update()">修改密码</button>
 		</div>
-		<!--下面是登陆按钮,包括颜色控制-->
-		<button type="button" id ="submit" style="width: 280px;" class="btn btn-info">修改密码</button>
+
 	</form>
 	<h4 id="msgH3" style="color:red;font-size:14px;" class="text-center"></h4>
+
+</div>
 </body>
+
+<script src="../js/vue/vue-2.4.0.js" type="text/javascript"></script>
+<script src="../js/vue/vue-resource-1.3.4.js" type="text/javascript"></script>
+<script>
+
+	var vue = new Vue({
+		el: '#app',
+		data(){
+			return {
+				userName:'',
+				email:'',
+				password:'',
+				confirmPwd:'',
+				emailcode:''
+			}
+		},
+		methods:{
+			//请求后台更新密码
+			update(){
+				if (this.userName == null || this.userName == ''){
+					alert("账户名请填写.");
+					return;
+				}
+				this.$http.post("/pwd/forget_password",
+						{"userName": this.userName,"email": this.email, "password": this.password,
+						"emailcode": this.emailcode, "confirmPwd": this.confirmPwd},
+						{emulateJSON: true}).then(function (result) {
+					console.log(result.body);
+				});
+			},
+			sendEmailCode(){
+				// "/pwd/sendEmailCode"
+				if (this.email == null || this.email == ''){
+					alert("请填写邮箱后再发送验证码.");
+					return;
+				}
+				this.$http.post("/pwd/sendEmailCode",{toMail: this.email},{emulateJSON: true}).then(function (result) {
+					let body = result.body;
+					// console.log(body);
+					if (body && body.resultCode >= 0){
+
+					}else {
+						alert(body.resultMessage);
+					}
+				}).catch(function (response) {
+					//捕获异常
+					console.log(response);
+				});
+			}
+		}
+	});
+</script>
 </html>

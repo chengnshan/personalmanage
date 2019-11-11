@@ -58,7 +58,7 @@ public class ShrioConfig_crazycake implements EnvironmentAware{
 
 		//自定义拦截器
 		Map<String, Filter> filtersMap = new LinkedHashMap<>(); // 过滤器
- 		CustomLogout customLogout = new CustomLogout();
+ 		CustomLogout customLogout = new CustomLogout(userRealm());
 		customLogout.setRedirectUrl("/html/login1.html");
 		//限制同一帐号同时在线的个数。
 		filtersMap.put("kickout", kickoutFilter());
@@ -93,6 +93,8 @@ public class ShrioConfig_crazycake implements EnvironmentAware{
 		filterChainDefinitionMap.put("/html/weixin/**", "anon");  //微信公众号页面
 		filterChainDefinitionMap.put("/html/study/**","anon");
 		filterChainDefinitionMap.put("/html/forgetPwd.html","anon");
+		filterChainDefinitionMap.put("/pwd/sendEmailCode","anon");
+		filterChainDefinitionMap.put("/pwd/forget_password","anon");
 		filterChainDefinitionMap.put("/html/indexAdmin.html","anon");
 //		filterChainDefinitionMap.put("/websocket2", "anon");
 		filterChainDefinitionMap.put("/**", "kickout,user");

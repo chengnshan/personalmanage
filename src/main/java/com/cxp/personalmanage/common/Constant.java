@@ -27,6 +27,10 @@ public class Constant {
     public static final String CREATE_USER = "create_user"; 
     public static final String UPDATE_USER = "update_user";
 
+	public static final String EMAIL_VERITY_CODE = "email_verity_code";
+	public static final String EMAIL_VERITY_TIME = "email_verity_time";
+	public static final long EMAIL_VERITY_TIME_NUM = 300000;
+
 	/**
 	 * redis分布式锁常量
 	 */

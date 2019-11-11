@@ -4,14 +4,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import com.cxp.personalmanage.shiro.UserRealm;
 import org.apache.shiro.session.SessionException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
 import com.cxp.personalmanage.utils.CommonUtil;
 import com.cxp.personalmanage.utils.RedisUtils;
@@ -19,6 +17,16 @@ import com.cxp.personalmanage.utils.RedisUtils;
 public class CustomLogout extends LogoutFilter {
 
 	 private static final Logger logger = LoggerFactory.getLogger(CustomLogout.class);
+
+	 private UserRealm userRealm;
+
+	 public CustomLogout(){
+
+     }
+
+    public CustomLogout(UserRealm userRealm){
+        this.userRealm = userRealm;
+    }
 	 
 	@Override
 	protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
@@ -29,6 +37,7 @@ public class CustomLogout extends LogoutFilter {
         try {
             subject.logout();
             RedisUtils.remove(CommonUtil.getIpAddr((HttpServletRequest)request));
+            userRealm.clearAllCache();
         } catch (SessionException ise) {
         	logger.debug("Encountered session exception during logout.  This can generally safely be ignored.", ise);
         }

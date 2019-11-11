@@ -38,6 +38,8 @@ public class InitMemoryConfig implements ApplicationListener<ContextRefreshedEve
 	 private ConsumeTypeInfoService consumeTypeInfoService;
 	
 	 public static Map<String ,Object> initMap = null;
+
+	 public static final Map<String,Map<String,Object>> emailCodeMap = new HashMap<>(16);
 	
 	 public void init() {
 		initMap = new HashMap<String, Object>();

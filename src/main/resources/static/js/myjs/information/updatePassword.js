@@ -35,6 +35,9 @@ require.config({
         'CustCommonJs':{
         	deps:["jquery","bootstrap"]
         },
+        'common_share':{
+            deps:["jquery","bootstrap"]
+        },
         "defaults":{
             deps:["jquery","bootstrap"]
         }
@@ -52,22 +55,23 @@ require.config({
         'fileinput_locale_zh':'bootstrap/bootstrap-fileinput/js/fileinput_locale_zh',
         'selectpicker':'common/bootstrap-select-1.12.4/js/bootstrap-select.min',
         'CustCommonJs':'common/CustCommonJs',
+        'common_share':'myjs/common/common_share',
         'updatePassword':'myjs/information/updatePassword'
     },
 	waitSeconds: 0
 });
 
 require(['jquery','bootstrap','updatePassword','ajaxfileupload','theme',"moment",'My97DatePicker','datetimepicker',
-	'bootstrap_fileinput','fileinput_locale_zh','selectpicker','CustCommonJs'],
+	'bootstrap_fileinput','fileinput_locale_zh','selectpicker','CustCommonJs','common_share'],
     function ($, bootstrap, updatePassword,ajaxfileupload,theme,moment,My97DatePicker,datetimepicker,
-    		bootstrap_fileinput,fileinput_locale_zh,selectpicker,CustCommonJs) {
+    		bootstrap_fileinput,fileinput_locale_zh,selectpicker,CustCommonJs, common_share) {
 
 //		$('#nav').load("../top.html");
 	
 		$('.selectpicker').selectpicker({'noneSelectedText':'请选择'});
 		$('.selectpicker').selectpicker('refresh');
-		
-		updatePassword.getLoginUser();
+
+        common_share.getLoginUser();
 
 		updatePassword.initFileInput('file-Portrait', "/consumeDetail/importConsumeDetailInfo");
 		

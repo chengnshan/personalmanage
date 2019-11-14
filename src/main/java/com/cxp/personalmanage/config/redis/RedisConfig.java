@@ -1,4 +1,4 @@
-package com.cxp.personalmanage.config;
+package com.cxp.personalmanage.config.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
@@ -25,29 +25,38 @@ public class RedisConfig {
 	@Bean
 	public JedisConnectionFactory factory() {
 		JedisConnectionFactory factory = new JedisConnectionFactory();
-		factory.setDatabase(0);
+		factory.setDatabase(redisProperties.getDatabase());
 		factory.setPort(redisProperties.getPort());
 		factory.setHostName(redisProperties.getHost());
 		factory.setPassword(redisProperties.getPassword());
 		factory.setDatabase(redisProperties.getDatabase());
+		factory.setTimeout(redisProperties.getTimeout());
+
 		JedisPoolConfig poolConfig = new JedisPoolConfig();
 		poolConfig.setMaxTotal(redisProperties.getPool().getMaxActive());
 		poolConfig.setMaxIdle(redisProperties.getPool().getMaxIdle());
 		poolConfig.setMinIdle(redisProperties.getPool().getMinIdle());
 		poolConfig.setMaxWaitMillis(redisProperties.getPool().getMaxWait());
+
 		factory.setPoolConfig(poolConfig);
+
 		return factory;
 	}
 
-	@Bean
-	public JedisPool JedisPool() {
+	@Bean(name = "jedisPool")
+	public JedisPool jedisPool() {
 		JedisPoolConfig poolConfig = new JedisPoolConfig();
 		poolConfig.setMaxTotal(redisProperties.getPool().getMaxActive());
 		poolConfig.setMaxIdle(redisProperties.getPool().getMaxIdle());
 		poolConfig.setMinIdle(redisProperties.getPool().getMinIdle());
 		poolConfig.setMaxWaitMillis(redisProperties.getPool().getMaxWait());
-		JedisPool jedisPool = new JedisPool(poolConfig, redisProperties.getHost(), redisProperties.getPort(), 60000,
-				redisProperties.getPassword(), 0);
+
+		JedisPool jedisPool = new JedisPool(poolConfig,
+				redisProperties.getHost(),
+				redisProperties.getPort(),
+				redisProperties.getTimeout(),
+				redisProperties.getPassword(),
+				redisProperties.getDatabase());
 		return jedisPool;
 	}
 	
@@ -64,8 +73,9 @@ public class RedisConfig {
 		RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
 		// 将刚才的redis连接工厂设置到模板类中
 		template.setConnectionFactory(factory);
-		// 设置key的序列化器
-		template.setKeySerializer(new StringRedisSerializer());
+
+		StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+
 		// 设置value的序列化器
 		// 使用Jackson 2，将对象序列化为JSON
 		Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
@@ -74,7 +84,13 @@ public class RedisConfig {
 		om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
 		om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
 		jackson2JsonRedisSerializer.setObjectMapper(om);
+
+		// 设置key的序列化器
+		template.setKeySerializer(stringRedisSerializer);
 		template.setValueSerializer(jackson2JsonRedisSerializer);
+
+		template.setHashKeySerializer(stringRedisSerializer);
+		template.setHashValueSerializer(jackson2JsonRedisSerializer);
 
 		return template;
 	}

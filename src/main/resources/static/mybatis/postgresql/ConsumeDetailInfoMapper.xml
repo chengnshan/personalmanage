@@ -14,9 +14,10 @@
 		<result column="create_user" property="create_user"  javaType="String" jdbcType="VARCHAR"/>
 		<result column="update_time" property="update_time"  javaType="java.util.Date" jdbcType="TIMESTAMP"/>
 		<result column="update_user" property="update_user"  javaType="String" jdbcType="VARCHAR"/>
-		<association property="consumeTypeInfo" select="com.cxp.personalmanage.mapper.ConsumeTypeInfoMapper.getConsumerTypeById" 
-			javaType="com.cxp.personalmanage.pojo.consumer.ConsumeTypeInfo"
-			column="consumeId"></association>
+		<association property="consumeTypeInfo"
+					 select="com.cxp.personalmanage.mapper.postgresql.ConsumeTypeInfoMapper.getConsumerTypeById"
+					 javaType="com.cxp.personalmanage.pojo.consumer.ConsumeTypeInfo"
+					 column="consume_id"></association>
 		<association property="consumeChannelInfo"
 					 select="com.cxp.personalmanage.mapper.postgresql.ConsumeChannelInfoMapper.findConsumeChannelByCode"
 					 javaType="com.cxp.personalmanage.pojo.consumer.ConsumeChannelInfo"
@@ -24,8 +25,8 @@
 	</resultMap>
 	
 	<sql id="baseColumn">
-		id,user_name,consume_time,consume_money,consume_id,remark,channel_code,
-			create_time,create_user,update_time,update_user
+		id,user_name, consume_time,consume_money, consume_id, remark, channel_code,
+			create_time, create_user, update_time, update_user
 	</sql>
 	
 	<sql id="page_conditionn_limit">

@@ -3,12 +3,14 @@ package com.cxp.personalmanage.pojo.consumer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class ConsumeChannelInfo implements Serializable {
 
     private static final long serialVersionUID = 8497031604047864584L;

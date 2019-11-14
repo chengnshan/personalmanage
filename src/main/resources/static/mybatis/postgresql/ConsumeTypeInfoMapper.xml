@@ -34,7 +34,7 @@
 		</where>
 	</select>
 	
-	<select id="getConsumerTypeById" resultMap="baseResultMap" parameterType="String">
+	<select id="getConsumerTypeById" resultMap="baseResultMap" parameterType="java.lang.String">
 		select <include refid="baseColumn"/> 
 		from consume_type_info 
 		where consume_id = #{consumeId}

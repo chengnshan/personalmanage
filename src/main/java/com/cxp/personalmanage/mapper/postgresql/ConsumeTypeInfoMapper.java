@@ -3,6 +3,7 @@ package com.cxp.personalmanage.mapper.postgresql;
 import java.util.List;
 
 import com.cxp.personalmanage.pojo.consumer.ConsumeTypeInfo;
+import org.apache.ibatis.annotations.Param;
 
 public interface ConsumeTypeInfoMapper {
 
@@ -11,12 +12,12 @@ public interface ConsumeTypeInfoMapper {
 	 * @param consumeTypeInfo
 	 * @return
 	 */
-	public List<ConsumeTypeInfo> findConsumeTypeInfo(ConsumeTypeInfo consumeTypeInfo);
+	 List<ConsumeTypeInfo> findConsumeTypeInfo(ConsumeTypeInfo consumeTypeInfo);
 	
 	/**
 	 * 根据消费Id查询
 	 * @param consumeId
 	 * @return
 	 */
-	public ConsumeTypeInfo getConsumerTypeById(String consumeId);
+	ConsumeTypeInfo getConsumerTypeById(@Param("consumeId") String consumeId);
 }

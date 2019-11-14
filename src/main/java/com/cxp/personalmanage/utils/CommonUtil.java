@@ -4,13 +4,15 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +30,10 @@ public class CommonUtil {
 	public void setStringRedisTemplate(StringRedisTemplate stringRedisTemplate) {
 		CommonUtil.stringRedisTemplate = stringRedisTemplate;
 		logger.info("CommonUtil注入stringRedisTemplate成功.");
+	}
+
+	private CommonUtil(){
+
 	}
 
 	public static String getIpAddr(HttpServletRequest request) {
@@ -59,7 +65,7 @@ public class CommonUtil {
 					userInfo = new UserInfo();
 					try {
 						BeanUtils.copyProperties(userInfo, principal);
-					} catch (IllegalAccessException | InvocationTargetException e) {
+					} catch (BeansException e) {
 						e.printStackTrace();
 					}
 				}

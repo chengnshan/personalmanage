@@ -217,12 +217,14 @@ define(['signup'],function(signup){
                             html +='<option value="'+item.channel_code+'">'+item.channel_name+'</option>';
                         });
 					}
-                    $('#qConsumeChannel,#addChannelCode').append("<option value=''>请选择</option>");
-                    $('#qConsumeChannel,#addChannelCode').append(html);
+                    $('#qConsumeChannel').append("<option value=''>请选择</option>");
+                    $('#addChannelCode').append("<option value=''>请选择</option>");
+                    $('#qConsumeChannel').append(html);
+                    $('#addChannelCode').append(html);
                     $('.qConsumeChannel').selectpicker({
                         size : 10
                     });
-                    $('.qConsumeChannel,.addChannelCode').selectpicker('refresh');
+                    $('#qConsumeChannel, #addChannelCode').selectpicker('refresh');
                 }
 			});
 		},

@@ -7,8 +7,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import com.cxp.personalmanage.common.Constant;
@@ -21,7 +21,7 @@ import com.cxp.personalmanage.service.MenuInfoService;
 import com.cxp.personalmanage.service.RoleInfoService;
 import com.cxp.personalmanage.service.SystemParameterInfoService;
 
-@Configuration
+@Component
 public class InitMemoryConfig implements ApplicationListener<ContextRefreshedEvent> {
 	
 	 @Autowired
@@ -75,9 +75,11 @@ public class InitMemoryConfig implements ApplicationListener<ContextRefreshedEve
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
+	 	//防止重复执行
 		if(event.getApplicationContext().getParent() == null ) {
 			this.init();
 		}
+		System.out.println("我的父容器为：" + event.getApplicationContext().getParent());
 	}
 
 }

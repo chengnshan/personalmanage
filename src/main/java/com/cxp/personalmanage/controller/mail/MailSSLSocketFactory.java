@@ -9,7 +9,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 /**
- * 邮件ssl
+ * 邮件ssl配置
  * @author : cheng
  * @date : 2019-11-11 19:03
  */

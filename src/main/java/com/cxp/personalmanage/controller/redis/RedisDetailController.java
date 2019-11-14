@@ -1,4 +1,4 @@
-package com.cxp.personalmanage.controller;
+package com.cxp.personalmanage.controller.redis;
 
 import com.cxp.personalmanage.controller.base.BaseController;
 import com.cxp.personalmanage.pojo.dto.RedisKeyValueDto;

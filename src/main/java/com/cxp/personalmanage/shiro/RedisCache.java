@@ -24,8 +24,12 @@ public class RedisCache<K, V> implements Cache<K, V> {
 
 	private final String CACHE_SHIRO = "shiro_cache_";
 
-	@Autowired
 	private JedisUtil jedisUtil;
+
+	@Autowired
+	public void setJedisUtil(JedisUtil jedisUtil){
+		this.jedisUtil = jedisUtil;
+	}
 
 	private byte[] getKey(K k) {
 		if (k instanceof String) {

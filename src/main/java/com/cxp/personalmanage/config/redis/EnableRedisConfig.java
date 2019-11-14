@@ -1,6 +1,5 @@
 package com.cxp.personalmanage.config.redis;
 
-import com.cxp.personalmanage.config.RedisConfig;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

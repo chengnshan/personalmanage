@@ -4,9 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -21,9 +27,16 @@ import com.cxp.personalmanage.service.MenuInfoService;
 import com.cxp.personalmanage.service.RoleInfoService;
 import com.cxp.personalmanage.service.SystemParameterInfoService;
 
-@Component
-public class InitMemoryConfig implements ApplicationListener<ContextRefreshedEvent> {
-	
+/**
+ * CommandLineRunner、ApplicationRunner 接口是在容器启动成功后的最后一步回调（类似开机自启动）
+ * @author cheng
+ * @date 2019-11-15
+ */
+@Configuration
+public class InitMemoryConfig implements ApplicationRunner {
+
+	private static final Logger logger = LoggerFactory.getLogger(InitMemoryConfig.class);
+
 	 @Autowired
 	 private RoleInfoService roleInfoService;
 	 
@@ -42,8 +55,8 @@ public class InitMemoryConfig implements ApplicationListener<ContextRefreshedEve
 	 public static final Map<String,Map<String,Object>> emailCodeMap = new HashMap<>(16);
 	
 	 public void init() {
-		initMap = new HashMap<String, Object>();
-		System.out.println("initMap初始化了");
+		initMap = new HashMap<>();
+		 logger.info("initMap初始化了");
 		/**获取角色列表*/
 		List<RoleInfo> roleList = roleInfoService.findRoleList(null);
 		if(!CollectionUtils.isEmpty(roleList)) {
@@ -73,13 +86,18 @@ public class InitMemoryConfig implements ApplicationListener<ContextRefreshedEve
 		}
 	}
 
-	@Override
+	/*@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 	 	//防止重复执行
 		if(event.getApplicationContext().getParent() == null ) {
 			this.init();
 		}
 		System.out.println("我的父容器为：" + event.getApplicationContext().getParent());
-	}
+	}*/
 
+	@Override
+	public void run(ApplicationArguments args) throws Exception {
+		this.init();
+		logger.info(ArrayUtils.toString(args.getSourceArgs()));
+	}
 }

@@ -2,9 +2,10 @@ package com.cxp.personalmanage.mapper.postgresql;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cxp.personalmanage.pojo.UserRoleInfo;
 
-public interface UserRoleInfoMapper {
+public interface UserRoleInfoMapper extends BaseMapper<UserRoleInfo> {
 
     /**
      * 新增数据

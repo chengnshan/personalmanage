@@ -86,9 +86,9 @@
     </select>
     
     <insert id="insertMenuInfo" parameterType="com.cxp.personalmanage.pojo.MenuInfo">
-    	insert into menu_info (menuid,menuname,menuurl,remark,classstyle,sort,parent_menuid,menu_level) 
+    	insert into menu_info (menuid,menuname,menuurl,remark,classstyle,sort,parent_menuid,menu_level,`enable`)
     	values 
-    	(#{menuId},#{menuName},#{menuUrl},#{remark},#{classStyle},#{sort},#{parentMenuId},#{menuLevel})
+    	(#{menuId},#{menuName},#{menuUrl},#{remark},#{classStyle},#{sort},#{parentMenuId},#{menuLevel},#{enable})
     </insert>
     
     <!-- 更新用户 -->

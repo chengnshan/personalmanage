@@ -19,7 +19,7 @@
 	</sql>
 
 	<!--根据用户名获取对应角色-->
-	<select id="findUserRoleInfoList" parameterType="String" resultMap="resultMap">
+	<select id="findUserRoleInfoList" parameterType="java.lang.String" resultMap="resultMap">
 		SELECT b.id,b.roleid,b.rolename,b.description,b.enable,b.create_time,b.create_user,b.update_time,b.update_user
 			FROM user_role_info a ,roleinfo b
 			WHERE a.roleid = b.roleid  AND a.enable = 1

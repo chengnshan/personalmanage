@@ -108,10 +108,9 @@ public class MenuController extends BaseController{
     				returnStr = buildSuccessResultInfo("菜单添加成功!");
     				//清除redis中存储的菜单列表,重新从数据加载
     				stringRedisTemplate.delete(CommonUtil.getIpAddr(request)+"-"+Constant.LOGIN_MENU_INFO);
-    			}else {
+				}else {
     				returnStr = buildFailedResultInfo(-1, "此菜单已经存在,不能重复添加!");
     			}
-    			TimeUnit.SECONDS.sleep(30L);
 			} catch (Exception e) {
 				logger.error("insertMenuInfo添加菜单出错 : "+e.getMessage());
 				returnStr = buildFailedResultInfo(-1, "服务器异常,添加失败!");

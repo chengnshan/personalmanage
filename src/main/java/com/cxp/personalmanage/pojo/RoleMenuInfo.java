@@ -1,7 +1,10 @@
 package com.cxp.personalmanage.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 
+@TableName(value = "role_menu_info", resultMap = "baseResultMap")
 public class RoleMenuInfo extends BaseEntityInfo implements Serializable {
 
 	private static final long serialVersionUID = -6593321694359467857L;

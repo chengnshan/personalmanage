@@ -1,7 +1,7 @@
 package com.cxp.personalmanage.mapper.postgresql;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cxp.personalmanage.pojo.Student;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -32,7 +33,8 @@ import com.cxp.personalmanage.utils.JackJsonUtil;
 import com.cxp.personalmanage.utils.encrypt.AESUtil;
 
 @Service(value = "consumeDetailInfoService")
-public class ConsumeDetailInfoServiceImpl implements ConsumeDetailInfoService {
+public class ConsumeDetailInfoServiceImpl extends ServiceImpl<ConsumeDetailInfoMapper,ConsumeDetailInfo>
+        implements ConsumeDetailInfoService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConsumeDetailInfoServiceImpl.class);
 

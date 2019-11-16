@@ -7,7 +7,7 @@ define(['common_share'],function(common_share){
                 data: '',
                 contentType: 'application/x-www-form-urlencoded',
                 success: function (data) {
-                    let resultCode = data.resultCode;
+                    var resultCode = data.resultCode;
                     if ( resultCode >= 0 ){
                         var resultData = data.resultData;
                         var userInfo = JSON.parse(resultData);
@@ -34,7 +34,7 @@ define(['common_share'],function(common_share){
                         });
                         $("#menu_ul").append(html);
                     }else {
-                        let resultMessage = data.resultMessage;
+                        var resultMessage = data.resultMessage;
                         alert(resultMessage);
                     }
                 }

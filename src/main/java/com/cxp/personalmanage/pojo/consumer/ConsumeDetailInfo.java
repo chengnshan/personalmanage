@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 
@@ -16,6 +17,7 @@ import com.cxp.personalmanage.pojo.BaseEntityInfo;
 import com.cxp.personalmanage.utils.DateTimeUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+@TableName(value = "consume_detail_info", resultMap = "baseResultMap")
 public class ConsumeDetailInfo extends BaseEntityInfo implements Serializable {
 
 	private static final long serialVersionUID = 8650652903061206863L;

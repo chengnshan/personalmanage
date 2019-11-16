@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.cxp.personalmanage.config.context.InitMemoryConfig;
+import com.cxp.personalmanage.service.MenuInfoService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -33,6 +35,9 @@ public class RoleMenuInfoServiceImpl implements RoleMenuInfoService {
 
 	@Autowired
 	private RoleMenuInfoMapper roleMenuInfoMapper;
+
+	@Autowired
+	private MenuInfoService menuInfoService;
 	
 	@Autowired
 	@Qualifier(value = "stringRedisTemplate")
@@ -109,6 +114,7 @@ public class RoleMenuInfoServiceImpl implements RoleMenuInfoService {
     	UserInfo userInfo = CommonUtil.getCurrentLoginUser(request);
     	String userMenuKey = CommonUtil.getIpAddr(request) + "-" + Constant.LOGIN_MENU_INFO+"-"+userInfo.getUserName();
     	stringRedisTemplate.delete(userMenuKey);
+		InitMemoryConfig.initMap.put(Constant.InitKey.MENU_INFO_LIST, menuInfoService.findMenuInfoList(null));
     	
 		return Constant.SUCC;
 	}

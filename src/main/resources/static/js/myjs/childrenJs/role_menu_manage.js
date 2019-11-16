@@ -250,7 +250,9 @@ define(['role_menu_manage'],function(role_menu_manage){
                     var result = data.resultData;
                     if(data.resultCode >=0 && result){
                     	$(".success_p.saveRoleMenu").text("角色菜单信息保存成功!");
-                    	$('.alert-success.saveRoleMenu').slideDown(500).delay(2000).slideUp(1000);
+                    	$('.alert-success.saveRoleMenu').slideDown(500).delay(3000).slideUp(1000);
+                    //    role_menu_manage.getRoleList();
+                        location.reload();
                     }else{
                     	$(".warning_p.saveRoleMenu").text(data.resultMessage);
                     	$('.alert-warning.saveRoleMenu').slideDown(500).delay(2000).slideUp(1000);

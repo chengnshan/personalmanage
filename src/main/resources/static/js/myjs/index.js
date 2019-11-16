@@ -59,7 +59,7 @@ define(['index'],function(index){
                 data: '',
                 contentType: 'application/x-www-form-urlencoded',
                 success: function (data) {
-                    let resultCode = data.resultCode;
+                    var resultCode = data.resultCode;
                     if ( resultCode >= 0 ){
                         var resultData = data.resultData;
                         var userInfo = JSON.parse(resultData);
@@ -86,7 +86,7 @@ define(['index'],function(index){
                         });
                         $("#menu_ul").append(html);
                     }else {
-                        let resultMessage = data.resultMessage;
+                        var resultMessage = data.resultMessage;
                         alert(resultMessage);
                     }
                 }

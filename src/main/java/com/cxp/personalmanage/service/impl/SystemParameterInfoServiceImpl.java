@@ -3,6 +3,7 @@ package com.cxp.personalmanage.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,8 @@ import com.cxp.personalmanage.pojo.SystemParameterInfo;
 import com.cxp.personalmanage.service.SystemParameterInfoService;
 
 @Service(value = "systemParameterInfoService")
-public class SystemParameterInfoServiceImpl implements SystemParameterInfoService {
+public class SystemParameterInfoServiceImpl extends ServiceImpl<SystemParameterInfoMapper,SystemParameterInfo>
+		implements SystemParameterInfoService {
 
 	@Autowired
 	private SystemParameterInfoMapper systemParameterInfoMapper;

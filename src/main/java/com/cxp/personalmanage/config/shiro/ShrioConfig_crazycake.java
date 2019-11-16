@@ -16,7 +16,6 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.AccessControlFilter;
-import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
@@ -47,7 +46,7 @@ import org.springframework.core.env.Environment;
 public class ShrioConfig_crazycake implements EnvironmentAware{
 	private static final Logger logger = LoggerFactory.getLogger(ShrioConfig_crazycake.class);
 	
-	private Environment enviroment;
+	public static Environment enviroment;
 	
 	@Bean(name = "shiroFilter")
 	public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
@@ -341,7 +340,7 @@ public class ShrioConfig_crazycake implements EnvironmentAware{
 
 	@Override
 	public void setEnvironment(Environment environment) {
-		this.enviroment=environment;
+		ShrioConfig_crazycake.enviroment=environment;
 	}
 
 	/**

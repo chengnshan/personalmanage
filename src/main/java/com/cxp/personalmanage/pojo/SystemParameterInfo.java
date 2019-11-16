@@ -1,15 +1,31 @@
 package com.cxp.personalmanage.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 
+@TableName(value = "system_parameter_info", resultMap = "baseResultMap")
 public class SystemParameterInfo extends BaseEntityInfo implements Serializable{
 
 	private static final long serialVersionUID = -3146624782820248912L;
-	
+
+	@TableId(value = "id", type = IdType.AUTO)
+	@TableField
 	private Integer id;
+
+	@TableField(value = "param_code")
 	private String param_code;
+
+	@TableField(value = "param_value")
 	private String param_value;
+
+	@TableField(value = "param_name")
 	private String param_name;
+
+	@TableField(value = "enable")
 	private Integer enable = 1 ;
 
 	public Integer getId() {

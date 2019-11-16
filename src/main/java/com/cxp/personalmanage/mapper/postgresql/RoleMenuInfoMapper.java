@@ -3,9 +3,10 @@ package com.cxp.personalmanage.mapper.postgresql;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cxp.personalmanage.pojo.RoleMenuInfo;
 
-public interface RoleMenuInfoMapper {
+public interface RoleMenuInfoMapper extends BaseMapper<RoleMenuInfo> {
 
 	/**
 	 * 查询角色菜单信息 

@@ -3,9 +3,10 @@ package com.cxp.personalmanage.service;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.cxp.personalmanage.pojo.UserInfo;
 
-public interface UserInfoService {
+public interface UserInfoService extends IService<UserInfo> {
 
     /**
      * 根据用户账号或者id查询唯一结果

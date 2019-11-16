@@ -3,6 +3,7 @@ package com.cxp.personalmanage.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +13,11 @@ import com.cxp.personalmanage.pojo.UserInfo;
 import com.cxp.personalmanage.service.UserInfoService;
 
 @Service(value = "userInfoService")
-public class UserInfoServiceImpl implements UserInfoService {
+public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
 
 	@Autowired
 	private UserInfoMapper userInfoMapper;
+
 	@Autowired
 	private UserRoleInfoMapper userRoleInfoMapper;
 

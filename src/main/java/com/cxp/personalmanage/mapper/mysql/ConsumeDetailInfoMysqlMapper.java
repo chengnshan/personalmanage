@@ -16,7 +16,7 @@ public interface ConsumeDetailInfoMysqlMapper {
 	
 	/**
 	 * 根据Map传过来 的条件查询
-	 * @param consumeDetailInfo
+	 * @param map
 	 * @return
 	 */
 	public List<ConsumeDetailInfo> findConsumeDetailInfoListByMap(Map<String,Object> map);

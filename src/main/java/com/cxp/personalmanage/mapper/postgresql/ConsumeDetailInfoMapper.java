@@ -3,9 +3,10 @@ package com.cxp.personalmanage.mapper.postgresql;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cxp.personalmanage.pojo.consumer.ConsumeDetailInfo;
 
-public interface ConsumeDetailInfoMapper {
+public interface ConsumeDetailInfoMapper extends BaseMapper<ConsumeDetailInfo> {
 
 	/**
 	 * 根据属性查询 

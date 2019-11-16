@@ -3,10 +3,11 @@ package com.cxp.personalmanage.mapper.postgresql;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cxp.personalmanage.pojo.UserInfo;
 import org.apache.ibatis.annotations.Param;
 
-public interface UserInfoMapper {
+public interface UserInfoMapper extends BaseMapper<UserInfo> {
 	/**
 	 * 根据用户账号或者id查询唯一结果
 	 * @param userInfo

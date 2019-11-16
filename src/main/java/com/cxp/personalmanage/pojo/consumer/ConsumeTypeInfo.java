@@ -1,7 +1,10 @@
 package com.cxp.personalmanage.pojo.consumer;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 
+@TableName(value = "consume_type_info", resultMap = "baseResultMap")
 public class ConsumeTypeInfo implements Serializable {
 
 	private static final long serialVersionUID = 8049806183277682943L;

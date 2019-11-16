@@ -1,5 +1,6 @@
 package com.cxp.personalmanage.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cxp.personalmanage.common.Constant;
 import com.cxp.personalmanage.config.context.InitMemoryConfig;
 import com.cxp.personalmanage.mapper.postgresql.MenuInfoMapper;
@@ -24,7 +25,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 @Service(value = "menuInfoService")
-public class MenuInfoServiceImpl implements MenuInfoService {
+public class MenuInfoServiceImpl extends ServiceImpl<MenuInfoMapper, MenuInfo> implements MenuInfoService {
 
     @Autowired
     private MenuInfoMapper menuInfoMapper;

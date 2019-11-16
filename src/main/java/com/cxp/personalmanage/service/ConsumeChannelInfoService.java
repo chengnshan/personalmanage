@@ -1,10 +1,11 @@
 package com.cxp.personalmanage.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.cxp.personalmanage.pojo.consumer.ConsumeChannelInfo;
 
 import java.util.List;
 
-public interface ConsumeChannelInfoService {
+public interface ConsumeChannelInfoService extends IService<ConsumeChannelInfo> {
 
     /**
      * 根据对象属性查询列表

@@ -1,10 +1,11 @@
 package com.cxp.personalmanage.mapper.postgresql;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cxp.personalmanage.pojo.consumer.ConsumeChannelInfo;
 
 import java.util.List;
 
-public interface ConsumeChannelInfoMapper {
+public interface ConsumeChannelInfoMapper extends BaseMapper<ConsumeChannelInfo> {
 
     /**
      * 根据对象属性查询列表

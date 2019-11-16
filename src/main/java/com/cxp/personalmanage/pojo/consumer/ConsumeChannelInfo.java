@@ -1,5 +1,6 @@
 package com.cxp.personalmanage.pojo.consumer;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@TableName(value = "consume_channel_info", resultMap = "baseResultMap")
 public class ConsumeChannelInfo implements Serializable {
 
     private static final long serialVersionUID = 8497031604047864584L;

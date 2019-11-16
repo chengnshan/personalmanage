@@ -3,10 +3,11 @@ package com.cxp.personalmanage.service;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.cxp.personalmanage.pojo.consumer.ConsumeDetailInfo;
 import com.cxp.personalmanage.pojo.excel.ExceConsumeDetailInfo;
 
-public interface ConsumeDetailInfoService {
+public interface ConsumeDetailInfoService extends IService<ConsumeDetailInfo> {
 
 	/**
 	 * 根据属性查询 

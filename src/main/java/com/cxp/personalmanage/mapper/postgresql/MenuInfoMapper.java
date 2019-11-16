@@ -1,11 +1,12 @@
 package com.cxp.personalmanage.mapper.postgresql;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cxp.personalmanage.pojo.MenuInfo;
 
 import java.util.List;
 import java.util.Map;
 
-public interface MenuInfoMapper {
+public interface MenuInfoMapper extends BaseMapper<MenuInfo> {
 
 	/**
 	 * 获取菜单列表

@@ -1,24 +1,48 @@
 package com.cxp.personalmanage.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@TableName(value = "userinfo", resultMap = "baseResultMap")
 public class UserInfo extends BaseEntityInfo implements Serializable {
 	private static final long serialVersionUID = -5890268832873153185L;
+
+	//主键,且属于自增型
+	@TableId(type = IdType.AUTO)
+	@TableField
 	private Integer id;
+
+	@TableField(value = "username")
 	private String userName;// 用户名
+
+	@TableField(value = "password")
 	private String password;// 密码
+
+	@TableField(value = "salt")
 	private String salt;// 盐
+
+	@TableField(value = "realName")
 	private String realName;
 
+	@TableField(value = "tel_phone")
 	private String telPhone;
 
+	@TableField(value = "image_url")
 	private String image_url; // 图片路径
 
+	@TableField(exist = false)
 	private List<RoleInfo> roleList = new ArrayList<RoleInfo>();
-	private int enable = 1;
 
+	@TableField(value = "enable")
+	private Integer enable = 1;
+
+	@TableField(exist = false)
 	private String[] roleIds;
 
 	public String[] getRoleIds() {
@@ -77,11 +101,11 @@ public class UserInfo extends BaseEntityInfo implements Serializable {
 		this.roleList = roleList;
 	}
 
-	public int getEnable() {
+	public Integer getEnable() {
 		return enable;
 	}
 
-	public void setEnable(int enable) {
+	public void setEnable(Integer enable) {
 		this.enable = enable;
 	}
 

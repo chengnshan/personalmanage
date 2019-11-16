@@ -3,6 +3,7 @@ package com.cxp.personalmanage;
 import com.cxp.personalmanage.config.redis.EnableRedisConfig;
 import com.cxp.personalmanage.config.websocket.EnableWebsocketConfig;
 import org.mybatis.spring.annotation.MapperScan;
+import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;

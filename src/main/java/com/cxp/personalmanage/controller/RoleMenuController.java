@@ -65,7 +65,8 @@ public class RoleMenuController extends BaseController {
 	/**
 	 * 添加角色菜单信息
 	 * @param request
-	 * @param roleMenuInfo
+	 * @param roleId
+	 * @param menuId
 	 * @return
 	 */
 	@RequestMapping(value = "/saveRoleMenuInfo")

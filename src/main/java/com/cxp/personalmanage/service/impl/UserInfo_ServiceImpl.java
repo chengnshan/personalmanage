@@ -1,7 +1,6 @@
 package com.cxp.personalmanage.service.impl;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,12 +13,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -101,7 +101,7 @@ public class UserInfo_ServiceImpl implements UserInfo_Service {
     	UserInfo loginUser = new UserInfo();
         try {
     		 BeanUtils.copyProperties(loginUser, principal);
-    	 } catch (IllegalAccessException | InvocationTargetException e) {
+    	 } catch (BeansException e) {
     		 e.printStackTrace();
     	 }
 
@@ -177,7 +177,7 @@ public class UserInfo_ServiceImpl implements UserInfo_Service {
     	UserInfo loginUser = new UserInfo();
         try {
     		 BeanUtils.copyProperties(loginUser, principal);
-    	 } catch (IllegalAccessException | InvocationTargetException e) {
+    	 } catch (BeansException e) {
     		 e.printStackTrace();
     	 }
         

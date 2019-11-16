@@ -8,12 +8,12 @@ import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.cxp.personalmanage.config.shiro.ShrioConfig_crazycake;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
-import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,20 +29,35 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import java.sql.SQLException;
 
+/**
+ * @author cheng
+ */
 @Configuration
+@EnableConfigurationProperties(SecondDataSourceProperties.class)
 @MapperScan(basePackages = { "com.cxp.personalmanage.mapper.mysql" }, sqlSessionFactoryRef = "sqlSessionFactory2")
 @Import(value= {EntityInterceptor.class,SQLStatsInterceptor.class})
 public class SecondSessionFactory {
 
-	@Autowired
-	@Qualifier("secondaryDataSource")
-	private DataSource ds2;
+	private static final Logger logger = LoggerFactory.getLogger(SecondSessionFactory.class);
 	
 	@Autowired
 	private EntityInterceptor entityInterceptor;
 	
 	@Autowired
-	private SQLStatsInterceptor sQLStatsInterceptor;
+	private SQLStatsInterceptor sqlStatsInterceptor;
+
+	@Autowired
+	private SecondDataSourceProperties secondDataSourceProperties;
+
+	@Autowired
+	private Environment environment;
+
+	@PostConstruct
+	public void init(){
+		if (environment == null){
+			this.environment = ShrioConfig_crazycake.enviroment;
+		}
+	}
 	
 	@Bean(name = "sqlSessionFactory2")
 	public SqlSessionFactory sqlSessionFactory2() throws Exception {
@@ -53,7 +68,7 @@ public class SecondSessionFactory {
         Resource[] resources = new PathMatchingResourcePatternResolver().getResources("classpath*:static/mybatis/mysql/**/*.xml");
         factoryBean.setMapperLocations(resources);
         //设置mybatis拦截器
-        factoryBean.setPlugins(new Interceptor[] {entityInterceptor,sQLStatsInterceptor});
+        factoryBean.setPlugins(new Interceptor[] {entityInterceptor,sqlStatsInterceptor});
 		return factoryBean.getObject();
 	}
 
@@ -74,28 +89,27 @@ public class SecondSessionFactory {
 		return configurer;
 	}*/
 
-	private Environment environment;
-
 	@Bean(name = "secondaryDataSource")
 	public DataSource secondDataSource() {
-		this.environment = ShrioConfig_crazycake.enviroment;
 		DruidDataSource druidDataSource = new DruidDataSource();
-		druidDataSource.setUrl(environment.getProperty("spring.second.datasource.url"));
-		druidDataSource.setDriverClassName(environment.getProperty("spring.second.datasource.driver-class-name"));
-		druidDataSource.setUsername(environment.getProperty("spring.second.datasource.username"));
-		druidDataSource.setPassword(environment.getProperty("spring.second.datasource.password"));
-		druidDataSource.setMaxActive(Integer.valueOf(environment.getProperty("datasource.maxActive")));
-		druidDataSource.setMinIdle(Integer.valueOf(environment.getProperty("datasource.minIdle")));
-		druidDataSource.setMaxWait(Long.valueOf(environment.getProperty("datasource.maxWait")));
+		druidDataSource.setUrl(secondDataSourceProperties.getUrl());
+		druidDataSource.setDriverClassName(secondDataSourceProperties.getDriverClassName());
+		druidDataSource.setUsername(secondDataSourceProperties.getUsername());
+
+		druidDataSource.setInitialSize(secondDataSourceProperties.getInitialize());
+		druidDataSource.setPassword(secondDataSourceProperties.getPassword());
+		druidDataSource.setMaxActive(secondDataSourceProperties.getMaxActive());
+		druidDataSource.setMinIdle(secondDataSourceProperties.getMinIdle());
+		druidDataSource.setMaxWait(secondDataSourceProperties.getMaxWait());
+
 		druidDataSource.setTestOnBorrow(false);
-		druidDataSource.setValidationQuery(environment.getProperty("datasource.validationQuery"));
-		druidDataSource.setInitialSize(Integer.valueOf(environment.getProperty("datasource.initialize")));
-		druidDataSource.setConnectionProperties(environment.getProperty("datasource.connectionProperties"));
-		druidDataSource.setUseGlobalDataSourceStat(Boolean.valueOf(environment.getProperty("useGlobalDataSourceStat")));
+		druidDataSource.setValidationQuery(secondDataSourceProperties.getValidationQuery());
+		druidDataSource.setConnectionProperties(secondDataSourceProperties.getConnectionProperties());
+		druidDataSource.setUseGlobalDataSourceStat(secondDataSourceProperties.isUseGlobalDataSourceStat());
 		try {
-			druidDataSource.setFilters(environment.getProperty("datasource.filters"));
+			druidDataSource.setFilters(secondDataSourceProperties.getFilters());
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error("secondDataSource exception" + e.getMessage(), e);
 		}
 		return druidDataSource;
 	}

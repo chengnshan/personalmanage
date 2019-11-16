@@ -63,6 +63,5 @@ public class TestRedisAll {
 
         System.out.println(userInfoService.list());
 
-        System.out.println(consumeDetailInfoService.list());
     }
 }

@@ -5,25 +5,20 @@ import javax.sql.DataSource;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
-import com.cxp.personalmanage.config.DataSourceConfig;
 import com.cxp.personalmanage.config.shiro.ShrioConfig_crazycake;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
-import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -36,21 +31,31 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.sql.SQLException;
 
 @Configuration
+@EnableConfigurationProperties(DataSourceProperties.class)
 @MapperScan(basePackages = { "com.cxp.personalmanage.mapper.postgresql" }, sqlSessionFactoryRef = "sqlSessionFactory1")
 @Import(value= {EntityInterceptor.class,SQLStatsInterceptor.class})
 public class PrimarySessionFactory {
 
-	@Autowired
-	@Qualifier("primaryDataSource")
-	private DataSource dataSource;
+	private static final Logger logger = LoggerFactory.getLogger(PrimarySessionFactory.class);
 	
 	@Autowired
 	private EntityInterceptor entityInterceptor;
 	
 	@Autowired
-	private SQLStatsInterceptor sQLStatsInterceptor;
+	private SQLStatsInterceptor sqlStatsInterceptor;
 
+	@Autowired
 	private Environment environment;
+
+	@Autowired
+	private DataSourceProperties dataSourceProperties;
+
+	@PostConstruct
+	public void init(){
+		if (environment == null){
+			this.environment = ShrioConfig_crazycake.enviroment;
+		}
+	}
 	
 	@Bean(name = "sqlSessionFactory1")
 	public SqlSessionFactory sqlSessionFactory1() throws Exception {
@@ -61,10 +66,9 @@ public class PrimarySessionFactory {
         Resource[] resources = new PathMatchingResourcePatternResolver().getResources("classpath*:static/mybatis/postgresql/**/*.xml");
         factoryBean.setMapperLocations(resources);
         //设置mybatis拦截器
-        factoryBean.setPlugins(new Interceptor[] {entityInterceptor,sQLStatsInterceptor});
+        factoryBean.setPlugins(new Interceptor[] {entityInterceptor,sqlStatsInterceptor});
 
-		SqlSessionFactory sqlSessionFactory = factoryBean.getObject();
-		return sqlSessionFactory;
+		return factoryBean.getObject();
 	}
 
 	@Bean
@@ -84,27 +88,30 @@ public class PrimarySessionFactory {
 		return configurer;
 	}*/
 
+	@Autowired
+	private SecondDataSourceProperties secondDataSourceProperties;
+
 	@Bean(name = "primaryDataSource")
 	@Primary
 	public DataSource primaryDataSource() {
-		this.environment = ShrioConfig_crazycake.enviroment;
 		DruidDataSource druidDataSource = new DruidDataSource();
-		druidDataSource.setUrl(environment.getProperty("spring.datasource.url"));
-		druidDataSource.setDriverClassName(environment.getProperty("spring.datasource.driver-class-name"));
+		druidDataSource.setUrl(dataSourceProperties.getUrl());
+		druidDataSource.setDriverClassName(dataSourceProperties.getDriverClassName());
 		druidDataSource.setUsername(environment.getProperty("spring.datasource.username"));
 		druidDataSource.setPassword(environment.getProperty("spring.datasource.password"));
-		druidDataSource.setMaxActive(Integer.valueOf(environment.getProperty("datasource.maxActive")));
-		druidDataSource.setMinIdle(Integer.valueOf(environment.getProperty("datasource.minIdle")));
-		druidDataSource.setMaxWait(Long.valueOf(environment.getProperty("datasource.maxWait")));
+
+		druidDataSource.setMaxActive(secondDataSourceProperties.getMaxActive());
+		druidDataSource.setMinIdle(secondDataSourceProperties.getMinIdle());
+		druidDataSource.setMaxWait(secondDataSourceProperties.getMaxWait());
 		druidDataSource.setTestOnBorrow(false);
-		druidDataSource.setValidationQuery(environment.getProperty("datasource.validationQuery"));
-		druidDataSource.setInitialSize(Integer.valueOf(environment.getProperty("datasource.initialize")));
-		druidDataSource.setConnectionProperties(environment.getProperty("datasource.connectionProperties"));
-		druidDataSource.setUseGlobalDataSourceStat(Boolean.valueOf(environment.getProperty("useGlobalDataSourceStat")));
+		druidDataSource.setValidationQuery(secondDataSourceProperties.getValidationQuery());
+		druidDataSource.setInitialSize(secondDataSourceProperties.getInitialize());
+		druidDataSource.setConnectionProperties(secondDataSourceProperties.getConnectionProperties());
+		druidDataSource.setUseGlobalDataSourceStat(secondDataSourceProperties.isUseGlobalDataSourceStat());
 		try {
-			druidDataSource.setFilters(environment.getProperty("datasource.filters"));
+			druidDataSource.setFilters(secondDataSourceProperties.getFilters());
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error("secondDataSource exception" + e.getMessage(), e);
 		}
 		return druidDataSource;
 	}

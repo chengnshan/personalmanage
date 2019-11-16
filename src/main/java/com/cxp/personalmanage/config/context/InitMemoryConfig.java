@@ -1,10 +1,15 @@
 package com.cxp.personalmanage.config.context;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
+import com.cxp.personalmanage.utils.StringUtil;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,12 +55,11 @@ public class InitMemoryConfig implements ApplicationRunner {
 	 @Qualifier(value = "consumeTypeInfoService")
 	 private ConsumeTypeInfoService consumeTypeInfoService;
 	
-	 public static Map<String ,Object> initMap = null;
+	 public static Map<String ,Object> initMap = new HashMap<>(8);
 
 	 public static final Map<String,Map<String,Object>> emailCodeMap = new HashMap<>(16);
 	
 	 public void init() {
-		initMap = new HashMap<>();
 		 logger.info("initMap初始化了");
 		/**获取角色列表*/
 		List<RoleInfo> roleList = roleInfoService.findRoleList(null);
@@ -73,17 +77,51 @@ public class InitMemoryConfig implements ApplicationRunner {
 		if(!CollectionUtils.isEmpty(findMenuInfoList)) {
 			initMap.put(Constant.InitKey.MENU_INFO_LIST, findMenuInfoList);
 		}
-		
-		/**获取消费同步URL地址*/
+		/**加载系统参数表中的内容*/
+		 List<SystemParameterInfo> infos = systemParameterInfoService.listByProperty(null);
+		 if(!CollectionUtils.isEmpty(infos)) {
+			 initMap.put(Constant.InitKey.SYSTEM_PARAMTER_INFO_LIST, infos);
+		 }
+
+		/* *//**获取消费同步URL地址*//*
 		SystemParameterInfo paramInfo = systemParameterInfoService.getByCode(Constant.ScheduConsume.SYNC_COSUME_DETAIL_URL);
 		if(null != paramInfo) {
 			initMap.put(Constant.ScheduConsume.SYNC_COSUME_DETAIL_URL, paramInfo.getParam_value());
 		}
-		/**获取消费同步开关*/
+		*//**获取消费同步开关*//*
 		SystemParameterInfo paramInfo1 = systemParameterInfoService.getByCode(Constant.ScheduConsume.SYNC_COSUME_DETAIL_SWITCH);
 		if(null != paramInfo) {
 			initMap.put(Constant.ScheduConsume.SYNC_COSUME_DETAIL_SWITCH, paramInfo1.getParam_value());
+		}*/
+	}
+
+	/**
+	 * 获取系统参数表中的数据
+	 * @param code
+	 * @return
+	 */
+	public static SystemParameterInfo getSysParamInfoByCode(String code){
+		if (StringUtils.isBlank(StringUtil.conveterStr(code))){
+			return null;
 		}
+		Map<String, Object> initMap = InitMemoryConfig.initMap;
+		if(MapUtils.isNotEmpty(initMap)) {
+			List<SystemParameterInfo> infos = (List<SystemParameterInfo>) initMap.get(Constant.InitKey.SYSTEM_PARAMTER_INFO_LIST);
+			if ( !CollectionUtils.isEmpty(infos) ){
+				Stream<SystemParameterInfo> infoStream = infos.stream().filter(
+						systemParameterInfo -> code.equalsIgnoreCase(systemParameterInfo.getParam_code()));
+				return infoStream.findFirst().get();
+			}
+		}
+		return null;
+	}
+
+	public static String getParamValue(String code){
+		SystemParameterInfo paramInfoByCode = getSysParamInfoByCode(code);
+		if (paramInfoByCode != null){
+			return paramInfoByCode.getParam_value();
+		}
+		return null;
 	}
 
 	/*@Override
@@ -99,5 +137,18 @@ public class InitMemoryConfig implements ApplicationRunner {
 	public void run(ApplicationArguments args) throws Exception {
 		this.init();
 		logger.info(ArrayUtils.toString(args.getSourceArgs()));
+	}
+
+	public static void main(String[] args) {
+		List<Integer> list = new ArrayList<>();
+		list.add(45);
+		list.add(23);
+		list.add(22);
+		list.add(166);
+		Stream<Integer> integerStream = list.stream().filter(i -> i == 16);
+		System.out.println(integerStream.count());
+
+		boolean b = list.stream().anyMatch(t -> t == 12);
+		System.out.println(b);
 	}
 }

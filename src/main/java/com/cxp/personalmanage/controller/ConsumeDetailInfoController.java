@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.cxp.personalmanage.pojo.consumer.ConsumeChannelInfo;
 import com.cxp.personalmanage.service.ConsumeChannelInfoService;
-import com.cxp.personalmanage.utils.JackJsonUtil;
+import com.cxp.personalmanage.service.UserInfoService;
+import com.cxp.personalmanage.utils.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -19,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,9 +40,6 @@ import com.cxp.personalmanage.pojo.consumer.ConsumeTypeInfo;
 import com.cxp.personalmanage.pojo.excel.ExceConsumeDetailInfo;
 import com.cxp.personalmanage.service.ConsumeDetailInfoService;
 import com.cxp.personalmanage.service.ConsumeTypeInfoService;
-import com.cxp.personalmanage.utils.CommonUtil;
-import com.cxp.personalmanage.utils.DateTimeUtil;
-import com.cxp.personalmanage.utils.ExcelUtil;
 
 @RestController
 @RequestMapping(value = "/consumeDetail")
@@ -54,11 +55,23 @@ public class ConsumeDetailInfoController extends BaseController {
 	@Qualifier(value = "consumeTypeInfoService")
 	private ConsumeTypeInfoService consumeTypeInfoService;
 
-	@Autowired
+	@Resource(name = "stringRedisTemplate")
 	private StringRedisTemplate stringRedisTemplate;
+
+	@Resource(name = "redisTemplate")
+	private RedisTemplate redisTemplate;
 
 	@Autowired
 	private ConsumeChannelInfoService consumeChannelInfoService;
+
+	@Autowired
+	private UserInfoService userInfoServcie;
+
+	@Value(value = "${custom.rabbitmq.exchange.direct.consumeDetail}")
+	private String consumeDetailDirectExchange;
+
+	@Value(value = "${custom.rabbitmq.routingKey.consumeDetail}")
+	private String consumeDetailRoutingKey;
 
 	/**
 	 *
@@ -141,21 +154,38 @@ public class ConsumeDetailInfoController extends BaseController {
 	}
 
 	@RequestMapping(value = "/saveConsumeDetailInfo")
-	public String saveConsumeDetailInfo(@RequestBody ConsumeDetailInfo consumeDetailInfo) {
+	public String saveConsumeDetailInfo(@RequestBody ConsumeDetailInfo consumeDetailInfo, HttpServletRequest request) {
 		logger.info("saveConsumeDetailInfo 方法入参: " + consumeDetailInfo.toString());
-		int num = 0;
 		try {
-			if (null != consumeDetailInfo && StringUtils.isNotBlank(consumeDetailInfo.getUserName())
-					&& null != consumeDetailInfo.getConsume_money() && null != consumeDetailInfo.getConsume_time()) {
-				num = consumeDetailInfoService.saveConsumeDetail(consumeDetailInfo);
-			} else {
-				return buildFailedResultInfo(-1, "添加资料不全,请确认后添加!");
+			if (StringUtils.isBlank(consumeDetailInfo.getUserName())){
+				return buildFailedResultInfo(-1, "添加的用户不能为空!");
 			}
-
-			if (num > 0) {
+			if (null == consumeDetailInfo.getConsume_money() ){
+				return buildFailedResultInfo(-1, "金额需要填写!");
+			}
+			if ( null == consumeDetailInfo.getConsume_time() ){
+				return buildFailedResultInfo(-1, "消费日期需要填写!");
+			}
+			UserInfo userInfo = userInfoServcie.getUserInfoByUserName(consumeDetailInfo.getUserName());
+			if (null == userInfo) {
+				throw new Exception("没有此用户存在,无法添加消费信息!");
+			}
+			UserInfo loginUser = CommonUtil.getCurrentLoginUser(request);
+			consumeDetailInfo.setCreate_user(loginUser != null ? loginUser.getUserName() : "");
+			consumeDetailInfo.setUpdate_user(loginUser != null ? loginUser.getUserName() : "");
+			//获取rabbitqmq的开关
+			String rabbitSwitch = InitMemoryConfig.getParamValue(Constant.RabbitMQConstant.USE_RABBITMQ_SWITCH);
+			if (Constant.FLAG_Y.equalsIgnoreCase(rabbitSwitch)){
+				//解耦,发送给rabbitmq
+				String str = String.valueOf(RabbitUtil.sendObject(consumeDetailDirectExchange, consumeDetailRoutingKey, consumeDetailInfo, ConsumeDetailInfo.class));
 				return buildSuccessResultInfo("添加成功!");
-			} else {
-				return buildFailedResultInfo(-1, "添加失败!");
+			}else {
+				int num = consumeDetailInfoService.saveConsumeDetail(consumeDetailInfo);
+				if (num > 0) {
+					return buildSuccessResultInfo("添加成功!");
+				} else {
+					return buildFailedResultInfo(-1, "添加失败!");
+				}
 			}
 
 		} catch (Exception e) {
@@ -186,15 +216,10 @@ public class ConsumeDetailInfoController extends BaseController {
 			consumeTypeList = consumeTypeInfoService.findConsumeTypeInfo(null);
 		}
 
-		String channelInfo = stringRedisTemplate.opsForValue().get(Constant.RedisCustomKey.CONSUMECHANNELKEY);
-		List<ConsumeChannelInfo> consumeChannelList = null;
-		if (StringUtils.isBlank(channelInfo)){
+		List<ConsumeChannelInfo> consumeChannelList = (List<ConsumeChannelInfo>)
+				redisTemplate.opsForValue().get(Constant.RedisCustomKey.CONSUMECHANNELKEY);
+		if (CollectionUtils.isEmpty(consumeChannelList)){
 			consumeChannelList = consumeChannelInfoService.findConsumeChannelList(null);
-		}else{
-			Map<String, Object> map = JackJsonUtil.jsonToMap(channelInfo);
-			if (MapUtils.isNotEmpty(map)){
-				consumeChannelList = (List<ConsumeChannelInfo>)map.get("resultData");
-			}
 		}
 
 		param.put("consumeDetailInfo", consumeDetailInfo1);

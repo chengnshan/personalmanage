@@ -9,10 +9,17 @@ public interface SystemParameterInfoService {
 
 	/**
 	 * 根据Code获取对象
-	 * @param paramCode
+	 * @param param
 	 * @return
 	 */
 	public List<SystemParameterInfo> getParameterInfoByCode(Map<String,Object> param);
-	
+
+	/**
+	 * 根据code获取
+	 * @param code
+	 * @return
+	 */
 	public SystemParameterInfo getByCode(String code);
+
+	public List<SystemParameterInfo> listByProperty(SystemParameterInfo systemParameterInfo);
 }

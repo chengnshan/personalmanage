@@ -48,9 +48,9 @@ public class RabbitUtil {
      * @param clazz
      * @param <T>
      */
-    public static <T> void sendObject(String exchange, String routingKey, T t ,Class<T> clazz){
+    public static <T> Object sendObject(String exchange, String routingKey, T t ,Class<T> clazz){
         if (t == null){
-            return;
+            return null;
         }
         String jsonStr = JackJsonUtil.objectToString(t);
 
@@ -60,8 +60,7 @@ public class RabbitUtil {
         Message message = new Message(jsonStr.getBytes(),messageProperties);
         Object receive = rabbitTemplate.convertSendAndReceive(exchange, routingKey,
                 message, new CorrelationData(UUID.randomUUID().toString()));
-
-
+        return receive;
     }
 
     public static <E> void sendList(String exchange, String routingKey, Collection<E> collection, Class<E> clazz){

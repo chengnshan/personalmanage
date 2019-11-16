@@ -1,6 +1,9 @@
 package com.cxp.personalmanage.common;
 
 public class Constant {
+
+	public static final String FLAG_Y="Y";
+
 	public static final String VRIFYCODE="vrifyCode";
 	public static final String SUCC="SUCC";
     public static final int ROWS = 10;
@@ -58,6 +61,7 @@ public class Constant {
     	public static final String ROLELIST = "roleList";
     	public static final String CONSUMER_TYPE_LIST = "consumeTypeList";
     	public static final String MENU_INFO_LIST = "menuInfoList";
+    	public static final String SYSTEM_PARAMTER_INFO_LIST = "system_paramter_info_list";
     }
     
     public class LinuxPath{
@@ -92,5 +96,9 @@ public class Constant {
 
     public class RedisCustomKey{
 		public static final String CONSUMECHANNELKEY = "consumechannelkey";
+	}
+
+	public class RabbitMQConstant{
+		public static final String USE_RABBITMQ_SWITCH = "USE_RABBITMQ_SWITCH";
 	}
 }

@@ -12,11 +12,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.cxp.personalmanage.pojo.UserInfo;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Component
 public class CommonUtil {
@@ -81,6 +82,10 @@ public class CommonUtil {
 
 		UserInfo userInfo = null;
 		try {
+			if (request == null){
+				request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+			}
+
 			String strUserInfo = stringRedisTemplate.opsForValue().get(getIpAddr(request));
 			if (org.apache.commons.lang.StringUtils.isNotBlank(strUserInfo)) {
 				userInfo = JackJsonUtil.jsonToObject(strUserInfo, UserInfo.class);

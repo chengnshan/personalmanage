@@ -28,4 +28,8 @@ public class SystemParameterInfoServiceImpl implements SystemParameterInfoServic
 		return systemParameterInfoMapper.getByCode(code);
 	}
 
+	@Override
+	public List<SystemParameterInfo> listByProperty(SystemParameterInfo systemParameterInfo) {
+		return systemParameterInfoMapper.listByProperty(systemParameterInfo);
+	}
 }

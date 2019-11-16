@@ -28,7 +28,7 @@ import org.crazycake.shiro.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -343,4 +343,17 @@ public class ShrioConfig_crazycake implements EnvironmentAware{
 	public void setEnvironment(Environment environment) {
 		this.enviroment=environment;
 	}
+
+	/**
+	 *
+	 * @return MethodInvokingFactoryBean 实例
+	 */
+	@Bean
+	public MethodInvokingFactoryBean methodInvokingFactoryBean() {
+		MethodInvokingFactoryBean bean = new MethodInvokingFactoryBean();
+		bean.setStaticMethod("org.apache.shiro.SecurityUtils.setSecurityManager");
+		bean.setArguments(securityManager());
+		return bean;
+	}
+
 }

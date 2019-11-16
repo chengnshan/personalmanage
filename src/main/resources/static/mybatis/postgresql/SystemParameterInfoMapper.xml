@@ -27,8 +27,27 @@
 		</where>
 	</select>
 	
-	<select id="getByCode" parameterType="String" resultMap="baseResultMap">
+	<select id="getByCode" parameterType="java.lang.String" resultMap="baseResultMap">
 		select <include refid="baseColumn"/> 
 		from system_parameter_info where param_code = #{param_code}
+	</select>
+
+	<select id="listByProperty" resultMap="baseResultMap" parameterType="com.cxp.personalmanage.pojo.SystemParameterInfo">
+		select
+		<include refid="baseColumn"/>
+		from system_parameter_info where  1=1
+		<if test=" param_code != null and param_code != ''">
+			param_code = #{param_code}
+		</if>
+		<if test=" param_value != null and param_value != ''">
+			param_value = #{param_value}
+		</if>
+		<if test=" param_name != null and param_name != ''">
+			param_name = #{param_name}
+		</if>
+		<if test=" enable != null ">
+			enable = #{enable}
+		</if>
+		order by id desc
 	</select>
 </mapper>

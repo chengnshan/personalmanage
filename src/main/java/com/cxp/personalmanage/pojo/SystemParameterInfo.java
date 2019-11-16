@@ -10,7 +10,7 @@ public class SystemParameterInfo extends BaseEntityInfo implements Serializable{
 	private String param_code;
 	private String param_value;
 	private String param_name;
-	private int enable = 1 ;
+	private Integer enable = 1 ;
 
 	public Integer getId() {
 		return id;
@@ -44,11 +44,11 @@ public class SystemParameterInfo extends BaseEntityInfo implements Serializable{
 		this.param_name = param_name;
 	}
 
-	public int getEnable() {
+	public Integer getEnable() {
 		return enable;
 	}
 
-	public void setEnable(int enable) {
+	public void setEnable(Integer enable) {
 		this.enable = enable;
 	}
 

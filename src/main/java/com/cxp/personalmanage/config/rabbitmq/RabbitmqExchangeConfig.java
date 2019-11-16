@@ -9,6 +9,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author : cheng
  * @date : 2019-11-13 20:39
@@ -23,6 +26,42 @@ public class RabbitmqExchangeConfig {
      DirectExchange: 按照routingkey分发到指定队列
      TopicExchange: 多关键字匹配(*代表匹配一个字符，#代表匹配多个字符)
      */
+
+    /**死信队列*/
+    @Value(value = "${custom.rabbitmq.exchange.direct.consumeDetail.dead}")
+    private String consumeDetailDirectExchangeDead;
+
+    /**死信队列的路由键*/
+    @Value(value = "${custom.rabbitmq.routingKey.consumeDetail.dead}")
+    private String consumeDetailRoutingKeyDead;
+
+    /**死信队列的队列*/
+    @Value(value = "${custom.rabbitmq.queue.consumeDetail.dead}")
+    private String consumeDetailQueueDead;
+
+    /**死信队列 的声明*/
+    @Bean(name = "consumeDetailDirectExchangeDead")
+    public DirectExchange consumeDetailDirectExchangeDead(){
+        return new DirectExchange(consumeDetailDirectExchangeDead,true,false, null);
+    }
+
+    @Bean(name = "consumeDetailQueueDead")
+    public Queue consumeDetailQueueDead() {
+        return new Queue(consumeDetailQueueDead,true,false,false);
+    }
+
+    /**
+     * 死信队列与死信交换机绑定
+     * @return
+     */
+    @Bean
+    public Binding deadBinding(){
+        return BindingBuilder.bind(consumeDetailQueueDead())
+                .to(consumeDetailDirectExchangeDead())
+                .with(consumeDetailRoutingKeyDead);
+    }
+
+    /**============================================*/
 
     @Value(value = "${custom.rabbitmq.exchange.direct.consumeDetail}")
     private String consumeDetailDirectExchange;
@@ -60,7 +99,10 @@ public class RabbitmqExchangeConfig {
          *              Lazy mode : 懒人模式
          *              Master locator :集群相关设置
          * */
-        return new Queue(consumeDetailQueue, true,false, false, null);
+        Map<String, Object> args=new HashMap<>(6);
+        args.put("x-dead-letter-exchange", consumeDetailDirectExchangeDead);
+        args.put("x-dead-letter-routing-key", consumeDetailRoutingKeyDead);
+        return new Queue(consumeDetailQueue, true,false, false, args);
     }
 
     @Value(value = "${custom.rabbitmq.routingKey.consumeDetail}")

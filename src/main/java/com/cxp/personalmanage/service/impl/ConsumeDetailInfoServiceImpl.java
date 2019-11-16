@@ -73,59 +73,53 @@ public class ConsumeDetailInfoServiceImpl implements ConsumeDetailInfoService {
 		return consumeDetailInfoMapper.findConsumeDetailInfoCountByMap(map);
 	}
 
-	@Transactional(value="txPrimaryManager",rollbackFor = { Exception.class, RuntimeException.class }, propagation = Propagation.REQUIRED)
+	@Transactional(rollbackFor = { Exception.class }, propagation = Propagation.REQUIRED)
 	@Override
 	public int saveConsumeDetail(ConsumeDetailInfo consumeDetailInfo) throws Exception {
-		UserInfo userInfo = userInfoServcie.getUserInfoByUserName(consumeDetailInfo.getUserName());
-		if (null == userInfo) {
-			throw new Exception("没有此用户存在,无法添加消费信息!");
-		}
+        int saveNum = 0;
+        //直接插入数据库
+        saveNum = consumeDetailInfoMapper.saveConsumeDetail(consumeDetailInfo);
+        //同步消费信息
+        String synConsumeSwitch = InitMemoryConfig.getParamValue(Constant.ScheduConsume.SYNC_COSUME_DETAIL_SWITCH);
+        if(StringUtils.isBlank(synConsumeSwitch)) {
+            SystemParameterInfo systemParam = systemParameterInfoService.getByCode(Constant.ScheduConsume.SYNC_COSUME_DETAIL_SWITCH);
+            synConsumeSwitch = systemParam != null ? systemParam.getParam_value() : "";
+        }
 
-		int saveNum = consumeDetailInfoMapper.saveConsumeDetail(consumeDetailInfo);
-		
-		//同步消费信息
-		Map<String, Object> initMap = InitMemoryConfig.initMap;
-		if(MapUtils.isNotEmpty(initMap)) {
-			String synConsumeSwitch = (String) initMap.get(Constant.ScheduConsume.SYNC_COSUME_DETAIL_SWITCH);
-			if(StringUtils.isBlank(synConsumeSwitch)) {
-				SystemParameterInfo systemParam = systemParameterInfoService.getByCode(Constant.ScheduConsume.SYNC_COSUME_DETAIL_SWITCH);
-				synConsumeSwitch = systemParam != null ? systemParam.getParam_value() : "";
-			}
-			//如果开关是开
-			if("Y".equals(synConsumeSwitch)) {
-				 String synConsumeUrl = (String) initMap.get(Constant.ScheduConsume.SYNC_COSUME_DETAIL_URL);
-				 Map<String, String> map =new HashMap<>();
-				 map.put("requestId", System.currentTimeMillis()+"");
-				 map.put("requestUser", "aliyun");
-				 
-				 Map<String, Object> mapData =new HashMap<>();
-				 mapData.put(Constant.CommonInterface.ACTION, Constant.CommonInterface.INSERT);
-				 List<ConsumeDetailInfo> list =new ArrayList<>();
-				 list.add(consumeDetailInfo);
-				 mapData.put(Constant.CommonInterface.REQUESTDATA, list);
-				 
-				 //加密请求内容
-				 String requestData = AESUtil.encrypt(JackJsonUtil.objTojson(mapData), Constant.encypt.ENCYPT_PASSWORD_KEY);
-				 map.put("requestObject", requestData);
-				 String postresult = HttpClientUtils.httpPost_header(synConsumeUrl, map);
-				 logger.info("同步消费明细结果 : "+ postresult );
-				 if(StringUtils.isNotBlank(postresult) && !"null".equals(postresult)) {
-					 Map<String, Object> returnMap = JackJsonUtil.jsonToMap(postresult);
-					 if(MapUtils.isNotEmpty(returnMap)) {
-						 String isSuccess = (String) returnMap.get("responseCode");
-						 if("life-00001".equals(isSuccess)) {
-							 return saveNum;
-						 }else {
-							 String errorMsg = (String) returnMap.get("responseObject");
-							 throw new Exception("添加消费信息失败,同步接口调用失败! "+ errorMsg);
-						 }
-					 }
-				 }else {
-					 throw new Exception("添加消费信息失败,同步接口调用异常!");
-				 }
-			}
-		}
-		 return saveNum;
+        //如果开关是开
+        if(Constant.FLAG_Y.equals(synConsumeSwitch)) {
+            String synConsumeUrl = InitMemoryConfig.getParamValue(Constant.ScheduConsume.SYNC_COSUME_DETAIL_URL);
+            Map<String, String> map =new HashMap<>();
+            map.put("requestId", System.currentTimeMillis()+"");
+            map.put("requestUser", "aliyun");
+
+            Map<String, Object> mapData =new HashMap<>();
+            mapData.put(Constant.CommonInterface.ACTION, Constant.CommonInterface.INSERT);
+            List<ConsumeDetailInfo> list =new ArrayList<>();
+            list.add(consumeDetailInfo);
+            mapData.put(Constant.CommonInterface.REQUESTDATA, list);
+
+            //加密请求内容
+            String requestData = AESUtil.encrypt(JackJsonUtil.objTojson(mapData), Constant.encypt.ENCYPT_PASSWORD_KEY);
+            map.put("requestObject", requestData);
+            String postresult = HttpClientUtils.httpPost_header(synConsumeUrl, map);
+            logger.info("同步消费明细结果 : "+ postresult );
+            if(StringUtils.isNotBlank(postresult) && !"null".equals(postresult)) {
+                Map<String, Object> returnMap = JackJsonUtil.jsonToMap(postresult);
+                if(MapUtils.isNotEmpty(returnMap)) {
+                    String isSuccess = (String) returnMap.get("responseCode");
+                    if("life-00001".equals(isSuccess)) {
+                        return saveNum;
+                    }else {
+                        String errorMsg = (String) returnMap.get("responseObject");
+                        throw new Exception("添加消费信息失败,同步接口调用失败! "+ errorMsg);
+                    }
+                }
+            }else {
+                throw new Exception("添加消费信息失败,同步接口调用异常!");
+            }
+        }
+        return saveNum;
 	}
 
 	@Transactional(value="txPrimaryManager",rollbackFor = { Exception.class, RuntimeException.class }, propagation = Propagation.REQUIRED)
@@ -193,6 +187,7 @@ public class ConsumeDetailInfoServiceImpl implements ConsumeDetailInfoService {
 	 * @param list
 	 * @return
 	 */
+	@Override
 	public int batchInsertDetailInfo(List<ConsumeDetailInfo> list) {
 		return consumeDetailInfoMapper.batchInsert(list);
 	}

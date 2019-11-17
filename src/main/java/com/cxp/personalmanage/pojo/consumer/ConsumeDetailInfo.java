@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -22,19 +25,39 @@ public class ConsumeDetailInfo extends BaseEntityInfo implements Serializable {
 
 	private static final long serialVersionUID = 8650652903061206863L;
 
+	@TableId(value = "id", type = IdType.AUTO)
+	@TableField
 	private Integer id;
+
+	@TableField(value = "user_name")
 	private String userName;
+
+	@TableField(value = "consume_time")
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 	private Date consume_time;
+
+	@TableField(value = "consume_money")
 	private BigDecimal consume_money;
+
+	@TableField(value = "consume_id")
 	private String consumeId;
+
+	@TableField(value = "remark")
 	private String remark;
+
+	@TableField(value = "channel_code")
 	private String channel_code;
 
+	@TableField(exist = false)
 	private ConsumeTypeInfo consumeTypeInfo;
+
+	@TableField(exist = false)
 	private ConsumeChannelInfo consumeChannelInfo;
 
+	@TableField(exist = false)
 	private String consumeName;
+
+	@TableField(exist = false)
 	private String weekDay;
 
 	public String getWeekDay() {

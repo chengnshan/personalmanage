@@ -119,7 +119,7 @@
 	</select>
 	
 	<!-- 查询总数 -->
-	<select id="findConsumeDetailInfoCountByMap" parameterType="java.util.Map" resultType="Integer">
+	<select id="findConsumeDetailInfoCountByMap" parameterType="java.util.Map" resultType="java.lang.Integer">
 		select count(1) 
 		from consume_detail_info 
 		<where>

@@ -1,16 +1,24 @@
 package com.cxp.personalmanage.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
 public class BaseEntityInfo {
 
+	@TableField(value = "create_time")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8" )
 	protected Date create_time;
+
+	@TableField(value = "create_user")
 	protected String create_user;
+
+	@TableField(value = "update_time")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8" )
 	protected Date update_time;
+
+	@TableField(value = "update_user")
 	protected String update_user;
 	public Date getCreate_time() {
 		return create_time;

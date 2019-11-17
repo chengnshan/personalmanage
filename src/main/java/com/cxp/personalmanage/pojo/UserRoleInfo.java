@@ -1,5 +1,8 @@
 package com.cxp.personalmanage.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
@@ -8,9 +11,19 @@ import java.io.Serializable;
 public class UserRoleInfo extends BaseEntityInfo implements Serializable{
     
 	private static final long serialVersionUID = -6495861512374197391L;
+
+    //主键,且属于自增型
+    @TableId(type = IdType.AUTO)
+    @TableField
 	private int id;
+
+    @TableField(value = "roleid")
     private String roleId;
+
+    @TableField(value = "username")
     private String userName;
+
+    @TableField
     private int enable;
 
     public int getEnable() {

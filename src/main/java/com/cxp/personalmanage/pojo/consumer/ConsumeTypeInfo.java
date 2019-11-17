@@ -1,5 +1,8 @@
 package com.cxp.personalmanage.pojo.consumer;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
@@ -9,10 +12,20 @@ public class ConsumeTypeInfo implements Serializable {
 
 	private static final long serialVersionUID = 8049806183277682943L;
 
+	@TableId(value = "id", type = IdType.AUTO)
+	@TableField
 	private Integer id;
+
+	@TableField(value = "consume_id")
 	private String consumeId;
+
+	@TableField(value = "consume_name")
 	private String consumeName;
+
+	@TableField(value = "remark")
 	private String remark;
+
+	@TableField(value = "import_no")
 	private Integer importNo;
 
 	public Integer getId() {

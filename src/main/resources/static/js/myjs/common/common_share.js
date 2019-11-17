@@ -20,7 +20,7 @@ define(['common_share'],function(common_share){
                                 var chilHtml = "";
                                 html += '<li class="nav nav-list nav-list-expandable nav-list-expanded">' +
                                     '<a><i class="fa fa-user"></i>'+item.menuName+' <span class="caret"></span></a>' +
-                                    '<ul class="nav navbar-nav" style="width: 100%;">';
+                                    '<ul class="nav navbar-nav" style="width: 100%; display: block;">';
                                 $.each(item.childrenMenus,function (index1,child) {
                                     console.log(child.menuName);
                                     chilHtml +=

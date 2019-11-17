@@ -163,7 +163,7 @@ body {
 					return;
 				}
 				this.$http.post("/pwd/sendEmailCode",{toMail: this.email},{emulateJSON: true}).then(function (result) {
-					let body = result.body;
+					var body = result.body;
 					// console.log(body);
 					if (body && body.resultCode >= 0){
 

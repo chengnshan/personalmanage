@@ -11,7 +11,7 @@ import com.cxp.personalmanage.controller.base.BaseController;
 @Controller
 @RequestMapping(value="/refresh")
 public class RefreshMemoryController extends BaseController{
-	
+
 	@Autowired
 	private InitMemoryConfig initMemoryConfig;
 

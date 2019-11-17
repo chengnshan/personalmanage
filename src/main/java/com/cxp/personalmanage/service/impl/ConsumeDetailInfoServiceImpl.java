@@ -80,8 +80,12 @@ public class ConsumeDetailInfoServiceImpl extends ServiceImpl<ConsumeDetailInfoM
 	public int saveConsumeDetail(ConsumeDetailInfo consumeDetailInfo) throws Exception {
         int saveNum = 0;
         //直接插入数据库
-        saveNum = consumeDetailInfoMapper.saveConsumeDetail(consumeDetailInfo);
-        //同步消费信息
+//        saveNum = consumeDetailInfoMapper.saveConsumeDetail(consumeDetailInfo);
+		boolean save = save(consumeDetailInfo);
+		if (save){
+			saveNum = 1;
+		}
+		//同步消费信息
         String synConsumeSwitch = InitMemoryConfig.getParamValue(Constant.ScheduConsume.SYNC_COSUME_DETAIL_SWITCH);
         if(StringUtils.isBlank(synConsumeSwitch)) {
             SystemParameterInfo systemParam = systemParameterInfoService.getByCode(Constant.ScheduConsume.SYNC_COSUME_DETAIL_SWITCH);

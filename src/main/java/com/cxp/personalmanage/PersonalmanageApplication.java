@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableRedisConfig
 @EnableWebsocketConfig
 @EnableEurekaClient
+@EnableScheduling
 public class PersonalmanageApplication {
 
 	public static void main(String[] args) {

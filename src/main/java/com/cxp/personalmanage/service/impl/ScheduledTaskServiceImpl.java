@@ -8,13 +8,15 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import com.cxp.personalmanage.config.context.InitMemoryConfig;
+import com.cxp.personalmanage.utils.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,50 +89,46 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
 	@Transactional(value="txPrimaryManager",rollbackFor= {Exception.class,RuntimeException.class},propagation=Propagation.REQUIRED)
 	@Override
 	public void saveTransportConsume() {
-		Map<String, Object> paramMap = new HashMap<>();
+
 		Map<String, Object> map = null;
 		List<Object> list = null;
 		ConsumeDetailInfo cdi = null;
 		List<ConsumeDetailInfo> saveList = new ArrayList<>();
-		// 获取设置的参数值
-		paramMap.put("param_code", Constant.ScheduConsume.CONSUME_CODE);
-		List<SystemParameterInfo> parameterInfoList = systemParameterInfoService.getParameterInfoByCode(paramMap);
-		if (CollectionUtils.isNotEmpty(parameterInfoList)) {
-			SystemParameterInfo param = parameterInfoList.get(0);
-			String param_value = param.getParam_value();
-			// 把JSON字符串转换成List集合
-			ObjectMapper mapper = JackJsonUtil.getInstance();
-			mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-			mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-			try {
-				list = JackJsonUtil.json2ListRecursion(param_value, mapper);
-			} catch (Exception e) {
-				logger.error(e.getMessage());
+
+		List<SystemParameterInfo> parameterInfoList = null;
+		String paramValue = InitMemoryConfig.getParamValue(Constant.ScheduConsume.CONSUME_CODE);
+		if (StringUtils.isBlank(StringUtil.conveterStr(paramValue))){
+			Map<String, Object> paramMap = new HashMap<>();
+			// 获取设置的参数值
+			paramMap.put("param_code", Constant.ScheduConsume.CONSUME_CODE);
+			parameterInfoList = systemParameterInfoService.getParameterInfoByCode(paramMap);
+			if (CollectionUtils.isNotEmpty(parameterInfoList)) {
+				SystemParameterInfo param = parameterInfoList.get(0);
+				paramValue = param.getParam_value();
 			}
-			// 如果集合不为空
-			if (CollectionUtils.isNotEmpty(list)) {
-				Date currentDate = new Date();
-				for (Object obj : list) {
-					// 强制转换为Map
-					map = (Map<String, Object>) obj;
-					if (MapUtils.isNotEmpty(map)) {
-						// 获取执行次数
-						Integer num = (Integer) map.get("num");
-						if (num != null && num > 0) {
-							for (int i = 0; i < num; i++) {
-								cdi = new ConsumeDetailInfo();
-								cdi.setConsume_time(currentDate);
-								
-								BigDecimal big=new BigDecimal(map.get("consumeMoney")+"");
-								cdi.setConsume_money(big);
-								cdi.setConsumeId((String) map.get("consumeType"));
-								cdi.setRemark((String) map.get("remark"));
-								cdi.setCreate_user(Constant.ScheduConsume.ADMIN);
-								cdi.setUpdate_user(Constant.ScheduConsume.ADMIN);
-								cdi.setUserName((String) map.get("userName"));
-								saveList.add(cdi);
-							}
-						} else {
+		}
+
+		// 把JSON字符串转换成List集合
+		ObjectMapper mapper = JackJsonUtil.getInstance();
+		mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+		mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+		try {
+			list = JackJsonUtil.json2ListRecursion(paramValue, mapper);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		// 如果集合不为空
+		if (CollectionUtils.isNotEmpty(list)) {
+			Date currentDate = new Date();
+			String channelCode = null;
+			for (Object obj : list) {
+				// 强制转换为Map
+				map = (Map<String, Object>) obj;
+				if (MapUtils.isNotEmpty(map)) {
+					// 获取执行次数
+					Integer num = (Integer) map.get("num");
+					if (num != null && num > 0) {
+						for (int i = 0; i < num; i++) {
 							cdi = new ConsumeDetailInfo();
 							cdi.setConsume_time(currentDate);
 
@@ -141,16 +139,32 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
 							cdi.setCreate_user(Constant.ScheduConsume.ADMIN);
 							cdi.setUpdate_user(Constant.ScheduConsume.ADMIN);
 							cdi.setUserName((String) map.get("userName"));
+							channelCode = StringUtil.conveterStr(String.valueOf(map.get("channelCode")));
+							cdi.setChannel_code(StringUtils.isNotBlank(channelCode) ? channelCode : "");
 							saveList.add(cdi);
 						}
+					} else {
+						cdi = new ConsumeDetailInfo();
+						cdi.setConsume_time(currentDate);
+
+						BigDecimal big=new BigDecimal(map.get("consumeMoney")+"");
+						cdi.setConsume_money(big);
+						cdi.setConsumeId((String) map.get("consumeType"));
+						cdi.setRemark((String) map.get("remark"));
+						cdi.setCreate_user(Constant.ScheduConsume.ADMIN);
+						cdi.setUpdate_user(Constant.ScheduConsume.ADMIN);
+						cdi.setUserName((String) map.get("userName"));
+						saveList.add(cdi);
 					}
 				}
 			}
-			// 批量插入
-			if (CollectionUtils.isNotEmpty(saveList)) {
-				consumeDetailInfoService.batchInsertDetailInfo(saveList);
-			}
 		}
+		// 批量插入
+		if (CollectionUtils.isNotEmpty(saveList)) {
+			consumeDetailInfoService.batchInsertDetailInfo(saveList);
+		}
+
+
 	}
 
 }

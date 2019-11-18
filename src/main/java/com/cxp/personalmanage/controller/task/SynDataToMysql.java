@@ -27,9 +27,8 @@ import com.cxp.personalmanage.service.ConsumeDetailInfoService;
 import com.cxp.personalmanage.service.ScheduledTaskService;
 import com.cxp.personalmanage.service.SystemParameterInfoService;
 
-@RestController
-@RequestMapping(value = "/tasks")
-@EnableScheduling
+//@RestController
+//@RequestMapping(value = "/tasks")
 public class SynDataToMysql implements SchedulingConfigurer {
 
 	private static final Logger logger = LoggerFactory.getLogger(SynDataToMysql.class);

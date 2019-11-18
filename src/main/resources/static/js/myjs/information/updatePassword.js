@@ -120,14 +120,14 @@ define(['updatePassword'],function(updatePassword){
                                 $.each(item.childrenMenus,function (index1,child) {
 
                                     chilHtml +=
-                                        '   <li><a href="../../'+child.menuUrl+'"><i class="'+child.classStyle+'"></i> '+child.menuName+'</a></li>' ;
+                                        '   <li><a href="../../..'+child.menuUrl+'"><i class="'+child.classStyle+'"></i> '+child.menuName+'</a></li>' ;
                                 })
                                 html+= chilHtml +'</ul></li>';
                             }else{
                                 if(item.menuId == 'updatePassword'){
-                                    html += '<li class="active"><a href="../../'+item.menuUrl+'"><i class="'+item.classStyle+'"></i> '+item.menuName+'</a></li>';
+                                    html += '<li class="active"><a href="../../..'+item.menuUrl+'"><i class="'+item.classStyle+'"></i> '+item.menuName+'</a></li>';
                                 }else{
-                                    html += '<li class=""><a href="../../'+item.menuUrl+'"><i class="'+item.classStyle+'"></i> '+item.menuName+'</a></li>';
+                                    html += '<li class=""><a href="../../..'+item.menuUrl+'"><i class="'+item.classStyle+'"></i> '+item.menuName+'</a></li>';
                                 }
                             }
 

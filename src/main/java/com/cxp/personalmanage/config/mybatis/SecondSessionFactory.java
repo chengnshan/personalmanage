@@ -4,6 +4,7 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.cxp.personalmanage.config.shiro.ShrioConfig_crazycake;
 import org.apache.ibatis.plugin.Interceptor;
@@ -52,6 +53,9 @@ public class SecondSessionFactory {
 	@Autowired
 	private Environment environment;
 
+	@Autowired
+	private PaginationInterceptor paginationInterceptor;
+
 	@PostConstruct
 	public void init(){
 		if (environment == null){
@@ -68,7 +72,7 @@ public class SecondSessionFactory {
         Resource[] resources = new PathMatchingResourcePatternResolver().getResources("classpath*:static/mybatis/mysql/**/*.xml");
         factoryBean.setMapperLocations(resources);
         //设置mybatis拦截器
-        factoryBean.setPlugins(new Interceptor[] {entityInterceptor,sqlStatsInterceptor});
+        factoryBean.setPlugins(new Interceptor[] {entityInterceptor,sqlStatsInterceptor, paginationInterceptor});
 		return factoryBean.getObject();
 	}
 

@@ -1,6 +1,8 @@
 package com.cxp.personalmanage.controller.context;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cxp.personalmanage.config.context.InitMemoryConfig;
 import com.cxp.personalmanage.controller.base.BaseController;
 import com.cxp.personalmanage.pojo.SystemParameterInfo;
@@ -10,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,14 +38,20 @@ public class SystemParamterController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/listSystemParam")
-    public String listSystemParam(HttpServletRequest request, SystemParameterInfo systemParameterInfo){
+    public String listSystemParam(HttpServletRequest request, SystemParameterInfo systemParameterInfo,
+                                  @RequestParam(defaultValue = "1", required = false) Integer currentPage){
+        IPage<SystemParameterInfo> infoIPage = null;
+
         QueryWrapper<SystemParameterInfo> wrapper = null;
+        Page<SystemParameterInfo> page = new Page<>(currentPage,10);
         if (StringUtils.isNotBlank(systemParameterInfo.getParam_code())){
             wrapper= new QueryWrapper<>();
             wrapper.isNotNull("param_code").eq("param_code", systemParameterInfo.getParam_code());
+            infoIPage = systemParameterInfoService.page(page, wrapper);
+        }else {
+            infoIPage = systemParameterInfoService.page(page);
         }
-        List<SystemParameterInfo> list = systemParameterInfoService.list(wrapper);
-        return buildSuccessResultInfo(list);
+        return buildSuccessResultInfo(Long.valueOf(infoIPage.getTotal()).intValue(), infoIPage.getRecords());
     }
 
     @RequestMapping(value = "/updateSystemParam")

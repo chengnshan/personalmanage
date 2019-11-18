@@ -44,13 +44,15 @@ public class SystemParamterController extends BaseController {
 
         QueryWrapper<SystemParameterInfo> wrapper = null;
         Page<SystemParameterInfo> page = new Page<>(currentPage,10);
+        wrapper= new QueryWrapper<>();
         if (StringUtils.isNotBlank(systemParameterInfo.getParam_code())){
-            wrapper= new QueryWrapper<>();
-            wrapper.isNotNull("param_code").eq("param_code", systemParameterInfo.getParam_code());
-            infoIPage = systemParameterInfoService.page(page, wrapper);
-        }else {
-            infoIPage = systemParameterInfoService.page(page);
+            wrapper.isNotNull("param_code").like("param_code", systemParameterInfo.getParam_code());
         }
+        if (StringUtils.isNotBlank(systemParameterInfo.getParam_name())){
+            wrapper.isNotNull("param_name").like("param_name",systemParameterInfo.getParam_name());
+        }
+
+        infoIPage = systemParameterInfoService.page(page, wrapper);
         return buildSuccessResultInfo(Long.valueOf(infoIPage.getTotal()).intValue(), infoIPage.getRecords());
     }
 

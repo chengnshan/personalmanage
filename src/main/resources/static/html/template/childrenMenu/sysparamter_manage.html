@@ -110,18 +110,18 @@
                     <div class="col-xs-9">
                         <div class="col-xs-10">
                             <input type="text" class="form-control" id="param_code"
-                                   name="param_code" placeholder="请输入用户" v-model="param_code">
+                                   name="param_code" placeholder="请输入编码" v-model="param_code">
                         </div>
                     </div>
                 </div>
                 <div class="col-xs-6 form-group">
-                    <!--<label class="col-xs-2 control-label">姓名:</label>
+                    <label class="col-xs-2 control-label">参数名称:</label>
                     <div class="col-xs-10">
                         <div class="col-xs-10">
-                            <input type="text" class="form-control" id="realName"
-                                   name="realName" placeholder="请输入名字">
+                            <input type="text" class="form-control" id="param_name"
+                                   name="param_name" placeholder="请输入参数名称"  v-model="param_name">
                         </div>
-                    </div>-->
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -143,7 +143,7 @@
             <div class="row">
                 <div class="col-xs-6 text-center"></div>
                 <div class="col-xs-6 text-center">
-                    <button type="button" class="btn btn-primary" id="queryParam" @click="queryParam">查询</button>
+                    <button type="button" class="btn btn-primary" id="queryParam" @click="queryParam(1)">查询</button>
                     <span class="" style="margin-left: 8px;"></span>
                     <button type="button" class="btn btn-info" id="clearQueryText" @click="clearQueryText">清空</button>
                     <span class="" style="margin-left: 8px;"></span>

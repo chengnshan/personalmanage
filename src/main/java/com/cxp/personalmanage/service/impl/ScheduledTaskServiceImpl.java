@@ -127,7 +127,11 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
 				if (MapUtils.isNotEmpty(map)) {
 					// 获取执行次数
 					Integer num = (Integer) map.get("num");
-					if (num != null && num > 0) {
+                    Boolean enable = Boolean.valueOf(StringUtil.conveterStr(String.valueOf(map.get("enable"))));
+                    if ( !enable ){
+                        continue;
+                    }
+                    if (num != null && num > 0) {
 						for (int i = 0; i < num; i++) {
 							cdi = new ConsumeDetailInfo();
 							cdi.setConsume_time(currentDate);

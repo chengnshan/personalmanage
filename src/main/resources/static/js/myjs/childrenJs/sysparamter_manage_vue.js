@@ -29,6 +29,7 @@ var vue = new Vue({
             pageSize : 10 ,
 
             param_code:'',
+            param_name:'',
             list: [],
             menu_html : '',
             loginUserNameStr : '',
@@ -105,7 +106,9 @@ var vue = new Vue({
     methods:{
         queryParam(currentPage){
             this.$http.post('/systemParamter/listSystemParam',
-                {'param_code' : this.param_code,'currentPage': currentPage == '' ? 1 : currentPage},
+                {'param_code' : this.param_code,
+                    'param_name':this.param_name,
+                    'currentPage': currentPage == '' ? 1 : currentPage},
                 {emulateJSON: true})
                 .then(function (result) {
                     var body = result.body;
@@ -187,7 +190,7 @@ var vue = new Vue({
                 var body = result.body;
                 if (body && body.resultCode >= 0){
                     $('#updateModal').modal('hide');
-                    this.queryParam();
+                    this.queryParam(this.currentPage);
                 }
             });
         },

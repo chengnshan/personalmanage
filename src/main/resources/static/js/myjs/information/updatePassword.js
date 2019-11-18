@@ -71,7 +71,8 @@ require(['jquery','bootstrap','updatePassword','ajaxfileupload','theme',"moment"
 		$('.selectpicker').selectpicker({'noneSelectedText':'请选择'});
 		$('.selectpicker').selectpicker('refresh');
 
-        common_share.getLoginUser();
+        // common_share.getLoginUser();
+        updatePassword.getLoginUser();
 
 		updatePassword.initFileInput('file-Portrait', "/consumeDetail/importConsumeDetailInfo");
 		
@@ -102,36 +103,38 @@ define(['updatePassword'],function(updatePassword){
                 data: '',
                 contentType: 'application/x-www-form-urlencoded',
                 success: function (data) {
-                    var userInfo = data.userInfo;
-                    $(".msg_span").text(userInfo.realName);
-                    
-                    var rolestr="";
-                    var menuList = data.menuListByRoleId;
-                    html = "";
-                    $.each(menuList, function (index, item) {
+                    if (data && data.resultCode >= 0){
+                        var resultData = JSON.parse(data.resultData);
+                        $(".msg_span").text(resultData.userInfo.realName);
 
-                        if(item.childrenMenus.length >0 ){
-                            var chilHtml = "";
-                            html += '<li class="nav nav-list nav-list-expandable nav-list-expanded">' +
-                                '<a><i class="fa fa-user"></i>'+item.menuName+' <span class="caret"></span></a>' +
-                                '<ul class="nav navbar-nav" style="width: 100%;">';
-                            $.each(item.childrenMenus,function (index1,child) {
+                        var rolestr="";
+                        var menuList = resultData.menuListByRoleId;
+                        html = "";
+                        $.each(menuList, function (index, item) {
 
-                                chilHtml +=
-                                    '   <li><a href="../../'+child.menuUrl+'"><i class="'+child.classStyle+'"></i> '+child.menuName+'</a></li>' ;
-                            })
-                            html+= chilHtml +'</ul></li>';
-                        }else{
-                            if(item.menuId == 'updatePassword'){
-                                html += '<li class="active"><a href="../../'+item.menuUrl+'"><i class="'+item.classStyle+'"></i> '+item.menuName+'</a></li>';
+                            if(item.childrenMenus.length >0 ){
+                                var chilHtml = "";
+                                html += '<li class="nav nav-list nav-list-expandable nav-list-expanded">' +
+                                    '<a><i class="fa fa-user"></i>'+item.menuName+' <span class="caret"></span></a>' +
+                                    '<ul class="nav navbar-nav" style="width: 100%;">';
+                                $.each(item.childrenMenus,function (index1,child) {
+
+                                    chilHtml +=
+                                        '   <li><a href="../../'+child.menuUrl+'"><i class="'+child.classStyle+'"></i> '+child.menuName+'</a></li>' ;
+                                })
+                                html+= chilHtml +'</ul></li>';
                             }else{
-                                html += '<li class=""><a href="../../'+item.menuUrl+'"><i class="'+item.classStyle+'"></i> '+item.menuName+'</a></li>';
+                                if(item.menuId == 'updatePassword'){
+                                    html += '<li class="active"><a href="../../'+item.menuUrl+'"><i class="'+item.classStyle+'"></i> '+item.menuName+'</a></li>';
+                                }else{
+                                    html += '<li class=""><a href="../../'+item.menuUrl+'"><i class="'+item.classStyle+'"></i> '+item.menuName+'</a></li>';
+                                }
                             }
-                        }
-                        	
-                    });
-                    updatePassword.getUserInfo(userInfo,userInfo.roleList);
-                    $("#menu_ul").append(html);
+
+                        });
+                        updatePassword.getUserInfo(resultData.userInfo, resultData.userInfo.roleList);
+                        $("#menu_ul").append(html);
+                    }
                 }
             });
         },

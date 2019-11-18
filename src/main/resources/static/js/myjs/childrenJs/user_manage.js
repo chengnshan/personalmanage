@@ -76,8 +76,6 @@ require(['jquery','bootstrap','user_manage','ajaxfileupload','bootstrap_fileinpu
 //		$('#nav').load("../top.html");
 	
 		$.comleteAjax();
-	
-        user_manage.messsage();
 
         common_share.getLoginUser();
 
@@ -164,9 +162,6 @@ require(['jquery','bootstrap','user_manage','ajaxfileupload','bootstrap_fileinpu
 
 define(['user_manage'],function(user_manage){
     var user_manage = {
-        messsage:function () {
-            console.log("加载了!");
-        },
 
         getLoginUser:function(){
             $.ajax({
@@ -266,7 +261,7 @@ define(['user_manage'],function(user_manage){
                             	'<td><button class="btn btn-link" id="updateUserInfo" value="'+item.userName+'">修改</button>'+
                                 '<button class="btn btn-link" id="delUserInfo" value="'+item.userName+'">删除</button></td>' + '</tr>';
                         });
-                        var totalRows=data.resultCode;console.log(totalRows);
+                        var totalRows=data.resultCode;
                         totalRows=totalRows ==0 ?1 :totalRows ;
                         var pageHtml=page.pageWithUrl('/queryUserListByCondition',pageNo,totalRows);
 

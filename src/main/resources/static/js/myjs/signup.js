@@ -275,6 +275,8 @@ define(['signup'],function(signup){
                 	 if(data.resultCode >=0 && result){
                 		 
                 		 $.each(result.consumeDetailInfoList,function (index, item) {
+							 var channel_name = (item.consumeChannelInfo != undefined || item.consumeChannelInfo != null) ?
+								 item.consumeChannelInfo.channel_name : '';
                 			 html += "<tr>" +
                 			 '<td class="text-center" >'+parseInt(num+1+index)+'</td>'+
                 			 '<td class="text-center" >'+item.userName+'</td>'+
@@ -283,7 +285,7 @@ define(['signup'],function(signup){
                 			 '<td class="text-center" >'+item.consumeName+'</td>'+
                 			 '<td>'+'消费'+'</td>'+
                 			 '<td>'+item.consume_money+'</td>'+
-							 '<td>'+item.consumeChannelInfo.channel_name+'</td>'+
+							 '<td>'+ channel_name +'</td>'+
                 			 '<td>'+(item.remark == undefined ? '':item.remark )+'</td>'+
                 			 '<td>'+item.update_time+'</td>'+
                 			 '<td><button class="btn btn-link" id="updateConsumeDetailA" value="'+item.id+'">修改</button></td>'+

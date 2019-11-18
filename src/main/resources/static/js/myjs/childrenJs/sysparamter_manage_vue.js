@@ -1,9 +1,33 @@
 
+var componentpage = {
+    template: '#comPage',
+    data() {
+        return {
+
+        }
+    },
+    props: ['totalrows','totalpage', 'currentpage'],
+    methods: {
+        comClickA(){
+            this.$emit('parentfunc');
+            alert(this.totalrows);
+        },
+        querySys(count){
+            this.$emit('parentquery',count);
+        }
+    }
+};
+
 var vue = new Vue({
     el: '#wrapper',
     data(){
         return {
-            currentPage: '',
+            currentPage: 1,
+            totalRows: 0,
+            //总页数
+            totalPage : 0,
+            pageSize : 10 ,
+
             param_code:'',
             list: [],
             menu_html : '',
@@ -54,24 +78,58 @@ var vue = new Vue({
                 this.loginUserNameStr = userInfo.userInfo.realName;
             }
         });
-        this.$http.post('/systemParamter/listSystemParam',{'param_code' : this.param_code}, {emulateJSON: true}).then(function (result) {
-            var body = result.body;
-            if (body && body.resultCode >= 0){
-                this.list = body.resultData;
-            }
-        });
-    },
-    methods:{
-        queryParam(param){
-            this.$http.post('/systemParamter/listSystemParam',{'param_code' : this.param_code}, {emulateJSON: true}).then(function (result) {
+        this.$http.post('/systemParamter/listSystemParam',
+            {'param_code' : this.param_code, 'currentPage': this.currentPage == '' ? 1 : this.currentPage},
+            {emulateJSON: true})
+            .then(function (result) {
                 var body = result.body;
                 if (body && body.resultCode >= 0){
                     this.list = body.resultData;
+
+                    this.totalRows=body.resultCode;
+
+                    if(this.totalRows % this.pageSize ===0){
+                        this.totalPage = parseInt(this.totalRows / this.pageSize);
+                    }else{
+                        this.totalPage = parseInt(this.totalRows / this.pageSize) +1;
+                    }
+                    /*var totalRows=body.resultCode;
+                    totalRows=totalRows ==0 ? 1 :totalRows ;
+                    var pageHtml=this.pageWithUrl(1,totalRows);
+
+                    $("#page").html(pageHtml);
+                    $("#page nav").removeAttr("style");*/
                 }
             });
+    },
+    methods:{
+        queryParam(currentPage){
+            this.$http.post('/systemParamter/listSystemParam',
+                {'param_code' : this.param_code,'currentPage': currentPage == '' ? 1 : currentPage},
+                {emulateJSON: true})
+                .then(function (result) {
+                    var body = result.body;
+                    if (body && body.resultCode >= 0){
+                        this.list = body.resultData;
+
+                        this.totalRows=body.resultCode;
+
+                        if(this.totalRows % this.pageSize ===0){
+                            this.totalPage = parseInt(this.totalRows / this.pageSize);
+                        }else{
+                            this.totalPage = parseInt(this.totalRows / this.pageSize) +1;
+                        }
+
+                        this.currentPage = currentPage;
+                    }
+                });
         },
         clearQueryText(){
             this.param_code = '';
+            this.addParamCode = '';
+            this.addParamName = '';
+            this.addParamValue = '';
+            this.addParamEnable = '';
         },
         updateParamModel(id){
             this.$http.post('/systemParamter/getSystemParamById',{'id' : id}, {emulateJSON: true}).then(function (result) {
@@ -105,7 +163,7 @@ var vue = new Vue({
         },
         saveParamInfo(){
             //获取ref定义的dom节点
-            console.log(this.$refs.updateModal);
+        //    console.log(this.$refs.updateModal);
             this.$http.post('/systemParamter/saveSystemParam'
                 ,{ 'param_code':this.addParamCode, 'param_name':this.addParamName, 'param_value':this.addParamValue, 'enable':this.addParamEnable}
                 , {emulateJSON: true})
@@ -113,9 +171,12 @@ var vue = new Vue({
                     var body = result.body;
                     if (body && body.resultCode >= 0){
                         $('#addParamModal').modal('hide');
-                        this.queryParam();
+                        this.queryParam(1);
+                    }else {
+
                     }
                 });
+            this.clearQueryText();
         },
         updateParamInfo(){
             this.$http.post('/systemParamter/updateSystemParam'
@@ -129,6 +190,29 @@ var vue = new Vue({
                     this.queryParam();
                 }
             });
+        },
+        pageClick : function(){
+            var obj = this;
+            var element = $("#page nav li:not(.disabled) a");
+            $(element).each(function(){
+                var url=$(this).attr("href");
+                if(url != "#"){
+                    var pageNo= url.substr(url.indexOf("pageNo=") + 7 ,url.length);
+                    //绑定click事件
+                    $(this).click(function () {
+                        this.currentPage = pageNo;
+                        obj.queryParam();
+                        // user_manage.getUserList(page,parseInt(pageNo));
+                        return false;
+                    });
+                }
+            });
+        },
+        clickA(){
+            alert(this.totalRows);
         }
+    },
+    components: {
+        componentpage : componentpage
     }
 });

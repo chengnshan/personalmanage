@@ -15,6 +15,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @date : 2019-11-06 22:42
  */
 public class ChatMessageHandler extends TextWebSocketHandler {
+
     private static Logger logger = LoggerFactory.getLogger(ChatMessageHandler.class);
 
     public static CopyOnWriteArraySet<WebSocketSession> webSocketSessions = new CopyOnWriteArraySet<WebSocketSession>();

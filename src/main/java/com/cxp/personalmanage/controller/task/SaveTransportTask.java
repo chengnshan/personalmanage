@@ -46,7 +46,8 @@ public class SaveTransportTask implements SchedulingConfigurer {
 	private ScheduledTaskService scheduledTaskService;
 
 	// 每周一到周五 0点30分执行执行一次
-	private String expression = "0 30 0 * * 1/5 ";
+	private String expression = "0 30 0 * * MON-FRI ";
+//	private String expression = "0 19 22 * * MON-FRI ";
 
 	@PostConstruct
 	public void init(){

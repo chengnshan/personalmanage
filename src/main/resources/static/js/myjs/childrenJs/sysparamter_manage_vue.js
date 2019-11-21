@@ -1,4 +1,4 @@
-
+//定义分页组件
 var componentpage = {
     template: '#comPage',
     data() {
@@ -17,6 +17,8 @@ var componentpage = {
         }
     }
 };
+//菜单组件
+var menucom1 = menucom();
 
 var vue = new Vue({
     el: '#wrapper',
@@ -30,6 +32,8 @@ var vue = new Vue({
 
             param_code:'',
             param_name:'',
+
+            menulist: [],
             list: [],
             menu_html : '',
             loginUserNameStr : '',
@@ -55,6 +59,8 @@ var vue = new Vue({
                 var userInfo = JSON.parse(resultData);
 
                 var menuList = userInfo.menuListByRoleId;
+                this.menulist = menuList;
+
                 html = "";
                 for (var i =0 ; i< menuList.length; i++){
                     if(menuList[i].childrenMenus.length >0 ){
@@ -79,6 +85,7 @@ var vue = new Vue({
                 this.loginUserNameStr = userInfo.userInfo.realName;
             }
         });
+
         this.$http.post('/systemParamter/listSystemParam',
             {'param_code' : this.param_code, 'currentPage': this.currentPage == '' ? 1 : this.currentPage},
             {emulateJSON: true})
@@ -108,7 +115,7 @@ var vue = new Vue({
             this.$http.post('/systemParamter/listSystemParam',
                 {'param_code' : this.param_code,
                     'param_name':this.param_name,
-                    'currentPage': currentPage == '' ? 1 : currentPage},
+                    'currentPage': (currentPage == '' || currentPage == undefined) ? 1 : currentPage},
                 {emulateJSON: true})
                 .then(function (result) {
                     var body = result.body;
@@ -133,6 +140,8 @@ var vue = new Vue({
             this.addParamName = '';
             this.addParamValue = '';
             this.addParamEnable = '';
+
+            this.queryParam(this.currentPage);
         },
         updateParamModel(id){
             this.$http.post('/systemParamter/getSystemParamById',{'id' : id}, {emulateJSON: true}).then(function (result) {
@@ -159,12 +168,13 @@ var vue = new Vue({
                 rem.post('/systemParamter/deleteSystemParamById',{'id' : id}, {emulateJSON: true}).then(function (result) {
                     var body = result.body;
                     if (body && body.resultCode >= 0){
-                        this.queryParam();
+                        this.queryParam(this.currentPage);
                     }
                 });
             });
         },
         saveParamInfo(){
+
             //获取ref定义的dom节点
         //    console.log(this.$refs.updateModal);
             this.$http.post('/systemParamter/saveSystemParam'
@@ -174,7 +184,13 @@ var vue = new Vue({
                     var body = result.body;
                     if (body && body.resultCode >= 0){
                         $('#addParamModal').modal('hide');
-                        this.queryParam(1);
+                        //清空添加框的值
+                        this.addParamValue = '';
+                        this.addParamCode = '';
+                        this.addParamName = '';
+                        this.addParamEnable='';
+
+                        this.queryParam(this.currentPage);
                     }else {
 
                     }
@@ -216,6 +232,7 @@ var vue = new Vue({
         }
     },
     components: {
-        componentpage : componentpage
+        componentpage : componentpage ,
+        menucomponet : menucom1
     }
 });

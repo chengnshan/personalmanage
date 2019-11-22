@@ -7,6 +7,8 @@ import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.cxp.personalmanage.utils.ExceptionInfoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -43,7 +45,8 @@ public class DownStudyWord {
 				}
 				System.out.println("success");
 			} catch (Exception e) {
-				logger.info("下载文件出错, " + e.getMessage());
+				logger.info("下载文件出错, " + e.getMessage(), e);
+				ExceptionInfoUtil.saveExceptionInfo("downloadSpringBoot",e.getMessage(), e);
 			} finally {
 				if (inputStream != null) {
 					try {
@@ -88,7 +91,8 @@ public class DownStudyWord {
 				}
 				System.out.println("success");
 			} catch (Exception e) {
-				logger.info("下载文件出错, " + e.getMessage());
+				logger.info("downloadLinuxWord下载文件出错, " + e.getMessage(), e);
+				ExceptionInfoUtil.saveExceptionInfo("downloadLinuxWord",e.getMessage(), e);
 			} finally {
 				if (inputStream != null) {
 					try {

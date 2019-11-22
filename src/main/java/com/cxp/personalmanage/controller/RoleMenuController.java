@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.cxp.personalmanage.utils.ExceptionInfoUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +79,8 @@ public class RoleMenuController extends BaseController {
 		try {
 			roleMenuInfoService.saveRoleMenuInfo(request, roleId, menuId);
 		} catch (Exception e) {
-			logger.info("服务器异常,更新权限失败"+e.getMessage());
+			logger.info("saveRoleMenuInfo服务器异常,更新权限失败"+e.getMessage(), e);
+			ExceptionInfoUtil.saveExceptionInfo("saveRoleMenuInfo",e.getMessage(), e);
 			return buildFailedResultInfo(-1, "保存角色菜单信息失败!");
 		}
 		

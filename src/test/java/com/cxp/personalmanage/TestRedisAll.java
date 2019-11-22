@@ -11,6 +11,7 @@ import com.cxp.personalmanage.service.MailService;
 import com.cxp.personalmanage.service.SystemParameterInfoService;
 import com.cxp.personalmanage.service.UserInfoService;
 import com.cxp.personalmanage.utils.DateTimeUtil;
+import com.cxp.personalmanage.utils.ScanClassUtil;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -54,6 +56,8 @@ public class TestRedisAll {
     @Autowired
     private ConsumeDetailInfoService consumeDetailInfoService;
 
+    @Autowired
+    private ScanClassUtil scanClassUtil;
 
     @Value("${spring.mail.password}")
     private String mailPwd;
@@ -86,5 +90,13 @@ public class TestRedisAll {
         param.put("endTime", DateTimeUtil.parse(DateTimeUtil.DATE_TIME_PATTERN, "2019-11-18" + " 23:59:59"));
         List<ConsumeDetailInfo> map = consumeDetailInfoService.findConsumeDetailInfoListByMap(param);
         System.out.println(map);
+    }
+
+    @Test
+    public void test4(){
+        Set<Class<?>> classes = scanClassUtil.scannerPackages("com.cxp.personalmanage.pojo");
+        classes.stream().forEach(tt->{
+            System.out.println(tt.getName());
+        });
     }
 }

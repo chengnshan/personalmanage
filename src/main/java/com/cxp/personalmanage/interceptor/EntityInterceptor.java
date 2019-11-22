@@ -1,10 +1,12 @@
 package com.cxp.personalmanage.interceptor;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.cxp.personalmanage.pojo.execp.ExceptionInfo;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.executor.Executor;
@@ -41,7 +43,9 @@ public class EntityInterceptor implements Interceptor {
 			Object arg = args[i];
 			String className = arg.getClass().getName();
 			System.out.println(i + " 参数类型：" + className);
-
+			if (arg instanceof ExceptionInfo){
+				continue;
+			}
 			// 第一个参数处理。根据它判断是否给“操作属性”赋值。
 			if (arg instanceof MappedStatement) {// 如果是第一个参数 MappedStatement
 				MappedStatement ms = (MappedStatement) arg;
@@ -113,10 +117,12 @@ public class EntityInterceptor implements Interceptor {
 					BeanUtils.setProperty(obj, Constant.UPDATE_USER, currentLoginUser != null?currentLoginUser.getUserName():"");
 				}
 			}
-			
+
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
 	}

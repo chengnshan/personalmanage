@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cxp.personalmanage.mapper.postgresql.ExceptionInfoMapper">
+
+    <resultMap type="com.cxp.personalmanage.pojo.execp.ExceptionInfo" id="baseResultMap">
+        <id column="id" property="id"/>
+        <result column="exception_position" property="exceptionPosition"/>
+        <result column="create_time" property="createTime"/>
+        <result column="exception_name" property="exceptionName"/>
+        <result column="exception_detail" property="exceptionDetail"/>
+    </resultMap>
+
+</mapper>

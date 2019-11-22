@@ -3,6 +3,7 @@ package com.cxp.personalmanage.controller.task;
 import java.util.*;
 
 import com.cxp.personalmanage.config.context.InitMemoryConfig;
+import com.cxp.personalmanage.utils.ExceptionInfoUtil;
 import com.cxp.personalmanage.utils.RedisUtils;
 import com.cxp.personalmanage.utils.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -91,6 +92,7 @@ public class SaveTransportTask implements SchedulingConfigurer {
 						logger.info("end : 保存上下班固定费用结束 : " + new Date());
 					} catch (Exception e) {
 						logger.error("保存上下班固定费用开始SaveTransportTask任务出错: " + e.getMessage(),e);
+						ExceptionInfoUtil.saveExceptionInfo("saveTransportTask",e.getMessage(), e);
 					}
 				}
 				RedisUtils.releaseLock(Constant.DistributedCon.CONSUME_DETAIL_LOCK,uuid);

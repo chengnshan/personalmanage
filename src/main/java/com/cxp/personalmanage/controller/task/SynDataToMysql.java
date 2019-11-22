@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.cxp.personalmanage.utils.ExceptionInfoUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ public class SynDataToMysql implements SchedulingConfigurer {
 	private static String expression = "0 0 1 * * ?";
 
 	@RequestMapping(value = "/changeSynMysqlDataExpression")
-	public String SynMysqlDataTask() {
+	public String synMysqlDataTask() {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("param_code", Constant.ScheduConsume.MYSQL_DATA_SCHEDU_TIME);
 		List<SystemParameterInfo> list = systemParameterInfoService.getParameterInfoByCode(paramMap);
@@ -72,6 +73,7 @@ public class SynDataToMysql implements SchedulingConfigurer {
 					logger.info("end : 定时同步数据到mysql结束 : " + new Date() +", 同步添加数据 :["+consumeNum+"]条");
 				} catch (Exception e) {
 					logger.error("定时同步数据到mysql任务出错: " + e.getMessage());
+					ExceptionInfoUtil.saveExceptionInfo("synMysqlDataTask",e.getMessage(), e);
 				}
 			}
 		};

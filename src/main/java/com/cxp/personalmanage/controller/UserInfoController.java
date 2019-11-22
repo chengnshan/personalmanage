@@ -21,6 +21,7 @@ import com.cxp.personalmanage.service.MenuInfoService;
 import com.cxp.personalmanage.service.RoleInfoService;
 import com.cxp.personalmanage.service.UserInfoService;
 import com.cxp.personalmanage.service.UserInfo_Service;
+import com.cxp.personalmanage.utils.ExceptionInfoUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -199,7 +200,8 @@ public class UserInfoController extends BaseController {
 			}
 			userInfo_Service.saveUserInfoAndRole(addUserName, addRealName, addRoleId, addUserPassword);
 		} catch (Exception e) {
-			logger.info("添加用户出错误.", e.getMessage());
+			logger.info("addUserInfoAndRole添加用户出错误."+e.getMessage(), e);
+			ExceptionInfoUtil.saveExceptionInfo("addUserInfoAndRole",e.getMessage(), e);
 			return buildFailedResultInfo(-1, "添加用户失败.");
 		}
 		return buildSuccessResultInfo(1, "添加用户成功.");
@@ -287,13 +289,16 @@ public class UserInfoController extends BaseController {
 			out = response.getOutputStream();
 			excelUtil.exportExcel(exportUserInfoList, "用户列表", out);
 		} catch (UnsupportedEncodingException e) {
-			logger.error("下载用户列表出错.", e.getMessage());
+			logger.error("exportUserInfo下载用户列表出错." + e.getMessage(),e);
+			ExceptionInfoUtil.saveExceptionInfo("exportUserInfo",e.getMessage(), e);
 			return buildFailedResultInfo(-1, "服务器出现问题,请稍后重试!");
 		} catch (IOException e) {
-			logger.error("下载用户列表出错.", e.getMessage());
+			logger.error("exportUserInfo下载用户列表出错."+ e.getMessage(),e);
+			ExceptionInfoUtil.saveExceptionInfo("exportUserInfo",e.getMessage(), e);
 			return buildFailedResultInfo(-1, "服务器出现问题,请稍后重试!");
 		} catch (Exception e) {
-			logger.error("下载用户列表出错.", e.getMessage());
+			logger.error("exportUserInfo下载用户列表出错."+ e.getMessage(),e);
+			ExceptionInfoUtil.saveExceptionInfo("exportUserInfo",e.getMessage(), e);
 			return buildFailedResultInfo(-1, "服务器出现问题,请稍后重试!");
 		} finally {
 			if (out != null) {
@@ -382,7 +387,8 @@ public class UserInfoController extends BaseController {
 				return buildSuccessResultInfo("更新信息成功");
 
 			} catch (Exception e) {
-				logger.error("updateOwnerInfo出错:" + e.getMessage());
+				logger.error("updateOwnerInfo出错:" + e.getMessage(), e);
+				ExceptionInfoUtil.saveExceptionInfo("updateOwnerInfo",e.getMessage(), e);
 				return buildFailedResultInfo(-1, "更新失败!");
 			}
 		}
@@ -413,7 +419,8 @@ public class UserInfoController extends BaseController {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			ExceptionInfoUtil.saveExceptionInfo("getImageByUsername",e.getMessage(), e);
+			logger.error("getImageByUsername : "+ e.getMessage(),e);
 		} finally {
 			try {
 				if (bis != null) {

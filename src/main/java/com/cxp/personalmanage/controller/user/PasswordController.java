@@ -6,6 +6,7 @@ import com.cxp.personalmanage.controller.base.BaseController;
 import com.cxp.personalmanage.pojo.UserInfo;
 import com.cxp.personalmanage.service.MailService;
 import com.cxp.personalmanage.service.UserInfoService;
+import com.cxp.personalmanage.utils.ExceptionInfoUtil;
 import com.cxp.personalmanage.utils.MD5Util;
 import com.cxp.personalmanage.utils.RandomCharUtil;
 import com.cxp.personalmanage.utils.StringUtil;
@@ -79,6 +80,7 @@ public class PasswordController extends BaseController {
             return buildSuccessResultInfo(null);
         }catch (Exception e){
             logger.error("PasswordController forgetPwd Exception : " + e.getMessage(), e);
+            ExceptionInfoUtil.saveExceptionInfo("PasswordController",e.getMessage(), e);
             return buildFailedResultInfo(-1, "服务器休息会.");
         }
     }
@@ -109,6 +111,7 @@ public class PasswordController extends BaseController {
             return buildSuccessResultInfo(null);
         } catch (Exception e) {
             logger.error("PasswordController sendEmailCode exception : " + e.getMessage(), e);
+            ExceptionInfoUtil.saveExceptionInfo("PasswordController sendEmailCode",e.getMessage(), e);
             return buildFailedResultInfo(-1,"服务器休息了一会!"+e.getMessage());
         }
     }

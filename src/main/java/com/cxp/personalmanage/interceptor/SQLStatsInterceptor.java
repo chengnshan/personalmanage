@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -60,6 +61,7 @@ public class SQLStatsInterceptor implements Interceptor {
 		}
 		String sqlId = mappedStatement.getId();
 		BoundSql boundSql = mappedStatement.getBoundSql(parameter);
+
 		Configuration configuration = mappedStatement.getConfiguration();
 		Object returnValue = null;
 		long start = System.currentTimeMillis();
@@ -67,8 +69,10 @@ public class SQLStatsInterceptor implements Interceptor {
 		long end = System.currentTimeMillis();
 		long time = (end - start);
 		if (time > 1) {
-			String sql = getSql(configuration, boundSql, sqlId, time);
-			logger.info(sql);
+			if ( ! boundSql.getSql().contains("exception_info")){
+				String sql = getSql(configuration, boundSql, sqlId, time);
+				logger.info(sql);
+			}
 		}
 		return returnValue;
 	}

@@ -23,7 +23,7 @@ import java.util.*;
  * @date : 2019-11-13 21:24
  */
 @Component
-@ConditionalOnProperty(prefix = "spring.rabbitmq",name = {"enable"},havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "spring.rabbitmq", name = {"enable"}, havingValue = "true", matchIfMissing = true)
 public class RabbitUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(RabbitUtil.class);
@@ -31,25 +31,26 @@ public class RabbitUtil {
     private static RabbitTemplate rabbitTemplate;
 
     @Autowired
-    private void setRabbitTemplate(RabbitTemplate rabbitTemplate){
+    private void setRabbitTemplate(RabbitTemplate rabbitTemplate) {
         RabbitUtil.rabbitTemplate = rabbitTemplate;
     }
 
     @PostConstruct
-    public void init(){
-        logger.info("初始化RabbitUtil成功");
+    public void init() {
+        logger.info("初始化RabbitUtil成功:{}", RabbitUtil.rabbitTemplate.toString());
     }
 
     /**
      * 发送一个对象到队列
+     *
      * @param exchange
      * @param routingKey
      * @param t
      * @param clazz
      * @param <T>
      */
-    public static <T> Object sendObject(String exchange, String routingKey, T t ,Class<T> clazz){
-        if (t == null){
+    public static <T> Object sendObject(String exchange, String routingKey, T t, Class<T> clazz) {
+        if (t == null) {
             return null;
         }
         String jsonStr = JackJsonUtil.objectToString(t);
@@ -57,23 +58,23 @@ public class RabbitUtil {
         MessageProperties messageProperties = new MessageProperties();
         messageProperties.getHeaders().put("__TypeId__", clazz.getSimpleName());
         messageProperties.setContentType("application/json");
-        Message message = new Message(jsonStr.getBytes(),messageProperties);
+        Message message = new Message(jsonStr.getBytes(), messageProperties);
         Object receive = rabbitTemplate.convertSendAndReceive(exchange, routingKey,
                 message, new CorrelationData(UUID.randomUUID().toString()));
         return receive;
     }
 
-    public static <E> void sendList(String exchange, String routingKey, Collection<E> collection, Class<E> clazz){
-        if (CollectionUtils.isEmpty(collection)){
+    public static <E> void sendList(String exchange, String routingKey, Collection<E> collection, Class<E> clazz) {
+        if (CollectionUtils.isEmpty(collection)) {
             return;
         }
         String jsonStr = JackJsonUtil.objectToString(collection);
 
         MessageProperties messageProperties = new MessageProperties();
         messageProperties.setContentType("application/json");
-        messageProperties.getHeaders().put("__TypeId__","java.util.List");
+        messageProperties.getHeaders().put("__TypeId__", "java.util.List");
         messageProperties.getHeaders().put("__ContentTypeId__", clazz.getSimpleName());
-        Message message = new Message(jsonStr.getBytes(),messageProperties);
+        Message message = new Message(jsonStr.getBytes(), messageProperties);
 
         Object receive = rabbitTemplate.convertSendAndReceive(exchange, routingKey,
                 message, new CorrelationData(UUID.randomUUID().toString()));
@@ -81,19 +82,19 @@ public class RabbitUtil {
 
     }
 
-    public static <K,V> void sendMap(String exchange, String routingKey, Map<K,V> map, Class<V> clazz){
-        if (MapUtils.isEmpty(map)){
+    public static <K, V> void sendMap(String exchange, String routingKey, Map<K, V> map, Class<V> clazz) {
+        if (MapUtils.isEmpty(map)) {
             return;
         }
         String jsonStr = JackJsonUtil.objectToString(map);
 
         MessageProperties messageProperties = new MessageProperties();
         messageProperties.setContentType("application/json");
-        messageProperties.getHeaders().put("__TypeId__","java.util.Map");
-        messageProperties.getHeaders().put("__KeyTypeId__","java.lang.String");
+        messageProperties.getHeaders().put("__TypeId__", "java.util.Map");
+        messageProperties.getHeaders().put("__KeyTypeId__", "java.lang.String");
         messageProperties.getHeaders().put("__ContentTypeId__", clazz.getSimpleName());
 
-        Message message = new Message(jsonStr.getBytes(),messageProperties);
+        Message message = new Message(jsonStr.getBytes(), messageProperties);
 
         Object receive = rabbitTemplate.convertSendAndReceive(exchange, routingKey,
                 message, new CorrelationData(UUID.randomUUID().toString()));
@@ -101,7 +102,8 @@ public class RabbitUtil {
     }
 
     public static void main(String[] args) {
-        List<Student> list = new ArrayList<Student>(){};
+        List<Student> list = new ArrayList<Student>() {
+        };
         Type genericSuperclass = list.getClass().getGenericSuperclass();
         String typeName = genericSuperclass.getTypeName();
         System.out.println(typeName);

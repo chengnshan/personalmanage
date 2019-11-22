@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.cxp.personalmanage.utils.ExceptionInfoUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -112,7 +113,8 @@ public class MenuController extends BaseController{
     				returnStr = buildFailedResultInfo(-1, "此菜单已经存在,不能重复添加!");
     			}
 			} catch (Exception e) {
-				logger.error("insertMenuInfo添加菜单出错 : "+e.getMessage());
+				logger.error("insertMenuInfo添加菜单出错 : "+e.getMessage(), e);
+				ExceptionInfoUtil.saveExceptionInfo("insertMenuInfo",e.getMessage(), e);
 				returnStr = buildFailedResultInfo(-1, "服务器异常,添加失败!");
 			}
     	}

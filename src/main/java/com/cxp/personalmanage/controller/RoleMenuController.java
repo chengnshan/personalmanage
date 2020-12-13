@@ -1,6 +1,5 @@
 package com.cxp.personalmanage.controller;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,16 +9,18 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cxp.personalmanage.controller.base.BaseController;
 import com.cxp.personalmanage.pojo.RoleMenuInfo;
 import com.cxp.personalmanage.service.RoleMenuInfoService;
-import com.cxp.personalmanage.utils.JackJsonUtil;
 
 @RestController
 @RequestMapping(value = "/roleMenu")
+@RefreshScope
 public class RoleMenuController extends BaseController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RoleMenuController.class);
@@ -86,4 +87,5 @@ public class RoleMenuController extends BaseController {
 		
 		return buildSuccessResultInfo("保存角色菜单信息成功!");
 	}
+
 }

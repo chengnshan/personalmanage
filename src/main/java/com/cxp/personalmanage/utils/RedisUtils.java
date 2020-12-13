@@ -10,13 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisCommands;
-
 import javax.annotation.PostConstruct;
 
 @Component
@@ -26,20 +24,20 @@ public class RedisUtils {
 
 	private static RedisTemplate<String, Object> redisTemplate;
 
-	private RedisUtils(){
+    private RedisUtils(){
 
-	}
+    }
 
-	@PostConstruct
-	public void init(){
-		logger.info("初始化RedisUtils成功");
-	}
+    @PostConstruct
+    public void init(){
+        logger.info("初始化RedisUtils成功");
+    }
 
 	@Autowired
 	@Qualifier(value = "redisTemplate")
 	public void setRedisTemlate(RedisTemplate<String, Object> redisTemplate) {
 		RedisUtils.redisTemplate = redisTemplate;
-		logger.info("{}", RedisUtils.redisTemplate);
+        logger.info("{}", RedisUtils.redisTemplate);
 	}
 
 	/**
